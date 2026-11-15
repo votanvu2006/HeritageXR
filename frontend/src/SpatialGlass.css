@@ -1749,3 +1749,98 @@
     visibility: hidden;
   }
 }
+
+.mobile-demo-intro { display: none; }
+/* A phone opens directly into the simulated museum after scanning the QR. */
+@media (max-width: 760px) {
+  .heritage-experience.spatial-app {
+    height: 100dvh;
+    min-height: 0;
+    padding: max(10px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  }
+  .camera-passthrough-shell:has(.heritage-experience) .camera-passthrough-control {
+    display: none;
+  }
+  .heritage-experience .mobile-demo-intro { display: block; }
+  .heritage-experience .desktop-scan-intro { display: none; }
+  .heritage-experience .spatial-header {
+    min-height: 50px;
+    flex-basis: 50px;
+    border-radius: 20px;
+    padding: 7px 12px;
+  }
+  .heritage-experience .heritage-brand strong { font-size: 16px; }
+  .heritage-experience .heritage-brand span { font-size: 7px; }
+  .heritage-experience .spatial-stage { margin-top: 10px; }
+  .heritage-experience .scan-experience .scan-guidance {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 20px;
+  }
+  .heritage-experience .scan-experience .scan-guidance strong { font-size: 16px; }
+  .heritage-experience .scan-experience .scan-guidance p { font-size: 12px; }
+  .heritage-experience .scan-experience .scan-bottom-hint {
+    width: fit-content;
+    max-width: 100%;
+    bottom: 8px;
+    padding: 10px 16px;
+    justify-content: center;
+    font-size: 11px;
+  }
+  .heritage-experience .object-experience {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 10px;
+    overflow-y: auto;
+  }
+  .heritage-experience .object-experience-heading {
+    min-height: 68px;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 20px;
+  }
+  .heritage-experience .object-title-copy h1 { font-size: 15px; }
+  .heritage-experience .object-title-copy .section-label { display: none; }
+  .heritage-experience .object-title-copy p { margin-top: 3px; font-size: 10px; }
+  .heritage-experience .object-action-dock {
+    border-radius: 20px;
+    padding: 8px;
+  }
+  .heritage-experience .object-action-dock > p { display: none; }
+  .heritage-experience .object-action-button { min-height: 52px; font-size: 11px; }
+  .heritage-experience .object-experience .structure-scene-viewport:has(.structure-part-card) {
+    grid-template-rows: minmax(190px, 1fr) auto auto auto;
+  }
+  .heritage-experience .object-experience:has(.structure-part-card) {
+    grid-template-rows: auto minmax(430px, 1fr) auto;
+  }
+  .heritage-experience .object-experience .structure-scene-viewport:has(.structure-part-card) .structure-part-card {
+    width: 100%;
+    max-height: none;
+    padding: 12px 14px;
+    border-radius: 18px;
+    overflow: visible;
+  }
+  .heritage-experience .structure-part-card p { font-size: 12px; line-height: 1.5; }
+  .heritage-experience .structure-part-card h3 { font-size: 16px; margin-block: 5px; }
+  .heritage-experience .structure-hotspot {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
+  .heritage-experience .structure-hotspot-label { display: none; }
+  .heritage-experience .structure-hotspot-number {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    font-size: 11px;
+  }
+  .heritage-experience .structure-hotspot.is-left { left: 4px; }
+  .heritage-experience .structure-hotspot.is-right { right: 4px; }
+}
+@media (max-width: 760px) {
+  .heritage-experience .scan-experience .scan-bottom-hint {
+    width: max-content;
+    white-space: nowrap;
+  }
+}
