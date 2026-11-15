@@ -518,9 +518,15 @@ export function createExhibitArtifact(id: ExhibitId) {
 }
 
 // Visitor-only display furniture; artifact meshes and admin cases stay intact.
-function styleGalleryCase(model: THREE.Group) {
+function styleGalleryCase(model: THREE.Group, id: ExhibitId) {
   const displayCase = model.userData.displayCase as THREE.Group | undefined;
   if (!displayCase) return;
+  const artifact = model.userData.artifact as THREE.Group;
+  const artifactBounds = new THREE.Box3().setFromObject(artifact);
+  // Seat the actual mesh bottom on the slab, rather than its authored origin.
+  model.userData.galleryArtifactY =
+    artifact.position.y + pedestalTop - artifactBounds.min.y;
+  artifact.position.y = model.userData.galleryArtifactY;
   displayCase.traverse((object) => {
     if (
       !(object instanceof THREE.Mesh) ||
@@ -528,6 +534,7 @@ function styleGalleryCase(model: THREE.Group) {
     )
       return;
     const material = object.material;
+    if (material.transparent) object.castShadow = false;
     switch (material.color.getHex()) {
       case 0xe7e4dc:
         object.visible = false;
@@ -565,6 +572,54 @@ function styleGalleryCase(model: THREE.Group) {
     }),
     [0, 0.83, 0],
   );
+  if (id === "dagger") {
+    const mountMaterial = new THREE.MeshStandardMaterial({
+      color: 0x302820,
+      roughness: 0.7,
+      metalness: 0.3,
+    });
+    addMesh(
+      displayCase,
+      new THREE.BoxGeometry(0.3, 0.035, 0.3),
+      mountMaterial,
+      [0, 0.8775, -0.12],
+    );
+    addMesh(
+      displayCase,
+      new THREE.CylinderGeometry(0.025, 0.025, 1.4, 12),
+      mountMaterial,
+      [0, 1.56, -0.16],
+    );
+    for (const height of [1.28, 2.1]) {
+      addMesh(
+        displayCase,
+        new THREE.BoxGeometry(0.18, 0.025, 0.22),
+        mountMaterial,
+        [0, height, -0.08],
+      );
+    }
+  }
+  // A feathered contact patch anchors the base even on low-end shadow maps.
+  const shadowCanvas = document.createElement("canvas");
+  shadowCanvas.width = shadowCanvas.height = 128;
+  const context = shadowCanvas.getContext("2d")!;
+  const gradient = context.createRadialGradient(64, 64, 20, 64, 64, 64);
+  gradient.addColorStop(0, "rgba(15, 8, 4, 0.7)");
+  gradient.addColorStop(0.55, "rgba(15, 8, 4, 0.45)");
+  gradient.addColorStop(1, "rgba(15, 8, 4, 0)");
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, 128, 128);
+  const contactShadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(3.5, 3.1),
+    new THREE.MeshBasicMaterial({
+      map: new THREE.CanvasTexture(shadowCanvas),
+      transparent: true,
+      depthWrite: false,
+    }),
+  );
+  contactShadow.rotation.x = -Math.PI / 2;
+  contactShadow.position.y = -0.039;
+  model.userData.contactShadow = contactShadow;
 }
 
 function tagModel(group: THREE.Group, id: ExhibitId) {
@@ -619,6 +674,9 @@ export function InteractiveScene({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = alignToGallery;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.autoUpdate = !alignToGallery;
     renderer.domElement.className = "three-canvas";
     renderer.domElement.setAttribute(
       "aria-label",
@@ -627,13 +685,32 @@ export function InteractiveScene({
 
     container.appendChild(renderer.domElement);
 
-    scene.add(new THREE.HemisphereLight(0xe5e4d8, 0x343a32, 2));
+    scene.add(
+      new THREE.HemisphereLight(0xe5e4d8, 0x343a32, alignToGallery ? 1.6 : 2),
+    );
 
-    const keyLight = new THREE.DirectionalLight(0xffe0a4, 3);
-    keyLight.position.set(-4, 7, 5);
+    const keyLight = new THREE.DirectionalLight(
+      0xffe0a4,
+      alignToGallery ? 2.5 : 3,
+    );
+    if (alignToGallery) keyLight.position.set(-3, 12, 4);
+    else keyLight.position.set(-4, 7, 5);
+    if (alignToGallery) {
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(2048, 2048);
+      keyLight.shadow.camera.left = keyLight.shadow.camera.bottom = -16;
+      keyLight.shadow.camera.right = keyLight.shadow.camera.top = 16;
+      keyLight.shadow.camera.far = 50;
+      keyLight.shadow.normalBias = 0.025;
+      keyLight.shadow.bias = -0.0001;
+    }
     scene.add(keyLight);
 
-    const focusLight = new THREE.PointLight(0xd8bd82, 12, 8);
+    const focusLight = new THREE.PointLight(
+      0xd8bd82,
+      alignToGallery ? 5 : 12,
+      8,
+    );
     focusLight.position.set(0, 2, 1.2);
     scene.add(focusLight);
 
@@ -651,10 +728,23 @@ export function InteractiveScene({
 
     models.forEach((model, id) => {
       model.position.x = positions[id];
-      if (alignToGallery) styleGalleryCase(model);
+      if (alignToGallery) styleGalleryCase(model, id);
       tagModel(model, id);
       scene.add(model);
+      if (model.userData.contactShadow) scene.add(model.userData.contactShadow);
     });
+
+    const galleryFloor = alignToGallery
+      ? new THREE.Mesh(
+          new THREE.PlaneGeometry(80, 40),
+          new THREE.ShadowMaterial({ opacity: 0.28, depthWrite: false }),
+        )
+      : null;
+    if (galleryFloor) {
+      galleryFloor.rotation.x = -Math.PI / 2;
+      galleryFloor.receiveShadow = true;
+      scene.add(galleryFloor);
+    }
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enabled = !alignToGallery;
@@ -677,7 +767,7 @@ export function InteractiveScene({
       const isPortrait =
         window.innerWidth <= 900 && window.innerHeight > window.innerWidth;
       const wallCenters = isPortrait ? [0.22, 0.5, 0.78] : [0.24, 0.5, 0.76];
-      const floorY = window.innerHeight * (isPortrait ? 0.74 : 0.72);
+      const floorY = window.innerHeight * (isPortrait ? 0.76 : 0.75);
       const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
       const layoutRay = new THREE.Raycaster();
       const point = new THREE.Vector3();
@@ -740,6 +830,23 @@ export function InteractiveScene({
       exhibitIds.forEach((id, index) =>
         placeCase(models.get(id)!, index, sharedScale),
       );
+      models.forEach((model) => {
+        const shadow = model.userData.contactShadow as THREE.Mesh | undefined;
+        if (!shadow) return;
+        shadow.position.set(
+          model.position.x,
+          model.position.y - 0.039 * sharedScale,
+          model.position.z,
+        );
+        shadow.scale.setScalar(sharedScale);
+      });
+      if (galleryFloor) {
+        galleryFloor.position.y =
+          models.get("jar")!.position.y - 0.04 * sharedScale;
+        // Stop the receiver behind the cases; the photographed wall is not a floor.
+        galleryFloor.position.z = 20 - 1.4 * sharedScale;
+      }
+      renderer.shadowMap.needsUpdate = true;
     };
 
     const resize = () => {
@@ -853,7 +960,10 @@ export function InteractiveScene({
 
         const [localX, localY, localZ] = hotspotAnchors[id];
         const scale = model.scale.x;
-        const pedestalOffset = showDisplayCaseRef.current ? pedestalTop : 0;
+        const artifact = model.userData.artifact as THREE.Group | undefined;
+        const pedestalOffset = showDisplayCaseRef.current
+          ? (artifact?.position.y ?? pedestalTop)
+          : 0;
 
         const position = new THREE.Vector3(
           model.position.x + localX * scale,
@@ -969,7 +1079,12 @@ export function InteractiveScene({
         }
       });
 
-      materials.forEach((material) => material.dispose());
+      materials.forEach((material) => {
+        if (material instanceof THREE.MeshBasicMaterial)
+          material.map?.dispose();
+        material.dispose();
+      });
+      keyLight.shadow.dispose();
 
       renderer.dispose();
       renderer.domElement.remove();
@@ -992,7 +1107,11 @@ export function InteractiveScene({
 
       if (displayCase && artifact) {
         displayCase.visible = effectiveShowDisplayCase;
-        artifact.position.y = effectiveShowDisplayCase ? pedestalTop : 0;
+        artifact.position.y = effectiveShowDisplayCase
+          ? alignToGallery
+            ? model.userData.galleryArtifactY
+            : pedestalTop
+          : 0;
       }
     });
 
