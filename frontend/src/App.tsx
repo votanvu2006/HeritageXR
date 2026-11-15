@@ -1,16 +1,18 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useSyncExternalStore } from "react";
 import { InteractiveScene, type ExhibitId } from "./InteractiveScene";
 import { InteractiveStructureScene } from "./InteractiveStructureScene";
 import { exhibitInformation } from "./exhibitInformation";
 import { exhibitStories } from "./exhibitStories";
 import { CraftingVideo } from "./CraftingVideo";
 import { NarratedVideo } from "./NarratedVideo";
-import { QuizPanel, readDemoPoints } from "./QuizPanel";
+import { QuizPanel } from "./QuizPanel";
+import { readQuizProgress, subscribeQuizProgress } from "./quizProgress";
 import type { ExhibitChatContext } from "./Chatbot";
 import { PhuChatbot } from "./components/PhuChatbot";
 import { CameraPassthrough } from "./CameraPassthrough";
 import "./App.css";
 import "./HeritageExperience.css";
+import "./SpatialGlass.css";
 
 const RagSandbox = lazy(() => import("./components/RagSandbox"));
 
@@ -71,7 +73,8 @@ const contentFlow: ObjectSection[] = [
 function MuseumApp() {
   const [selectedId, setSelectedId] = useState<ExhibitId | null>(null);
   const [screen, setScreen] = useState<ExperienceScreen>("scan");
-  const [points, setPoints] = useState(readDemoPoints);
+  const quizProgress = useSyncExternalStore(subscribeQuizProgress, readQuizProgress);
+  const points = quizProgress.points;
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [storyVideoUnavailable, setStoryVideoUnavailable] = useState(false);
 
@@ -121,14 +124,6 @@ function MuseumApp() {
     setIsAssistantOpen(false);
   };
 
-  const handlePointsChange = (nextPoints: number) => {
-    setPoints(nextPoints);
-    window.localStorage.setItem(
-      "heritagexr-demo-points-v1",
-      String(nextPoints),
-    );
-  };
-
   const openObjectSection = (section: ObjectSection) => {
     setScreen(section);
     setIsAssistantOpen(false);
@@ -176,19 +171,7 @@ function MuseumApp() {
             <a
               href="/admin"
               aria-label="Mở trang quản trị"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                minHeight: "34px",
-                padding: "7px 11px",
-                border: "1px solid rgba(218, 190, 119, 0.5)",
-                borderRadius: "8px",
-                color: "#f1e3c1",
-                background: "rgba(14, 17, 15, 0.88)",
-                font: "inherit",
-                fontSize: "11px",
-                textDecoration: "none",
-              }}
+              className="spatial-admin-link"
             >
               Quản trị
             </a>
@@ -210,6 +193,7 @@ function MuseumApp() {
                 selectedId={null}
                 onSelect={handleSelectExhibit}
                 showDisplayCase
+                alignToGallery
               />
 
               <div className="scan-bottom-hint glass-surface">
@@ -434,9 +418,8 @@ function MuseumApp() {
                 {screen === "quiz" && (
                   <div className="spatial-quiz-content">
                     <QuizPanel
+                      key={`${selectedExhibit.id}-${quizProgress.day}`}
                       exhibitId={selectedExhibit.id}
-                      points={points}
-                      onPointsChange={handlePointsChange}
                     />
                   </div>
                 )}

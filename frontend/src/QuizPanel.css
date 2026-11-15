@@ -34,3 +34,12 @@
 .quiz-source:hover {
   color: #ffe7a3;
 }
+.quiz-completed {
+  padding: 18px;
+  border: 1px solid #cbb08452;
+  border-radius: 18px;
+  background: #f0dfc512;
+  line-height: 1.6;
+}
+.quiz-completed h3 { margin: 0; font-size: 18px; }
+.quiz-completed p { margin: 8px 0 0; }

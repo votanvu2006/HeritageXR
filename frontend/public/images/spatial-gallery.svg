@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" fill="none">
+  <defs>
+    <linearGradient id="back-wall" x1="800" y1="120" x2="800" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C5B9A5"/><stop offset=".48" stop-color="#D5CBB9"/><stop offset="1" stop-color="#AA9D89"/>
+    </linearGradient>
+    <linearGradient id="ceiling" x1="800" y1="0" x2="800" y2="150" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#302D29"/><stop offset="1" stop-color="#51493E"/>
+    </linearGradient>
+    <linearGradient id="left-wall" x1="0" y1="380" x2="240" y2="380" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#746B5E"/><stop offset="1" stop-color="#A89B87"/>
+    </linearGradient>
+    <linearGradient id="right-wall" x1="1360" y1="380" x2="1600" y2="380" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A89B87"/><stop offset="1" stop-color="#746B5E"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="800" y1="665" x2="800" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A89B85"/><stop offset=".45" stop-color="#8D7F6C"/><stop offset="1" stop-color="#665D52"/>
+    </linearGradient>
+    <linearGradient id="recess" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#857866" stop-opacity=".42"/><stop offset=".06" stop-color="#CFC2AD" stop-opacity=".08"/><stop offset=".94" stop-color="#CFC2AD" stop-opacity=".08"/><stop offset="1" stop-color="#857866" stop-opacity=".42"/>
+    </linearGradient>
+    <radialGradient id="wall-wash"><stop stop-color="#FFF1CF" stop-opacity=".65"/><stop offset=".65" stop-color="#FFE9BF" stop-opacity=".18"/><stop offset="1" stop-color="#FFE9BF" stop-opacity="0"/></radialGradient>
+    <radialGradient id="floor-wash"><stop stop-color="#F6D9A5" stop-opacity=".2"/><stop offset="1" stop-color="#F6D9A5" stop-opacity="0"/></radialGradient>
+    <radialGradient id="vignette"><stop offset=".45" stop-color="#28231D" stop-opacity="0"/><stop offset="1" stop-color="#28231D" stop-opacity=".3"/></radialGradient>
+    <filter id="soft-light"><feGaussianBlur stdDeviation="6"/></filter>
+  </defs>
+  <!-- Architecture only: the three interactive artifacts are rendered by the app. -->
+  <rect width="1600" height="1000" fill="#9F927E"/>
+  <path d="M0 0H1600L1360 145H240Z" fill="url(#ceiling)"/>
+  <path d="M0 0L240 145V665L0 880Z" fill="url(#left-wall)"/>
+  <path d="M1600 0L1360 145V665L1600 880Z" fill="url(#right-wall)"/>
+  <path d="M240 145H1360V670H240Z" fill="url(#back-wall)"/>
+  <!-- Three quiet wall bays give the existing exhibits an architectural rhythm. -->
+  <rect x="277" y="174" width="326" height="487" rx="2" fill="url(#recess)"/>
+  <rect x="637" y="174" width="326" height="487" rx="2" fill="url(#recess)"/>
+  <rect x="997" y="174" width="326" height="487" rx="2" fill="url(#recess)"/>
+  <g fill="url(#wall-wash)">
+    <ellipse cx="440" cy="354" rx="182" ry="305"/>
+    <ellipse cx="800" cy="354" rx="182" ry="305"/>
+    <ellipse cx="1160" cy="354" rx="182" ry="305"/>
+  </g>
+  <path d="M0 880L240 665H1360L1600 880V1000H0Z" fill="url(#floor)"/>
+  <g fill="url(#floor-wash)">
+    <ellipse cx="405" cy="765" rx="250" ry="95"/>
+    <ellipse cx="800" cy="765" rx="250" ry="95"/>
+    <ellipse cx="1195" cy="765" rx="250" ry="95"/>
+  </g>
+  <!-- Shadow gaps, restrained stone joints and recessed ceiling lighting. -->
+  <path d="M240 662H1360" stroke="#4B4135" stroke-opacity=".5" stroke-width="6"/>
+  <path d="M0 880L240 665M1600 880L1360 665" stroke="#504638" stroke-opacity=".35" stroke-width="3"/>
+  <path d="M603 665L485 1000M997 665L1115 1000M0 873H1600M0 963H1600" stroke="#E2D0B2" stroke-opacity=".13"/>
+  <path d="M240 145H1360" stroke="#FFE4B5" stroke-opacity=".55" stroke-width="3" filter="url(#soft-light)"/>
+  <path d="M240 145H1360" stroke="#E5C999" stroke-opacity=".5"/>
+  <path d="M300 108H1300M175 42H1425" stroke="#211E1A" stroke-width="5"/>
+  <g fill="#F8DCA7">
+    <rect x="425" y="105" width="30" height="5" rx="2.5"/>
+    <rect x="785" y="105" width="30" height="5" rx="2.5"/>
+    <rect x="1145" y="105" width="30" height="5" rx="2.5"/>
+  </g>
+  <rect width="1600" height="1000" fill="url(#vignette)"/>
+</svg>

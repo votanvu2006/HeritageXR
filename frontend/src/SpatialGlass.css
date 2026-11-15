@@ -1,0 +1,1721 @@
+/* Presentation-only skin, scoped to the visitor experience. */
+.camera-passthrough-shell:has(.scan-experience)::before {
+  background-size: 100% 100%;
+}
+.camera-passthrough-shell {
+  background: #581f16;
+}
+.camera-passthrough-shell::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background: #581f16 url("/images/museum-balanced-gallery.webp") center / cover
+    no-repeat;
+  pointer-events: none;
+  transition: opacity 260ms ease;
+}
+.camera-passthrough-shell:has(.camera-passthrough-video.is-active)::before {
+  opacity: 0;
+}
+.camera-passthrough-shade {
+  background: linear-gradient(180deg, #1e0e0b1f, transparent 35%, #1e0e0b30);
+}
+.heritage-experience,
+.heritage-experience *,
+.heritage-experience *::before,
+.heritage-experience *::after {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif !important;
+}
+.heritage-experience {
+  --spatial-secondary: #e8dfd1;
+  --spatial-glass: linear-gradient(135deg, #352921d9, #241c18d4);
+  --spatial-border: #cbb08452;
+  --spatial-button: #f0dfc51a;
+  --spatial-shadow: 0 14px 36px #2920152e, inset 0 1px 0 #fff1dc1f;
+  color: #fff;
+  color-scheme: dark;
+}
+.heritage-experience.spatial-app {
+  height: 100svh;
+  min-height: 600px;
+  padding: 24px 32px 28px;
+}
+.heritage-experience :is(button, a, textarea):focus-visible,
+.camera-toggle-button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+}
+.heritage-experience .glass-surface,
+.heritage-experience .structure-part-card,
+.heritage-experience .structure-hotspot-label {
+  border: 1px solid var(--spatial-border);
+  color: #fff;
+  background: var(--spatial-glass);
+  box-shadow: var(--spatial-shadow);
+  backdrop-filter: blur(28px) saturate(125%);
+  -webkit-backdrop-filter: blur(28px) saturate(125%);
+}
+.heritage-experience .spatial-header {
+  flex: 0 0 68px;
+  min-height: 68px;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 20px;
+  padding: 10px 24px;
+  border: 1px solid var(--spatial-border);
+  border-radius: 28px;
+  background: var(--spatial-glass) !important;
+  box-shadow: var(--spatial-shadow);
+  backdrop-filter: blur(28px) saturate(125%);
+  -webkit-backdrop-filter: blur(28px) saturate(125%);
+}
+.heritage-experience .heritage-brand {
+  gap: 4px;
+}
+.heritage-experience .heritage-brand strong {
+  color: #fff;
+  font-size: 21px;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  text-transform: none;
+}
+.heritage-experience .heritage-brand span {
+  color: var(--spatial-secondary);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+.heritage-experience .spatial-header-center {
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.heritage-experience .heritage-header-actions {
+  align-items: center;
+  gap: 10px;
+}
+.heritage-experience :is(.heritage-total-points, .spatial-admin-link) {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border: 1px solid #ffffff26;
+  border-radius: 24px;
+  color: #fff;
+  background: var(--spatial-button);
+  font-size: 13px;
+  letter-spacing: 0;
+  text-decoration: none;
+  text-transform: none;
+  white-space: nowrap;
+}
+.heritage-experience .section-label {
+  margin-bottom: 6px;
+  color: var(--spatial-secondary);
+  font-size: 10px;
+  font-weight: 550;
+  letter-spacing: 0.11em;
+}
+.heritage-experience .spatial-stage {
+  margin-top: 22px;
+}
+.heritage-experience .scan-guidance {
+  top: 18px;
+  left: 16px;
+  width: min(420px, calc(100% - 32px));
+  padding: 22px 24px;
+  border-radius: 28px;
+}
+.heritage-experience .scan-guidance strong {
+  color: #fff;
+  font-size: clamp(17px, 1.5vw, 21px);
+  font-weight: 600;
+  line-height: 1.35;
+  text-shadow: none;
+}
+.heritage-experience .scan-guidance p {
+  margin-top: 9px;
+  color: var(--spatial-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+  text-shadow: none;
+}
+.heritage-experience .scan-bottom-hint {
+  bottom: 8px;
+  padding: 14px 20px;
+  border-radius: 26px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.heritage-experience .exhibit-hotspot {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #ffffffa6;
+  color: #fff;
+  background: #ffffff30;
+  box-shadow:
+    0 0 0 6px #ffffff12,
+    0 6px 24px #151e2926;
+  backdrop-filter: blur(12px);
+}
+.heritage-experience .exhibit-hotspot .hotspot-marker {
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  box-shadow: 0 0 12px #ffffff4d;
+}
+.heritage-experience .exhibit-hotspot::after {
+  content: attr(aria-label);
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  width: max-content;
+  max-width: 225px;
+  padding: 10px 16px;
+  transform: translateX(-50%);
+  border: 1px solid #ffffff4d;
+  border-radius: 24px;
+  color: #fff;
+  background: #35231fef;
+  box-shadow: 0 8px 24px #11182726;
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.4;
+  pointer-events: none;
+}
+.heritage-experience .exhibit-hotspot:hover {
+  background: #ffffff66;
+  box-shadow:
+    0 0 0 8px #ffffff20,
+    0 6px 24px #151e2933;
+}
+.heritage-experience .object-experience-heading {
+  top: 0;
+  left: 50%;
+  width: min(872px, calc(100% - 32px));
+  max-width: none;
+  min-height: 96px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 20px;
+  padding: 18px 20px;
+  transform: translateX(-50%);
+  border-radius: 30px;
+}
+.heritage-experience .object-title-copy h1 {
+  color: #fff;
+  font-size: clamp(19px, 2vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.heritage-experience .object-title-copy p {
+  margin-top: 6px;
+  color: var(--spatial-secondary);
+  font-size: 12px;
+}
+.heritage-experience
+  :is(
+    .spatial-back-button,
+    .spatial-assistant-button,
+    .spatial-next-button,
+    .structure-cutaway-toggle
+  ) {
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1px solid #ffffff26;
+  border-radius: 26px;
+  color: #fff;
+  background: var(--spatial-button);
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1.3;
+  transition:
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+.heritage-experience
+  :is(.spatial-next-button, .spatial-assistant-button[aria-expanded="true"]) {
+  color: #3d3325;
+  background: #f7eddd;
+}
+.heritage-experience
+  :is(
+    .spatial-back-button,
+    .spatial-assistant-button,
+    .spatial-next-button,
+    .structure-cutaway-toggle
+  ):hover {
+  border-color: #ffffff80;
+  color: #3d3325;
+  background: #f7eddd;
+}
+/* Reserve model space between the existing heading and dock. */
+.heritage-experience .object-experience > .interactive-structure-scene {
+  top: 108px;
+  bottom: 172px;
+  height: auto;
+}
+.heritage-experience .object-experience .structure-scene-viewport {
+  overflow: visible;
+}
+.heritage-experience .object-experience .structure-cutaway-toggle {
+  top: auto;
+  right: auto;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #3d3325;
+  background: #f7eddd;
+  box-shadow: var(--spatial-shadow);
+  white-space: nowrap;
+}
+.heritage-experience .object-experience .structure-cutaway-toggle.is-active {
+  background: #ead8b8;
+}
+.heritage-experience .object-experience .structure-scene-footnote {
+  bottom: -56px;
+  left: 50%;
+  width: max-content;
+  max-width: min(600px, calc(100% - 24px));
+  padding: 0;
+  transform: translateX(-50%);
+  color: #fff;
+  background: transparent;
+  font-size: 10px;
+  text-align: center;
+  text-shadow: 0 1px 8px #30261d;
+  backdrop-filter: none;
+}
+.heritage-experience .object-action-dock {
+  bottom: 0;
+  width: min(620px, calc(100% - 32px));
+  padding: 15px 18px 12px;
+  border-radius: 30px;
+}
+.heritage-experience .object-action-dock > p {
+  margin: 0 0 7px;
+  color: var(--spatial-secondary);
+  font-size: 12px;
+}
+.heritage-experience .object-action-list {
+  gap: 10px;
+}
+.heritage-experience .object-action-button {
+  min-height: 62px;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 4px;
+  border: 1px solid transparent;
+  border-radius: 19px;
+  color: #fff;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 550;
+}
+.heritage-experience .object-action-button:hover {
+  border-color: #ffffff30;
+  background: #ffffff24;
+}
+.heritage-experience .object-action-icon {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 0;
+  color: #fff;
+  font-size: 17px;
+}
+.heritage-experience .structure-hotspot {
+  width: min(220px, calc(50% - 26px));
+  min-height: 48px;
+  font-size: 13px;
+}
+.heritage-experience .structure-hotspot-number {
+  width: 34px;
+  height: 34px;
+  flex-basis: 34px;
+  border-color: #fff;
+  color: #3d3325;
+  background: #fff;
+  box-shadow: none;
+  font-size: 11px;
+}
+.heritage-experience .structure-hotspot-label {
+  padding: 13px 15px;
+  box-shadow: none;
+}
+.heritage-experience .structure-hotspot.is-active .structure-hotspot-label {
+  border-color: #fff;
+  background: #ffffff40;
+  box-shadow: none;
+}
+.heritage-experience .structure-scene-connector-line {
+  stroke: #fff;
+  filter: none;
+}
+.heritage-experience .structure-scene-connector-endpoint {
+  fill: #fff;
+  stroke: #ffffff60;
+  filter: none;
+}
+.heritage-experience .object-experience .structure-part-card {
+  right: 20px;
+  bottom: 10px;
+  width: 310px;
+  padding: 20px;
+  border-radius: 24px;
+  background: #30211eeb;
+}
+.heritage-experience .structure-scene-eyebrow {
+  color: var(--spatial-secondary);
+  font-size: 10px;
+}
+.heritage-experience .structure-part-card h3 {
+  color: #fff;
+  font-size: 19px;
+}
+.heritage-experience .structure-part-card p {
+  color: var(--spatial-secondary);
+  font-size: 13px;
+  line-height: 1.55;
+}
+/* The original tab, video, narration, quiz and chatbot components are untouched. */
+.heritage-experience .content-experience {
+  padding: 14px 24px;
+  background: transparent;
+}
+.heritage-experience .content-glass-panel {
+  width: min(1104px, 100%);
+  max-height: 100%;
+  gap: 24px;
+  padding: clamp(22px, 3vw, 36px);
+  border-radius: 36px;
+  color: #fff;
+  background: #30211eeb;
+  box-shadow: var(--spatial-shadow);
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff50 transparent;
+}
+.heritage-experience .content-experience-header {
+  gap: 24px;
+  padding-bottom: 22px;
+  border-color: #ffffff26;
+}
+.heritage-experience .content-experience-header h1 {
+  color: #fff;
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.heritage-experience .spatial-information-content {
+  width: 100%;
+  max-width: none;
+  gap: 22px;
+}
+.heritage-experience .spatial-information-meta {
+  gap: 12px;
+}
+.heritage-experience .spatial-information-meta span {
+  padding: 12px 18px;
+  border-color: #ffffff26;
+  color: #fff;
+  background: #ffffff14;
+  font-size: 14px;
+}
+.heritage-experience .spatial-information-overview {
+  color: #fff;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 500;
+  line-height: 1.5;
+  text-shadow: none;
+}
+.heritage-experience .spatial-information-facts {
+  gap: 16px;
+  color: #f0f2f8;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.heritage-experience .spatial-information-facts li::marker {
+  color: #fff;
+}
+.heritage-experience :is(.information-note, .heritage-3d-note) {
+  padding: 14px 18px;
+  border-left: 2px solid #ffffff80;
+  border-radius: 0 12px 12px 0;
+  color: #e0e4ee;
+  background: #ffffff0a;
+  font-size: 13px;
+}
+.heritage-experience
+  :is(
+    .information-source,
+    .spatial-story-sources a,
+    .crafting-video-source,
+    .quiz-source
+  ) {
+  color: #f3e4c5;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.heritage-experience .spatial-story-content {
+  gap: 20px;
+}
+.heritage-experience :is(.spatial-story-copy h2, .crafting-video-heading h2) {
+  color: #fff;
+  font-size: 23px;
+  font-weight: 600;
+}
+.heritage-experience
+  :is(.spatial-story-copy p, .crafting-video-heading p, .crafting-video-note) {
+  color: #e6e9f0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.heritage-experience .spatial-story-copy .spatial-story-description {
+  color: #d9dee8;
+  font-size: 12px;
+}
+.heritage-experience :is(.spatial-story-video, .crafting-video) {
+  border: 1px solid #ffffff30;
+  border-radius: 22px;
+  background: #29231d;
+}
+.heritage-experience .spatial-story-video video {
+  max-height: 48svh;
+}
+.heritage-experience .narrated-video-script {
+  color: #e6e9f0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.heritage-experience .spatial-quiz-content .quiz-panel {
+  max-width: 850px;
+  padding: 24px;
+  border: 1px solid #ffffff26;
+  border-radius: 26px;
+  background: #ffffff08;
+  color: #fff;
+}
+.heritage-experience .quiz-panel-heading h2 {
+  color: #fff;
+  font-size: 23px;
+  font-weight: 600;
+}
+.heritage-experience .quiz-points-chip {
+  padding: 10px 16px;
+  border-color: #ffffff30;
+  color: #fff;
+  background: #ffffff14;
+  font-size: 13px;
+}
+.heritage-experience .quiz-progress {
+  margin-top: 12px;
+  color: #d9dfeb;
+  font-size: 12px;
+}
+.heritage-experience .quiz-question {
+  margin: 10px 0;
+  color: #fff;
+  font-size: 23px;
+  font-weight: 550;
+}
+.heritage-experience .quiz-options {
+  gap: 12px;
+}
+.heritage-experience .quiz-option {
+  min-height: 56px;
+  gap: 16px;
+  padding: 14px 18px;
+  border: 1px solid #ffffff30;
+  border-radius: 22px;
+  color: #fff;
+  background: #ffffff14;
+  font-size: 16px;
+}
+.heritage-experience .quiz-option > span {
+  width: 28px;
+  height: 28px;
+  flex-basis: 28px;
+  border-color: #ffffff50;
+  color: #fff;
+  font-size: 12px;
+}
+.heritage-experience .quiz-option:hover:not(:disabled) {
+  border-color: #fff;
+  background: #ffffff26;
+}
+.heritage-experience .quiz-option.is-correct {
+  border-color: #a7e3c5;
+  background: #285b49b3;
+}
+.heritage-experience .quiz-option.is-wrong {
+  border-color: #ffb3b3;
+  background: #783f45b3;
+}
+.heritage-experience .quiz-feedback {
+  border-radius: 18px;
+  font-size: 14px;
+}
+.heritage-experience .quiz-feedback p {
+  color: inherit;
+}
+.heritage-experience .quiz-reward-box {
+  margin-top: 10px;
+  padding: 18px;
+  border-color: #ffffff26;
+  border-radius: 22px;
+  background: #ffffff0a;
+}
+.heritage-experience .quiz-reward-box strong {
+  color: #fff;
+  font-size: 14px;
+}
+.heritage-experience .quiz-reward-box p {
+  color: #e8dfd1;
+  font-size: 12px;
+}
+.heritage-experience
+  :is(
+    .quiz-next-button,
+    .quiz-reward-box button,
+    .crafting-video-actions button
+  ) {
+  min-height: 44px;
+  padding: 12px 18px;
+  border: 1px solid #ffffff40;
+  border-radius: 24px;
+  color: #fff;
+  background: #ffffff1f;
+  font-size: 13px;
+}
+.heritage-experience .quiz-demo-note {
+  color: #e8dfd1;
+  font-size: 12px;
+}
+.heritage-experience .object-experience .spatial-assistant-panel {
+  top: 120px;
+  right: 0;
+  bottom: 124px;
+  width: min(392px, calc(100% - 24px));
+  max-height: none;
+  grid-template-rows: auto minmax(0, 1fr);
+  border-radius: 30px;
+  background: #30211ef2;
+}
+.heritage-experience .spatial-assistant-panel > header {
+  padding: 20px 20px 14px;
+  border-color: #ffffff26;
+}
+.heritage-experience .spatial-assistant-panel > header strong {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+.heritage-experience .spatial-assistant-panel > header button {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-color: #ffffff30;
+  background: #ffffff14;
+  color: #fff;
+  font-size: 24px;
+}
+.heritage-experience .phu-chat-embedded .assistant-panel.chat-panel {
+  padding: 10px 20px 16px;
+}
+.heritage-experience
+  :is(
+    .chat-context,
+    .chat-empty p,
+    .chat-citation span,
+    .chat-citation blockquote,
+    .chat-compose label,
+    .voice-note
+  ) {
+  color: #e8dfd1;
+}
+.heritage-experience .chat-dot {
+  background: #c1e3cf;
+}
+.heritage-experience .chat-empty h3 {
+  color: #fff;
+  font-size: 19px;
+  font-weight: 550;
+}
+.heritage-experience .assistant-placeholder-icon {
+  border-color: #ffffff40;
+  color: #fff;
+  background: #ffffff14;
+}
+.heritage-experience
+  :is(
+    .chat-suggestions button,
+    .chat-message,
+    .chat-compose textarea,
+    .voice-hold,
+    .voice-toggle,
+    .chat-working button
+  ) {
+  border: 1px solid #ffffff30;
+  border-radius: 18px;
+  color: #fff;
+  background: #ffffff12;
+}
+.heritage-experience .chat-suggestions button:hover {
+  border-color: #ffffff80;
+  background: #ffffff26;
+}
+.heritage-experience .chat-message.is-user {
+  border-color: #ffffff30;
+  background: #ffffff24;
+}
+.heritage-experience .chat-speaker {
+  color: #eee3d2;
+}
+.heritage-experience .chat-sources,
+.heritage-experience .chat-compose {
+  border-color: #ffffff26;
+}
+.heritage-experience :is(.chat-sources summary, .chat-citation a) {
+  color: #f3e4c5;
+}
+.heritage-experience .chat-compose textarea {
+  padding: 12px 14px;
+  font-size: 15px;
+}
+.heritage-experience .chat-compose textarea::placeholder {
+  color: #cfc2ae;
+}
+.heritage-experience .chat-send {
+  min-height: 44px;
+  border: 0;
+  border-radius: 24px;
+  color: #3d3325;
+  background: #fff;
+}
+.heritage-experience .chat-send:hover:not(:disabled) {
+  background: #ead8b8;
+}
+.heritage-experience .voice-hold.is-recording {
+  border-color: #ffc1bc;
+  background: #753735;
+  color: #fff;
+}
+.heritage-experience .chat-working {
+  color: #e8dfd1;
+}
+.camera-passthrough-control {
+  top: auto;
+  right: auto;
+  bottom: max(28px, env(safe-area-inset-bottom));
+  left: 32px;
+  z-index: 19;
+  justify-items: start;
+  max-width: min(280px, calc(100vw - 32px));
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.camera-toggle-button {
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1px solid #ffffff50;
+  border-radius: 26px;
+  color: #fff;
+  background: #432c25eb;
+  box-shadow: 0 12px 32px #11182726;
+  backdrop-filter: blur(28px);
+  font-size: 13px;
+}
+.camera-toggle-button:hover,
+.camera-toggle-button.is-active {
+  border-color: #ffffffa6;
+  background: #ffffff40;
+}
+.camera-passthrough-caption {
+  padding: 8px 12px;
+  border-color: #ffffff30;
+  border-radius: 16px;
+  color: #fff;
+  background: #30211ef2;
+  font-size: 11px;
+  text-align: left;
+}
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .heritage-experience .glass-surface {
+    background: #30211ef2;
+  }
+}
+@media (max-width: 1000px) and (min-width: 761px) {
+  .heritage-experience.spatial-app {
+    padding: 18px;
+  }
+  .heritage-experience .spatial-header {
+    padding-inline: 18px;
+  }
+  .heritage-experience .spatial-header-center {
+    max-width: 220px;
+    font-size: 12px;
+  }
+  .heritage-experience .object-experience-heading {
+    width: calc(100% - 16px);
+  }
+  .heritage-experience .object-action-dock {
+    width: 580px;
+  }
+  .camera-passthrough-control {
+    left: 18px;
+    bottom: 145px;
+  }
+}
+@media (max-width: 760px) {
+  .heritage-experience.spatial-app {
+    min-height: 520px;
+    padding: 12px 12px 82px;
+  }
+  .heritage-experience .spatial-header {
+    min-height: 64px;
+    flex-basis: 64px;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 24px;
+  }
+  .heritage-experience .heritage-brand strong {
+    font-size: 18px;
+  }
+  .heritage-experience .heritage-brand span {
+    font-size: 7px;
+  }
+  .heritage-experience .heritage-header-actions {
+    gap: 6px;
+  }
+  .heritage-experience :is(.heritage-total-points, .spatial-admin-link) {
+    min-height: 36px;
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  .heritage-experience .spatial-stage {
+    margin-top: 14px;
+  }
+  .heritage-experience .scan-guidance {
+    top: 0;
+    left: 0;
+    width: min(330px, 100%);
+    padding: 16px 18px;
+    border-radius: 24px;
+  }
+  .heritage-experience .scan-guidance strong {
+    font-size: 16px;
+  }
+  .heritage-experience .scan-guidance p {
+    font-size: 12px;
+  }
+  .heritage-experience .scan-bottom-hint {
+    bottom: 0;
+    width: calc(100% - 16px);
+    max-width: none;
+    padding: 11px 14px;
+    font-size: 10px;
+  }
+  .heritage-experience .exhibit-hotspot {
+    width: 40px;
+    height: 40px;
+  }
+  .heritage-experience .exhibit-hotspot::after {
+    max-width: 105px;
+    padding: 7px 9px;
+    border-radius: 16px;
+    font-size: 9px;
+  }
+  .heritage-experience .object-experience-heading {
+    width: 100%;
+    min-height: 92px;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 14px 12px;
+    border-radius: 24px;
+  }
+  .heritage-experience .object-title-copy .section-label {
+    font-size: 8px;
+    letter-spacing: 0.07em;
+  }
+  .heritage-experience .object-title-copy h1 {
+    font-size: 17px;
+    white-space: normal;
+    line-height: 1.2;
+  }
+  .heritage-experience .object-title-copy p {
+    font-size: 10px;
+  }
+  .heritage-experience
+    :is(.spatial-back-button, .spatial-assistant-button, .spatial-next-button) {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  .heritage-experience .object-experience-heading .spatial-back-button {
+    width: 44px;
+    overflow: hidden;
+    color: transparent;
+    font-size: 0;
+  }
+  .heritage-experience .object-experience-heading .spatial-back-button::before {
+    content: "←";
+    color: #fff;
+    font-size: 20px;
+  }
+  .heritage-experience
+    .object-experience-heading
+    .spatial-back-button:hover::before {
+    color: #3d3325;
+  }
+  .heritage-experience .object-experience > .interactive-structure-scene {
+    top: 100px;
+    bottom: 164px;
+  }
+  .heritage-experience .object-experience .structure-cutaway-toggle {
+    top: auto;
+    right: auto;
+    bottom: -30px;
+    left: 50%;
+    min-height: 44px;
+    padding: 10px 18px;
+    font-size: 12px;
+  }
+  .heritage-experience .object-experience .structure-scene-footnote {
+    bottom: -51px;
+    max-width: calc(100% - 20px);
+    font-size: 8px;
+  }
+  .heritage-experience .object-action-dock {
+    bottom: 0;
+    width: 100%;
+    padding: 12px 10px 8px;
+    border-radius: 26px;
+  }
+  .heritage-experience .object-action-dock > p {
+    font-size: 11px;
+  }
+  .heritage-experience .object-action-list {
+    gap: 4px;
+  }
+  .heritage-experience .object-action-button {
+    min-height: 58px;
+    gap: 6px;
+    padding: 8px 2px;
+    border-radius: 16px;
+    font-size: 11px;
+  }
+  .heritage-experience .structure-hotspot {
+    width: min(160px, calc(50% - 12px));
+    gap: 5px;
+    font-size: 10px;
+  }
+  .heritage-experience .structure-hotspot-number {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+    font-size: 9px;
+  }
+  .heritage-experience .structure-hotspot-label {
+    padding: 10px;
+  }
+  .heritage-experience .object-experience .structure-part-card {
+    right: 8px;
+    bottom: 12px;
+    width: min(270px, calc(100% - 16px));
+    padding: 14px 16px;
+    border-radius: 20px;
+  }
+  .heritage-experience .structure-part-card h3 {
+    font-size: 16px;
+  }
+  .heritage-experience .structure-part-card p {
+    font-size: 11px;
+  }
+  .heritage-experience .content-experience {
+    padding: 0;
+    place-items: start center;
+  }
+  .heritage-experience .content-glass-panel {
+    max-height: 100%;
+    gap: 20px;
+    padding: 20px 18px;
+    border-radius: 28px;
+  }
+  .heritage-experience .content-experience-header {
+    gap: 14px;
+    padding-bottom: 16px;
+  }
+  .heritage-experience .content-experience-header h1 {
+    font-size: 24px;
+  }
+  .heritage-experience .spatial-information-meta span {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+  .heritage-experience .spatial-information-overview {
+    font-size: 19px;
+  }
+  .heritage-experience .spatial-information-facts {
+    gap: 14px;
+    font-size: 14px;
+  }
+  .heritage-experience :is(.spatial-story-copy h2, .crafting-video-heading h2) {
+    font-size: 21px;
+  }
+  .heritage-experience
+    :is(
+      .spatial-story-copy p,
+      .crafting-video-heading p,
+      .crafting-video-note
+    ) {
+    font-size: 14px;
+  }
+  .heritage-experience .spatial-story-video video {
+    max-height: 35svh;
+  }
+  .heritage-experience .spatial-quiz-content .quiz-panel {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .heritage-experience .quiz-question {
+    font-size: 19px;
+  }
+  .heritage-experience .quiz-option {
+    font-size: 15px;
+  }
+  .heritage-experience .quiz-reward-box {
+    grid-template-columns: 1fr;
+  }
+  .heritage-experience .object-experience .spatial-assistant-panel {
+    top: 106px;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    border-radius: 28px;
+  }
+  .heritage-experience .spatial-assistant-panel > header {
+    padding: 16px 18px 12px;
+  }
+  .heritage-experience .phu-chat-embedded .assistant-panel.chat-panel {
+    padding: 8px 18px 14px;
+  }
+  .heritage-experience .chat-compose textarea {
+    font-size: 16px;
+  }
+  .camera-passthrough-control {
+    bottom: max(16px, env(safe-area-inset-bottom));
+    left: 16px;
+    max-width: calc(100vw - 32px);
+  }
+  .camera-toggle-button {
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+  .camera-passthrough-caption {
+    max-width: min(280px, calc(100vw - 32px));
+    font-size: 10px;
+  }
+}
+@media (max-height: 700px) and (min-width: 761px) {
+  .heritage-experience.spatial-app {
+    padding: 12px 20px 16px;
+  }
+  .heritage-experience .spatial-header {
+    min-height: 60px;
+    flex-basis: 60px;
+  }
+  .heritage-experience .spatial-stage {
+    margin-top: 14px;
+  }
+  .heritage-experience .object-experience-heading {
+    min-height: 78px;
+    padding: 10px 16px;
+  }
+  .heritage-experience .object-experience > .interactive-structure-scene {
+    top: 88px;
+    bottom: 156px;
+  }
+  .heritage-experience .object-action-dock {
+    padding: 10px 14px 8px;
+  }
+  .heritage-experience .object-action-button {
+    min-height: 54px;
+  }
+  .heritage-experience .object-experience .spatial-assistant-panel {
+    top: 90px;
+    bottom: 110px;
+  }
+  .camera-passthrough-control {
+    left: 20px;
+    bottom: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .heritage-experience *,
+  .camera-passthrough-shell::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Monochrome versions of the approved dock icons; original labels remain. */
+.heritage-experience .object-action-icon {
+  font-size: 0;
+}
+.heritage-experience .object-action-icon::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  background: currentColor;
+  mask: var(--action-icon) center / contain no-repeat;
+  -webkit-mask: var(--action-icon) center / contain no-repeat;
+}
+.heritage-experience .object-action-button:nth-child(1) {
+  --action-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Cpath%20d%3D%22M12%2011v6M12%207h.01%22%2F%3E%3C%2Fsvg%3E");
+}
+.heritage-experience .object-action-button:nth-child(2) {
+  --action-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m9%205%2011%207-11%207Z%22%2F%3E%3C%2Fsvg%3E");
+}
+.heritage-experience .object-action-button:nth-child(3) {
+  --action-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m5%2020%2012-12M14%204l6%206M12%206l6-3%203%206M4%2015l5%205%22%2F%3E%3C%2Fsvg%3E");
+}
+.heritage-experience .object-action-button:nth-child(4) {
+  --action-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m12%202%202.8%206.7L22%2012l-7.2%203.3L12%2022l-2.8-6.7L2%2012l7.2-3.3Z%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* Empty space in the floating camera wrapper must not intercept the dock. */
+.camera-passthrough-control {
+  pointer-events: none;
+}
+.camera-passthrough-control .camera-toggle-button {
+  pointer-events: auto;
+}
+@media (min-width: 1001px) and (max-width: 1180px) {
+  .camera-passthrough-control {
+    max-width: 160px;
+  }
+  .camera-passthrough-caption {
+    max-width: 160px;
+  }
+}
+@media (min-width: 761px) and (max-width: 1000px) {
+  .camera-passthrough-control {
+    bottom: 170px;
+    max-width: 180px;
+  }
+}
+
+/* Keep the viewport fixed in short landscape windows; content panels scroll
+   internally instead of leaving their headings above the browser viewport. */
+.heritage-experience.spatial-app {
+  min-height: 0;
+}
+.heritage-experience .spatial-assistant-button {
+  color: #3d3325;
+  background: #f7eddd;
+}
+.heritage-experience .chat-send > span {
+  font-size: 0;
+}
+.heritage-experience .chat-send > span::after {
+  content: " ↑";
+  font-size: 16px;
+}
+@media (max-height: 500px) and (min-width: 761px) {
+  .heritage-experience.spatial-app {
+    padding: 8px 16px;
+  }
+  .heritage-experience .spatial-header {
+    flex-basis: 52px;
+    min-height: 52px;
+    padding-block: 6px;
+  }
+  .heritage-experience .spatial-stage {
+    margin-top: 8px;
+  }
+  .heritage-experience .object-experience-heading {
+    min-height: 64px;
+    padding: 8px 14px;
+  }
+  .heritage-experience .object-title-copy p {
+    margin-top: 2px;
+  }
+  .heritage-experience .object-experience > .interactive-structure-scene {
+    top: 72px;
+    bottom: 138px;
+  }
+  .heritage-experience .object-action-dock {
+    padding: 7px 12px;
+  }
+  .heritage-experience .object-action-dock > p {
+    margin-bottom: 2px;
+    font-size: 10px;
+  }
+  .heritage-experience .object-action-button {
+    min-height: 46px;
+    padding: 4px;
+    gap: 3px;
+    font-size: 11px;
+  }
+  .heritage-experience .content-experience {
+    padding-block: 0;
+  }
+  .heritage-experience .content-glass-panel {
+    padding: 20px;
+  }
+  .camera-passthrough-control {
+    bottom: 110px;
+    left: 16px;
+    max-width: 180px;
+  }
+  .heritage-experience .object-experience .spatial-assistant-panel {
+    top: 72px;
+    bottom: 0;
+  }
+  .heritage-experience .phu-chat-embedded .assistant-panel.chat-panel {
+    overflow-y: auto;
+  }
+  .heritage-experience .chat-messages {
+    flex: 0 0 60px;
+  }
+}
+
+/* Compact spatial layout: let the heading, viewer and dock share actual grid
+   rows instead of positioning footer controls outside the viewer with offsets. */
+.heritage-experience.spatial-app {
+  padding: 16px 24px 20px;
+}
+.heritage-experience .spatial-header {
+  flex-basis: 56px;
+  min-height: 56px;
+  padding: 8px 20px;
+  border-radius: 24px;
+}
+.heritage-experience .heritage-brand strong {
+  font-size: 19px;
+}
+.heritage-experience :is(.heritage-total-points, .spatial-admin-link) {
+  min-height: 36px;
+  padding: 8px 14px;
+  font-size: 12px;
+}
+.heritage-experience .spatial-stage {
+  margin-top: 16px;
+}
+.heritage-experience .scan-guidance {
+  width: min(350px, calc(100% - 32px));
+  padding: 16px 18px;
+  border-radius: 24px;
+}
+.heritage-experience .scan-guidance strong {
+  font-size: 18px;
+}
+.heritage-experience .scan-guidance p {
+  font-size: 12px;
+}
+.heritage-experience .object-experience {
+  display: grid;
+  grid-template: auto minmax(0, 1fr) auto / minmax(0, 1fr);
+  gap: 14px 20px;
+}
+.heritage-experience .object-experience-heading {
+  position: relative;
+  inset: auto;
+  grid-area: 1 / 1;
+  justify-self: center;
+  width: min(680px, 100%);
+  min-height: 74px;
+  padding: 12px 16px;
+  gap: 16px;
+  border-radius: 24px;
+  transform: none;
+}
+.heritage-experience .object-title-copy .section-label {
+  margin-bottom: 4px;
+  font-size: 9px;
+}
+.heritage-experience .object-title-copy h1 {
+  font-size: clamp(18px, 1.6vw, 22px);
+  line-height: 1.25;
+}
+.heritage-experience .object-title-copy p {
+  margin-top: 4px;
+  font-size: 11px;
+}
+.heritage-experience
+  .object-experience-heading
+  :is(.spatial-back-button, .spatial-assistant-button) {
+  min-height: 44px;
+  padding: 10px 14px;
+  font-size: 12px;
+}
+.heritage-experience .object-experience > .interactive-structure-scene {
+  position: relative;
+  inset: auto;
+  grid-area: 2 / 1;
+  min-height: 0;
+  height: 100%;
+}
+.heritage-experience .object-experience .structure-scene-viewport {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  row-gap: 8px;
+  overflow: hidden;
+}
+.heritage-experience .object-experience .structure-cutaway-toggle {
+  position: relative;
+  inset: auto;
+  grid-row: 2;
+  justify-self: center;
+  align-self: end;
+  min-height: 44px;
+  padding: 10px 18px;
+  margin: 0;
+  transform: none;
+  font-size: 12px;
+}
+.heritage-experience .object-experience .structure-scene-footnote {
+  position: relative;
+  inset: auto;
+  grid-row: 3;
+  justify-self: center;
+  width: fit-content;
+  max-width: min(720px, calc(100% - 24px));
+  margin: 0;
+  transform: none;
+  font-size: 10px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.heritage-experience .object-action-dock {
+  position: relative;
+  inset: auto;
+  grid-area: 3 / 1;
+  justify-self: center;
+  width: min(520px, 100%);
+  padding: 10px 12px;
+  border-radius: 24px;
+  transform: none;
+}
+.heritage-experience .object-action-dock > p {
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+.heritage-experience .object-action-list {
+  gap: 6px;
+}
+.heritage-experience .object-action-button {
+  min-height: 52px;
+  padding: 6px 4px;
+  gap: 5px;
+  font-size: 12px;
+}
+.heritage-experience .object-action-icon,
+.heritage-experience .object-action-icon::before {
+  width: 21px;
+  height: 21px;
+}
+.heritage-experience .object-experience .structure-part-card {
+  bottom: 82px;
+  width: min(280px, calc(100% - 32px));
+  max-height: calc(100% - 110px);
+  overflow-y: auto;
+  padding: 16px 18px;
+  border-radius: 22px;
+}
+.heritage-experience .structure-part-card h3 {
+  font-size: 17px;
+}
+.heritage-experience .structure-part-card p {
+  font-size: 12px;
+}
+/* Opening the existing AI guide gives it its own column on wide displays. */
+.heritage-experience .object-experience:has(.spatial-assistant-panel) {
+  grid-template-columns: minmax(0, 1fr) 360px;
+}
+.heritage-experience
+  .object-experience:has(.spatial-assistant-panel)
+  > .object-experience-heading {
+  grid-column: 1 / -1;
+}
+.heritage-experience .object-experience .spatial-assistant-panel {
+  position: relative;
+  inset: auto;
+  grid-area: 2 / 2 / 4 / 3;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  min-height: 0;
+  border-radius: 26px;
+}
+.heritage-experience .spatial-assistant-panel > header {
+  padding: 16px 18px 12px;
+}
+.heritage-experience .spatial-assistant-panel > header strong {
+  font-size: 17px;
+}
+.camera-passthrough-control {
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 24px;
+  max-width: min(220px, calc((100vw - 568px) / 2));
+}
+.camera-toggle-button {
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 12px;
+}
+.camera-passthrough-caption {
+  max-width: 100%;
+  font-size: 10px;
+}
+@media (max-width: 900px) {
+  .heritage-experience.spatial-app {
+    padding: 12px 12px 94px;
+  }
+  .heritage-experience .spatial-stage {
+    margin-top: 12px;
+  }
+  .heritage-experience .object-experience {
+    row-gap: 12px;
+  }
+  .heritage-experience .object-experience-heading {
+    width: min(640px, 100%);
+    gap: 10px;
+    padding: 12px;
+  }
+  .heritage-experience .object-experience:has(.spatial-assistant-panel) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .heritage-experience .object-experience .spatial-assistant-panel {
+    position: absolute;
+    inset: 86px 0 0;
+    grid-area: auto;
+    width: min(392px, 100%);
+    height: auto;
+    margin-left: auto;
+  }
+  .camera-passthrough-control {
+    bottom: max(14px, env(safe-area-inset-bottom));
+    left: 16px;
+    max-width: calc(100vw - 32px);
+  }
+  .camera-passthrough-caption {
+    max-width: 280px;
+  }
+}
+@media (max-width: 760px) {
+  .heritage-experience .spatial-header {
+    flex-basis: 56px;
+    min-height: 56px;
+    padding: 8px 12px;
+  }
+  .heritage-experience .heritage-brand strong {
+    font-size: 17px;
+  }
+  .heritage-experience .heritage-header-actions {
+    gap: 5px;
+  }
+  .heritage-experience :is(.heritage-total-points, .spatial-admin-link) {
+    padding: 8px 9px;
+    font-size: 10px;
+  }
+  .heritage-experience .object-experience-heading {
+    min-height: 78px;
+  }
+  .heritage-experience .object-title-copy h1 {
+    font-size: 16px;
+    white-space: normal;
+  }
+  .heritage-experience .object-title-copy p {
+    font-size: 10px;
+  }
+  .heritage-experience .object-experience-heading .spatial-back-button {
+    padding-inline: 0;
+  }
+  .heritage-experience .object-experience .spatial-assistant-panel {
+    width: 100%;
+  }
+  .heritage-experience .object-action-dock {
+    padding: 9px 8px;
+  }
+  .heritage-experience .object-action-button {
+    min-height: 50px;
+    font-size: 11px;
+  }
+  .heritage-experience .object-experience .structure-scene-footnote {
+    font-size: 9px;
+  }
+}
+@media (max-height: 500px) {
+  .heritage-experience .object-experience {
+    grid-template-rows: auto minmax(180px, 1fr) auto;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+  .heritage-experience .object-experience-heading {
+    min-height: 64px;
+    padding-block: 8px;
+  }
+  .heritage-experience .object-title-copy .section-label {
+    font-size: 8px;
+  }
+  .heritage-experience .object-title-copy h1 {
+    font-size: 17px;
+  }
+}
+
+.heritage-experience .object-experience .structure-part-card {
+  bottom: calc(var(--structure-footer-height, 82px) + 12px);
+  max-height: calc(100% - var(--structure-footer-height, 82px) - 24px);
+}
+
+/* The overview is a stationary display; rotation belongs to the object view. */
+.heritage-experience .scan-experience .three-canvas {
+  cursor: pointer;
+  touch-action: pan-y;
+}
+.heritage-experience .scan-experience .exhibit-hotspot {
+  border-color: #e1c59399;
+  background: #34271da6;
+  box-shadow:
+    0 0 0 5px #d7b57912,
+    0 5px 18px #180d0933;
+}
+.heritage-experience .scan-experience .exhibit-hotspot::after {
+  border-color: #cbb08466;
+  color: #f6ebd9;
+  background: #30231de8;
+}
+.heritage-experience .scan-experience .scan-guidance {
+  top: 0;
+  left: 50%;
+  width: min(540px, calc(100% - 24px));
+  padding: 12px 18px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.heritage-experience .scan-experience .scan-guidance strong {
+  font-size: 16px;
+}
+.heritage-experience .scan-experience .scan-guidance p {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+  .camera-passthrough-shell:has(.scan-experience)::before {
+    background-image: url("/images/museum-balanced-gallery-portrait.webp");
+  }
+  .heritage-experience .scan-experience .exhibit-hotspot::after {
+    max-width: min(150px, 24vw);
+  }
+}
+
+/* Compact touch targets retain the original hotspot interaction. */
+.heritage-experience .scan-experience .exhibit-hotspot {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+@media (max-width: 760px) {
+  .heritage-experience .scan-experience .exhibit-hotspot {
+    width: 44px;
+    height: 44px;
+  }
+}
+@media (max-height: 500px) and (min-width: 761px) {
+  .heritage-experience.spatial-app:has(.scan-experience) {
+    padding-bottom: 80px;
+  }
+  .heritage-experience .scan-experience .scan-bottom-hint {
+    position: fixed;
+    right: 16px;
+    bottom: 14px;
+    left: auto;
+    width: min(360px, 45vw);
+    max-width: none;
+    padding: 10px 14px;
+    transform: none;
+    font-size: 10px;
+    pointer-events: none;
+  }
+  .camera-passthrough-shell:has(.scan-experience) .camera-passthrough-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: calc(50vw - 24px);
+  }
+  .camera-passthrough-shell:has(.scan-experience) .camera-toggle-button {
+    flex-shrink: 0;
+  }
+}
+
+/* AI guide: shared insets and separate message/composer rows. */
+.heritage-experience .object-experience .spatial-assistant-panel {
+  min-width: 0;
+  overflow: hidden;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.heritage-experience .spatial-assistant-panel > header {
+  min-height: 72px;
+  padding: 14px 18px;
+  gap: 12px;
+}
+.heritage-experience .spatial-assistant-panel > header > div {
+  min-width: 0;
+}
+.heritage-experience .spatial-assistant-panel > header button {
+  width: 44px;
+  height: 44px;
+}
+.heritage-experience .spatial-assistant-panel .phu-chat-embedded {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+.heritage-experience .spatial-assistant-panel .assistant-panel.chat-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 12px 18px 16px;
+  overflow: hidden;
+}
+.heritage-experience .spatial-assistant-panel .chat-context {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+.heritage-experience .spatial-assistant-panel .chat-messages {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0 6px 0 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.heritage-experience .spatial-assistant-panel .chat-compose {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  padding: 12px 0 0;
+}
+.heritage-experience .spatial-assistant-panel .chat-compose form {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+  margin: 0;
+}
+.heritage-experience .spatial-assistant-panel .chat-compose label {
+  margin: 0;
+}
+.heritage-experience .spatial-assistant-panel .chat-compose textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 72px;
+  min-height: 64px;
+  max-height: 104px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 16px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.heritage-experience .spatial-assistant-panel .chat-compose textarea:focus-visible {
+  border-color: #f3e4c5;
+  outline: 2px solid #f3e4c5;
+  outline-offset: -2px;
+  box-shadow: none;
+}
+.heritage-experience .spatial-assistant-panel .chat-send {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  margin: 0;
+  border-radius: 16px;
+}
+.heritage-experience .spatial-assistant-panel .voice-control {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  margin: 0;
+}
+.heritage-experience .spatial-assistant-panel .voice-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.heritage-experience .spatial-assistant-panel :is(.voice-hold, .voice-toggle) {
+  display: flex;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 16px;
+  line-height: 1.35;
+}
+.heritage-experience .spatial-assistant-panel .voice-note {
+  margin: 0;
+  line-height: 1.45;
+}
+@media (max-width: 900px) {
+  .heritage-experience .object-experience .spatial-assistant-panel {
+    position: fixed;
+    inset: 12px 12px 12px auto;
+    z-index: 40;
+    width: min(420px, calc(100vw - 24px));
+    height: auto;
+    max-height: calc(100dvh - 24px);
+    margin: 0;
+  }
+}
+@media (max-height: 500px) {
+  .heritage-experience .spatial-assistant-panel > header {
+    min-height: 64px;
+    padding-block: 10px;
+  }
+  .heritage-experience .spatial-assistant-panel .assistant-panel.chat-panel {
+    gap: 8px;
+    padding-top: 8px;
+    padding-bottom: 12px;
+  }
+  .heritage-experience .spatial-assistant-panel .chat-compose {
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .heritage-experience .spatial-assistant-panel .chat-compose form {
+    grid-template-columns: minmax(0, 1fr) 88px;
+    gap: 6px 8px;
+  }
+  .heritage-experience .spatial-assistant-panel .chat-compose label {
+    grid-column: 1 / -1;
+  }
+  .heritage-experience .spatial-assistant-panel .chat-compose textarea {
+    height: 52px;
+    min-height: 52px;
+    max-height: 64px;
+  }
+  .heritage-experience .spatial-assistant-panel .chat-send {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+}
+
+@media (max-width: 760px) {
+  .camera-passthrough-shell:has(.spatial-assistant-panel) .camera-passthrough-control {
+    visibility: hidden;
+  }
+}

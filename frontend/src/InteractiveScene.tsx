@@ -10,16 +10,18 @@ type InteractiveSceneProps = {
   onSelect: (id: ExhibitId) => void;
   showDisplayCase?: boolean;
   hideCase?: boolean;
+  alignToGallery?: boolean;
   customHotspots?: CustomHotspot[];
   onSurfaceClick3D?: (localPos: [number, number, number]) => void;
   onHotspotClick?: (hotspot: CustomHotspot) => void;
 };
 
 type SceneState = {
-  camera: THREE.PerspectiveCamera;
+  camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
   controls: OrbitControls;
   models: Map<ExhibitId, THREE.Group>;
   focusLight: THREE.PointLight;
+  layoutGallery: () => void;
 };
 
 const exhibitIds: ExhibitId[] = ["drum", "jar", "dagger"];
@@ -497,12 +499,7 @@ function createDagger(includeDisplayCase = true) {
     [0, 1.83, 0],
   );
 
-  addMesh(
-    artifact,
-    new THREE.SphereGeometry(0.09, 12, 8),
-    bronze,
-    [0, 2, 0],
-  );
+  addMesh(artifact, new THREE.SphereGeometry(0.09, 12, 8), bronze, [0, 2, 0]);
 
   return includeDisplayCase ? createDisplayCase(artifact) : artifact;
 }
@@ -520,6 +517,111 @@ export function createExhibitArtifact(id: ExhibitId) {
   return createDrum(false);
 }
 
+// Visitor-only display furniture; artifact meshes and admin cases stay intact.
+function styleGalleryCase(model: THREE.Group, id: ExhibitId) {
+  const displayCase = model.userData.displayCase as THREE.Group | undefined;
+  if (!displayCase) return;
+  const artifact = model.userData.artifact as THREE.Group;
+  const artifactBounds = new THREE.Box3().setFromObject(artifact);
+  // Seat the actual mesh bottom on the slab, rather than its authored origin.
+  model.userData.galleryArtifactY =
+    artifact.position.y + pedestalTop - artifactBounds.min.y;
+  artifact.position.y = model.userData.galleryArtifactY;
+  displayCase.traverse((object) => {
+    if (
+      !(object instanceof THREE.Mesh) ||
+      !(object.material instanceof THREE.MeshStandardMaterial)
+    )
+      return;
+    const material = object.material;
+    if (material.transparent) object.castShadow = false;
+    switch (material.color.getHex()) {
+      case 0xe7e4dc:
+        object.visible = false;
+        break;
+      case 0x806638:
+        material.color.setHex(0x8f7048);
+        material.roughness = 0.4;
+        break;
+      case 0x171a18:
+        material.color.setHex(0x241d18);
+        break;
+      case 0xb8d2c6:
+        material.color.setHex(0xf0e4ce);
+        material.opacity = 0.035;
+        break;
+    }
+  });
+  addMesh(
+    displayCase,
+    new THREE.BoxGeometry(1.7, 0.76, 1.7),
+    new THREE.MeshStandardMaterial({
+      color: 0x42362d,
+      roughness: 0.78,
+      metalness: 0.06,
+    }),
+    [0, 0.42, 0],
+  );
+  addMesh(
+    displayCase,
+    new THREE.BoxGeometry(1.74, 0.06, 1.74),
+    new THREE.MeshStandardMaterial({
+      color: 0x9b8563,
+      roughness: 0.56,
+      metalness: 0.18,
+    }),
+    [0, 0.83, 0],
+  );
+  if (id === "dagger") {
+    const mountMaterial = new THREE.MeshStandardMaterial({
+      color: 0x302820,
+      roughness: 0.7,
+      metalness: 0.3,
+    });
+    addMesh(
+      displayCase,
+      new THREE.BoxGeometry(0.3, 0.035, 0.3),
+      mountMaterial,
+      [0, 0.8775, -0.12],
+    );
+    addMesh(
+      displayCase,
+      new THREE.CylinderGeometry(0.025, 0.025, 1.4, 12),
+      mountMaterial,
+      [0, 1.56, -0.16],
+    );
+    for (const height of [1.28, 2.1]) {
+      addMesh(
+        displayCase,
+        new THREE.BoxGeometry(0.18, 0.025, 0.22),
+        mountMaterial,
+        [0, height, -0.08],
+      );
+    }
+  }
+  // A feathered contact patch anchors the base even on low-end shadow maps.
+  const shadowCanvas = document.createElement("canvas");
+  shadowCanvas.width = shadowCanvas.height = 128;
+  const context = shadowCanvas.getContext("2d")!;
+  const gradient = context.createRadialGradient(64, 64, 20, 64, 64, 64);
+  gradient.addColorStop(0, "rgba(15, 8, 4, 0.7)");
+  gradient.addColorStop(0.55, "rgba(15, 8, 4, 0.45)");
+  gradient.addColorStop(1, "rgba(15, 8, 4, 0)");
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, 128, 128);
+  const contactShadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(3.5, 3.1),
+    new THREE.MeshBasicMaterial({
+      map: new THREE.CanvasTexture(shadowCanvas),
+      transparent: true,
+      depthWrite: false,
+    }),
+  );
+  contactShadow.rotation.x = -Math.PI / 2;
+  contactShadow.position.y = -0.039;
+  model.userData.contactShadow = contactShadow;
+}
+
 function tagModel(group: THREE.Group, id: ExhibitId) {
   group.userData.exhibitId = id;
 
@@ -533,6 +635,7 @@ export function InteractiveScene({
   onSelect,
   showDisplayCase = true,
   hideCase,
+  alignToGallery = false,
   customHotspots = [],
   onSurfaceClick3D,
   onHotspotClick,
@@ -564,13 +667,20 @@ export function InteractiveScene({
 
     const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    // A fixed frontal projection keeps all three cases the same apparent size.
+    // Perspective and orbit behavior remain available in admin/detail viewers.
+    const camera = alignToGallery
+      ? new THREE.OrthographicCamera(-5, 5, 3.4, -3.4, 0.1, 100)
+      : new THREE.PerspectiveCamera(42, 1, 0.1, 100);
     camera.position.set(0, 4.3, 10.4);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = alignToGallery;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.autoUpdate = !alignToGallery;
     renderer.domElement.className = "three-canvas";
     renderer.domElement.setAttribute(
       "aria-label",
@@ -579,13 +689,32 @@ export function InteractiveScene({
 
     container.appendChild(renderer.domElement);
 
-    scene.add(new THREE.HemisphereLight(0xe5e4d8, 0x343a32, 2));
+    scene.add(
+      new THREE.HemisphereLight(0xe5e4d8, 0x343a32, alignToGallery ? 1.6 : 2),
+    );
 
-    const keyLight = new THREE.DirectionalLight(0xffe0a4, 3);
-    keyLight.position.set(-4, 7, 5);
+    const keyLight = new THREE.DirectionalLight(
+      0xffe0a4,
+      alignToGallery ? 2.5 : 3,
+    );
+    if (alignToGallery) keyLight.position.set(-3, 12, 4);
+    else keyLight.position.set(-4, 7, 5);
+    if (alignToGallery) {
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(2048, 2048);
+      keyLight.shadow.camera.left = keyLight.shadow.camera.bottom = -16;
+      keyLight.shadow.camera.right = keyLight.shadow.camera.top = 16;
+      keyLight.shadow.camera.far = 50;
+      keyLight.shadow.normalBias = 0.025;
+      keyLight.shadow.bias = -0.0001;
+    }
     scene.add(keyLight);
 
-    const focusLight = new THREE.PointLight(0xd8bd82, 12, 8);
+    const focusLight = new THREE.PointLight(
+      0xd8bd82,
+      alignToGallery ? 5 : 12,
+      8,
+    );
     focusLight.position.set(0, 2, 1.2);
     scene.add(focusLight);
 
@@ -603,11 +732,26 @@ export function InteractiveScene({
 
     models.forEach((model, id) => {
       model.position.x = positions[id];
+      if (alignToGallery) styleGalleryCase(model, id);
       tagModel(model, id);
       scene.add(model);
+      if (model.userData.contactShadow) scene.add(model.userData.contactShadow);
     });
 
+    const galleryFloor = alignToGallery
+      ? new THREE.Mesh(
+          new THREE.PlaneGeometry(80, 40),
+          new THREE.ShadowMaterial({ opacity: 0.28, depthWrite: false }),
+        )
+      : null;
+    if (galleryFloor) {
+      galleryFloor.rotation.x = -Math.PI / 2;
+      galleryFloor.receiveShadow = true;
+      scene.add(galleryFloor);
+    }
+
     const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enabled = !alignToGallery;
     controls.enableDamping = true;
     controls.enablePan = false;
     controls.minDistance = 3.5;
@@ -617,27 +761,128 @@ export function InteractiveScene({
     controls.target.set(0, 1.95, 0);
     controls.update();
 
+    // Match the visitor room's wall-bay centers and floor line in viewport
+    // coordinates. Admin/detail scenes retain their existing arrangement.
+    const layoutGallery = () => {
+      if (!alignToGallery || selectedIdRef.current !== null) return;
+      const bounds = container.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      camera.updateMatrixWorld();
+      const isPortrait =
+        window.innerWidth <= 900 && window.innerHeight > window.innerWidth;
+      const wallCenters = isPortrait ? [0.22, 0.5, 0.78] : [0.24, 0.5, 0.76];
+      const floorY = window.innerHeight * (isPortrait ? 0.76 : 0.75);
+      const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+      const layoutRay = new THREE.Raycaster();
+      const point = new THREE.Vector3();
+      const box = new THREE.Box3();
+      const corner = new THREE.Vector3();
+      const maxWidth = window.innerWidth * (isPortrait ? 0.21 : 0.19);
+      const maxHeight = window.innerHeight * 0.44;
+
+      const placeCase = (model: THREE.Group, index: number, scale: number) => {
+        model.scale.setScalar(scale);
+        const targetX =
+          ((window.innerWidth * wallCenters[index] - bounds.left) /
+            bounds.width) *
+            2 -
+          1;
+        const floorNdcY = -((floorY - bounds.top) / bounds.height) * 2 + 1;
+        layoutRay.setFromCamera(new THREE.Vector2(targetX, floorNdcY), camera);
+        if (!layoutRay.ray.intersectPlane(plane, point)) return;
+        model.position.set(point.x, point.y + 0.04 * scale, 0);
+        corner
+          .set(model.position.x, model.position.y + 1.6 * scale, 0)
+          .project(camera);
+        layoutRay.setFromCamera(new THREE.Vector2(targetX, corner.y), camera);
+        if (layoutRay.ray.intersectPlane(plane, point))
+          model.position.x = point.x;
+      };
+      let sharedScale = 1;
+      exhibitIds.forEach((id, index) => {
+        const model = models.get(id)!;
+        let scale = 1;
+        // Measure the complete case, then keep the same scale for all three.
+        for (let pass = 0; pass < 4; pass++) {
+          placeCase(model, index, scale);
+          if (pass === 3) break;
+          box.setFromObject(model);
+          let left = Infinity,
+            right = -Infinity;
+          let top = -Infinity,
+            bottom = Infinity;
+          for (const x of [box.min.x, box.max.x]) {
+            for (const y of [box.min.y, box.max.y]) {
+              for (const z of [box.min.z, box.max.z]) {
+                corner.set(x, y, z).project(camera);
+                left = Math.min(left, corner.x);
+                right = Math.max(right, corner.x);
+                top = Math.max(top, corner.y);
+                bottom = Math.min(bottom, corner.y);
+              }
+            }
+          }
+          scale *= Math.min(
+            1,
+            maxWidth / (((right - left) * bounds.width) / 2),
+            maxHeight / (((top - bottom) * bounds.height) / 2),
+          );
+        }
+        sharedScale = Math.min(sharedScale, scale);
+      });
+      // Matching case sizes preserve a balanced, level display across the room.
+      exhibitIds.forEach((id, index) =>
+        placeCase(models.get(id)!, index, sharedScale),
+      );
+      models.forEach((model) => {
+        const shadow = model.userData.contactShadow as THREE.Mesh | undefined;
+        if (!shadow) return;
+        shadow.position.set(
+          model.position.x,
+          model.position.y - 0.039 * sharedScale,
+          model.position.z,
+        );
+        shadow.scale.setScalar(sharedScale);
+      });
+      if (galleryFloor) {
+        galleryFloor.position.y =
+          models.get("jar")!.position.y - 0.04 * sharedScale;
+        // Stop the receiver behind the cases; the photographed wall is not a floor.
+        galleryFloor.position.z = 20 - 1.4 * sharedScale;
+      }
+      renderer.shadowMap.needsUpdate = true;
+    };
+
     const resize = () => {
       const width = container.clientWidth || 1;
       const height = container.clientHeight || 1;
 
       renderer.setSize(width, height);
-      camera.aspect = width / height;
+      if (camera instanceof THREE.OrthographicCamera) {
+        camera.left = (-3.4 * width) / height;
+        camera.right = (3.4 * width) / height;
+        camera.top = 3.4;
+        camera.bottom = -3.4;
+      } else {
+        camera.aspect = width / height;
+      }
 
-      const isMobileScan =
-        selectedIdRef.current === null && width < 760;
+      const isMobileScan = selectedIdRef.current === null && width < 760;
 
-      camera.fov = isMobileScan ? 54 : 42;
+      if (camera instanceof THREE.PerspectiveCamera)
+        camera.fov = isMobileScan ? 54 : 42;
 
       if (selectedIdRef.current === null) {
         camera.position.set(
           0,
           4.3,
-          isMobileScan ? 12.2 : 10.4,
+          alignToGallery ? 18 : isMobileScan ? 12.2 : 10.4,
         );
       }
 
       camera.updateProjectionMatrix();
+      controls.update();
+      layoutGallery();
     };
 
     const resizeObserver = new ResizeObserver(resize);
@@ -727,13 +972,22 @@ export function InteractiveScene({
 
         const [localX, localY, localZ] = hotspotAnchors[id];
         const scale = model.scale.x;
-        const pedestalOffset = showDisplayCaseRef.current ? pedestalTop : 0;
+        const artifact = model.userData.artifact as THREE.Group | undefined;
+        const pedestalOffset = showDisplayCaseRef.current
+          ? (artifact?.position.y ?? pedestalTop)
+          : 0;
 
-        const position = new THREE.Vector3(
-          model.position.x + localX * scale,
-          model.position.y + (localY + pedestalOffset) * scale,
-          model.position.z + localZ * scale,
-        );
+        const position = alignToGallery
+          ? new THREE.Vector3(
+              model.position.x,
+              model.position.y + 1.3 * scale,
+              model.position.z + 1.06 * scale,
+            )
+          : new THREE.Vector3(
+              model.position.x + localX * scale,
+              model.position.y + (localY + pedestalOffset) * scale,
+              model.position.z + localZ * scale,
+            );
 
         position.project(camera);
 
@@ -812,7 +1066,13 @@ export function InteractiveScene({
 
     render();
 
-    sceneStateRef.current = { camera, controls, models, focusLight };
+    sceneStateRef.current = {
+      camera,
+      controls,
+      models,
+      focusLight,
+      layoutGallery,
+    };
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
@@ -837,13 +1097,18 @@ export function InteractiveScene({
         }
       });
 
-      materials.forEach((material) => material.dispose());
+      materials.forEach((material) => {
+        if (material instanceof THREE.MeshBasicMaterial)
+          material.map?.dispose();
+        material.dispose();
+      });
+      keyLight.shadow.dispose();
 
       renderer.dispose();
       renderer.domElement.remove();
       sceneStateRef.current = null;
     };
-  }, []);
+  }, [alignToGallery]);
 
   useEffect(() => {
     const state = sceneStateRef.current;
@@ -860,18 +1125,23 @@ export function InteractiveScene({
 
       if (displayCase && artifact) {
         displayCase.visible = effectiveShowDisplayCase;
-        artifact.position.y = effectiveShowDisplayCase ? pedestalTop : 0;
+        artifact.position.y = effectiveShowDisplayCase
+          ? alignToGallery
+            ? model.userData.galleryArtifactY
+            : pedestalTop
+          : 0;
       }
     });
 
     if (selectedId === null) {
       const isMobile = window.innerWidth < 760;
 
-      state.camera.fov = isMobile ? 54 : 42;
+      if (state.camera instanceof THREE.PerspectiveCamera)
+        state.camera.fov = isMobile ? 54 : 42;
       state.camera.position.set(
         0,
         4.3,
-        isMobile ? 12.2 : 10.4,
+        alignToGallery ? 18 : isMobile ? 12.2 : 10.4,
       );
       state.controls.target.set(0, 1.95, 0);
       state.focusLight.position.set(0, 2.6, 1.2);
@@ -879,23 +1149,32 @@ export function InteractiveScene({
       const selectedModel = state.models.get(selectedId);
       if (!selectedModel) return;
 
-      const artifact = selectedModel.userData.artifact as THREE.Group | undefined;
-      const focusBounds = new THREE.Box3().setFromObject(artifact ?? selectedModel);
+      const artifact = selectedModel.userData.artifact as
+        THREE.Group | undefined;
+      const focusBounds = new THREE.Box3().setFromObject(
+        artifact ?? selectedModel,
+      );
       const focusTarget = focusBounds.getCenter(new THREE.Vector3());
 
-      state.camera.fov = 42;
+      if (state.camera instanceof THREE.PerspectiveCamera)
+        state.camera.fov = 42;
       state.controls.target.copy(focusTarget);
       state.camera.position.set(
         focusTarget.x + 2.6,
         focusTarget.y + 1.5,
         focusTarget.z + 6.2,
       );
-      state.focusLight.position.set(focusTarget.x, focusTarget.y + 0.7, focusTarget.z + 1.2);
+      state.focusLight.position.set(
+        focusTarget.x,
+        focusTarget.y + 0.7,
+        focusTarget.z + 1.2,
+      );
     }
 
     state.camera.updateProjectionMatrix();
     state.controls.update();
-  }, [selectedId, effectiveShowDisplayCase]);
+    state.layoutGallery();
+  }, [selectedId, effectiveShowDisplayCase, alignToGallery]);
 
   return (
     <div className="scene-container" ref={containerRef}>
