@@ -1846,64 +1846,6 @@
 }
 
 .mobile-gallery-setting { display: none; }
-@media (max-width: 760px) and (orientation: portrait) {
-  .camera-passthrough-shell:has(.scan-experience)::before {
-    background: #391811;
-  }
-  .heritage-experience .mobile-gallery-setting {
-    display: block;
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(ellipse at 22% 40%, #c16a3350, transparent 25%),
-      radial-gradient(ellipse at 50% 40%, #c16a3340, transparent 25%),
-      radial-gradient(ellipse at 78% 40%, #c16a3350, transparent 25%),
-      linear-gradient(90deg, #3e1812, #713124 48%, #3e1812);
-  }
-  .heritage-experience .mobile-gallery-setting::after {
-    content: '';
-    position: absolute;
-    inset: 73% 0 0;
-    border-top: 4px double #947143;
-    background: #342017 url('/images/museum-balanced-gallery.webp') center bottom / 100% 400% no-repeat;
-    box-shadow: 0 -5px 12px #180a0770;
-  }
-  .heritage-experience .mobile-gallery-bays {
-    position: absolute;
-    left: 9%;
-    right: 9%;
-    bottom: 27%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2vw;
-    z-index: 1;
-  }
-  .heritage-experience .mobile-gallery-bays i {
-    display: block;
-    height: 48vw;
-    border: 2px solid #987344;
-    outline: 1px solid #392015;
-    outline-offset: 2px;
-    background:
-      radial-gradient(ellipse at 50% 0%, #eea85c60, transparent 65%),
-      linear-gradient(90deg, #210d0c80, #65291d70 50%, #210d0c80);
-    box-shadow: inset 0 0 18px #140805aa, 0 5px 10px #200c0860;
-  }
-  .heritage-experience .scan-experience .scene-container { z-index: 1; }
-  .heritage-experience .scan-experience .exhibit-hotspot::after {
-    width: 24vw;
-    min-height: 44px;
-    display: grid;
-    place-items: center;
-    top: calc(100% + 12px);
-    padding: 7px 5px;
-    border-radius: 12px;
-    font-size: 9px;
-    line-height: 1.35;
-  }
-}
-
 .object-back-arrow { margin-right: 4px; }
 @media (max-width: 760px) {
   .heritage-experience .object-experience-heading {
@@ -1935,51 +1877,31 @@
   }
   .heritage-experience .object-title-copy { min-width: 0; }
 }
+/* Reuse the desktop room artwork, including its actual lamp and wall texture. */
 @media (max-width: 760px) and (orientation: portrait) {
+  .camera-passthrough-shell:has(.scan-experience)::before {
+    background: linear-gradient(#20110c, #3e1c12);
+  }
   .heritage-experience .mobile-gallery-setting {
-    background:
-      linear-gradient(90deg, #170b0866, transparent 26%, transparent 74%, #170b0866),
-      linear-gradient(180deg, #1b100d 0%, #321910 24%, transparent 60%),
-      radial-gradient(ellipse 70% 40% at 50% 58%, #af73422e, transparent 90%),
-      #50271c;
-  }
-  .heritage-experience .mobile-gallery-bays i {
-    position: relative;
-    background:
-      radial-gradient(ellipse 95% 90% at 50% -8%, #efc68a80 0%, #ce975b50 35%, #a2653320 65%, transparent 95%),
-      linear-gradient(90deg, #24110d99, #633323 35%, #633323 65%, #24110d99);
-    border-color: #9e7d50;
-    box-shadow: inset 0 4px 7px #1a0a0770, inset 0 0 12px #1a0a0755, 0 2px 1px #1d0d0a, 0 6px 12px #1d0d0a66;
-  }
-  .heritage-experience .mobile-gallery-bays i::before {
-    content: '';
-    position: absolute;
-    top: -58px;
-    left: calc(50% - 9px);
-    width: 18px;
-    height: 13px;
-    border: 1px solid #776044;
-    border-radius: 3px 3px 7px 7px;
-    background: linear-gradient(#1c1510 0 62%, #c4a06a 68%, #fff4d8 83%, #fff9eb);
-    box-shadow: 0 2px 2px #0c0504, 0 3px 6px #e6be7d50;
-  }
-  .heritage-experience .mobile-gallery-bays i::after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    top: -46px;
-    left: -18%;
-    width: 136%;
-    height: calc(100% + 46px);
-    background: radial-gradient(ellipse 48% 55% at 50% 55%, #dfb47d2e, #bb87501a 48%, transparent 85%);
+    display: block;
+    position: fixed;
+    inset: clamp(170px, 25dvh, 210px) 0 0;
     pointer-events: none;
+    background: #3e1c12 url('/images/museum-balanced-gallery.webp') center / 100% 100% no-repeat;
+    mask-image: linear-gradient(transparent, #000 24px);
+    -webkit-mask-image: linear-gradient(transparent, #000 24px);
   }
-  .heritage-experience .mobile-gallery-setting::after {
-    background:
-      radial-gradient(ellipse 20% 75% at 22% 0%, #dcb47a38, transparent 85%),
-      radial-gradient(ellipse 20% 75% at 50% 0%, #dcb47a38, transparent 85%),
-      radial-gradient(ellipse 20% 75% at 78% 0%, #dcb47a38, transparent 85%),
-      linear-gradient(90deg, #160d0866, transparent 30%, transparent 70%, #160d0866),
-      #342017 url('/images/museum-balanced-gallery.webp') center bottom / 100% 400% no-repeat;
+  .heritage-experience .mobile-gallery-bays { display: none; }
+  .heritage-experience .scan-experience .scene-container { z-index: 1; }
+  .heritage-experience .scan-experience .exhibit-hotspot::after {
+    width: 24vw;
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+    top: calc(100% + 12px);
+    padding: 7px 5px;
+    border-radius: 12px;
+    font-size: 9px;
+    line-height: 1.35;
   }
 }

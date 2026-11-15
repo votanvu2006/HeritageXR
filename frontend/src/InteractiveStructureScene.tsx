@@ -235,9 +235,6 @@ export function InteractiveStructureScene({
     const resize = () => {
       const width = viewport.clientWidth || 1;
       const height = viewport.clientHeight || 1;
-      const isPhone = window.innerWidth <= 760;
-      keyLight.intensity = isPhone ? 1.8 : 3.2;
-      fillLight.intensity = isPhone ? 7 : 13;
       // The visitor layout reserves its last two grid rows for the cutaway
       // button and note. Frame the model in the remaining row, preserving its
       // aspect ratio and the original orbit/cutaway behavior.
