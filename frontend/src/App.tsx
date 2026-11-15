@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useSyncExternalStore } from "react";
 import { InteractiveScene, type ExhibitId } from "./InteractiveScene";
 import { InteractiveStructureScene } from "./InteractiveStructureScene";
 import { exhibitInformation } from "./exhibitInformation";
@@ -6,7 +6,7 @@ import { exhibitStories } from "./exhibitStories";
 import { CraftingVideo } from "./CraftingVideo";
 import { NarratedVideo } from "./NarratedVideo";
 import { QuizPanel } from "./QuizPanel";
-import { readDemoPoints } from "./quizProgress";
+import { readQuizProgress, subscribeQuizProgress } from "./quizProgress";
 import type { ExhibitChatContext } from "./Chatbot";
 import { PhuChatbot } from "./components/PhuChatbot";
 import { CameraPassthrough } from "./CameraPassthrough";
@@ -73,7 +73,8 @@ const contentFlow: ObjectSection[] = [
 function MuseumApp() {
   const [selectedId, setSelectedId] = useState<ExhibitId | null>(null);
   const [screen, setScreen] = useState<ExperienceScreen>("scan");
-  const [points, setPoints] = useState(readDemoPoints);
+  const quizProgress = useSyncExternalStore(subscribeQuizProgress, readQuizProgress);
+  const points = quizProgress.points;
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [storyVideoUnavailable, setStoryVideoUnavailable] = useState(false);
 
@@ -417,10 +418,8 @@ function MuseumApp() {
                 {screen === "quiz" && (
                   <div className="spatial-quiz-content">
                     <QuizPanel
-                      key={selectedExhibit.id}
+                      key={`${selectedExhibit.id}-${quizProgress.day}`}
                       exhibitId={selectedExhibit.id}
-                      points={points}
-                      onPointsChange={setPoints}
                     />
                   </div>
                 )}

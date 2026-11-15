@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import type { ExhibitId } from "./InteractiveScene";
 import { exhibitNames, questions } from "./quizQuestions";
 import {
@@ -6,22 +6,27 @@ import {
   quizResult,
   readQuizProgress,
   redeemQuizReward,
+  subscribeQuizProgress,
 } from "./quizProgress";
 import "./QuizPanel.css";
 
 type QuizPanelProps = {
   exhibitId: ExhibitId;
-  points: number;
-  onPointsChange: (points: number) => void;
 };
 
-export function QuizPanel({
-  exhibitId,
-  points,
-  onPointsChange,
-}: QuizPanelProps) {
+export function QuizPanel({ exhibitId }: QuizPanelProps) {
   const exhibitQuestions = questions[exhibitId];
-  const [progress, setProgress] = useState(readQuizProgress);
+  const progress = useSyncExternalStore(
+    subscribeQuizProgress,
+    readQuizProgress,
+  );
+  const points = progress.points;
+  const expiryDate = new Intl.DateTimeFormat("vi-VN", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(new Date(progress.expiresAt));
   const [questionIndex, setQuestionIndex] = useState(() =>
     Math.max(
       0,
@@ -43,13 +48,7 @@ export function QuizPanel({
     setIsSaving(true);
     setSaveError("");
     try {
-      const next = await answerQuizQuestion(
-        exhibitId,
-        question.id,
-        answerIndex,
-      );
-      setProgress(next);
-      onPointsChange(next.points);
+      await answerQuizQuestion(exhibitId, question.id, answerIndex);
     } catch {
       setSaveError("Chưa ghi nhận được câu trả lời. Bạn hãy thử lại.");
     } finally {
@@ -70,9 +69,7 @@ export function QuizPanel({
     setIsSaving(true);
     setSaveError("");
     try {
-      const { progress: next, redeemed } = await redeemQuizReward();
-      setProgress(next);
-      onPointsChange(next.points);
+      const { redeemed } = await redeemQuizReward();
       if (redeemed)
         setRewardCode(
           `HX-DEMO-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
@@ -113,7 +110,7 @@ export function QuizPanel({
           </p>
           <p>
             Bạn đã hoàn thành lượt chơi của {exhibitNames[exhibitId]}. Mỗi hiện
-            vật được tham gia đố vui một lần trong mỗi lần truy cập.
+            vật được tham gia đố vui một lần trong ngày.
           </p>
         </div>
       ) : (
@@ -197,8 +194,8 @@ export function QuizPanel({
         )}
       </div>
       <p className="quiz-demo-note">
-        Điểm và lượt chơi chỉ tính trong lần truy cập này. Tải lại trang sẽ bắt
-        đầu từ 0 điểm. Mã quà chỉ dùng để minh họa.
+        Điểm và lượt chơi hết hạn lúc 00:00 ngày {expiryDate} (giờ Việt Nam). Mã
+        quà chỉ dùng để minh họa.
       </p>
     </section>
   );

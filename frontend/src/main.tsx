@@ -52,7 +52,7 @@ function RootApp() {
   );
 }
 
-// Start once per document, before React StrictMode can mount components twice.
+// Load today’s progress once before React mounts; preserve same-day visits.
 startQuizVisit();
 
 createRoot(document.getElementById("root")!).render(
