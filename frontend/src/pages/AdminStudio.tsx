@@ -852,8 +852,8 @@ export function AdminStudio() {
 
           {pipelineDone && (
             <div>
-              <div className="admin-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                <div style={{ display: "grid", gap: "12px" }}>
+              <div className="admin-grid admin-review-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                <div className="admin-review-fields" style={{ display: "grid", gap: "12px" }}>
                   <div>
                     <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
                       Kịch bản thuyết minh
@@ -911,7 +911,7 @@ export function AdminStudio() {
                   </div>
                 </div>
 
-                <div>
+                <div className="admin-review-preview">
                   <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
                     Video lịch sử (.mp4)
                   </label>
