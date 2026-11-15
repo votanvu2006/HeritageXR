@@ -1476,6 +1476,36 @@
   max-height: calc(100% - var(--structure-footer-height, 82px) - 24px);
 }
 
+/* On phones the cutaway explanation gets its own row below the model. */
+@media (max-width: 760px) {
+  .heritage-experience .object-experience .structure-scene-viewport:has(.structure-part-card) {
+    grid-template-rows: minmax(180px, 1fr) auto auto auto;
+  }
+  .heritage-experience .object-experience .structure-scene-viewport:has(.structure-part-card) .structure-part-card {
+    position: relative;
+    inset: auto;
+    grid-row: 2;
+    justify-self: center;
+    width: min(360px, calc(100% - 16px));
+    max-height: 128px;
+    margin: 0;
+    padding: 10px 14px;
+    overflow-y: auto;
+  }
+  .heritage-experience .object-experience .structure-scene-viewport:has(.structure-part-card) .structure-cutaway-toggle {
+    grid-row: 3;
+  }
+  .heritage-experience .object-experience .structure-scene-viewport:has(.structure-part-card) .structure-scene-footnote {
+    grid-row: 4;
+  }
+}
+@media (max-width: 760px) and (max-height: 700px) {
+  .heritage-experience .object-experience:has(.structure-part-card) {
+    grid-template-rows: auto minmax(420px, 1fr) auto;
+    overflow-y: auto;
+  }
+}
+
 /* The overview is a stationary display; rotation belongs to the object view. */
 .heritage-experience .scan-experience .three-canvas {
   cursor: pointer;
