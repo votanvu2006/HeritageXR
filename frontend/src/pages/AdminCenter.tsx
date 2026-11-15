@@ -79,68 +79,68 @@ export function AdminCenter() {
   const totalSouvenirs = store.digitalSold + store.phygitalSold;
 
   const cardStyle: React.CSSProperties = {
-    background: "#0b0e13",
-    border: "1px solid #171c24",
-    borderRadius: "10px",
+    background: "#ffffff",
+    border: "1px solid #e4e8ee",
+    borderRadius: "18px",
     padding: "18px",
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+    <div className="admin-page admin-center" style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* HEADER */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1 style={{ margin: 0, fontSize: "20px", fontWeight: 700, color: "#f2f2ee" }}>
+      <div className="admin-page-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h1 style={{ margin: 0, fontSize: "28px", fontWeight: 700, color: "#172b3a" }}>
           Thống kê Trải nghiệm & Xác nhận tại Quầy
         </h1>
       </div>
 
       {/* 4 THẺ CHỈ SỐ TƯƠNG TÁC (KHÔNG CÓ TIỀN BẠC) */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
-        <div style={cardStyle}>
-          <div style={{ fontSize: "11.5px", color: "#808894" }}>Lượt quét tham quan</div>
-          <div style={{ fontSize: "24px", fontWeight: 700, color: "#f2f2ee", margin: "6px 0" }}>
+      <div className="admin-metrics" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
+        <div className="admin-card" style={cardStyle}>
+          <div style={{ fontSize: "11.5px", color: "#64748b" }}>Lượt quét tham quan</div>
+          <div style={{ fontSize: "24px", fontWeight: 700, color: "#172b3a", margin: "6px 0" }}>
             {store.scans.toLocaleString()}
           </div>
-          <div style={{ fontSize: "11px", color: "#10b981" }}>
+          <div style={{ fontSize: "11px", color: "#17836b" }}>
             AR Camera: {arRate}% · 3D Catalog: {100 - arRate}%
           </div>
         </div>
 
-        <div style={cardStyle}>
-          <div style={{ fontSize: "11.5px", color: "#808894" }}>Thời gian lưu trú TB</div>
-          <div style={{ fontSize: "24px", fontWeight: 700, color: "#e4cfa3", margin: "6px 0" }}>
+        <div className="admin-card" style={cardStyle}>
+          <div style={{ fontSize: "11.5px", color: "#64748b" }}>Thời gian lưu trú TB</div>
+          <div style={{ fontSize: "24px", fontWeight: 700, color: "#846036", margin: "6px 0" }}>
             {store.dwellMinutes} phút
           </div>
-          <div style={{ fontSize: "11px", color: "#808894" }}>
+          <div style={{ fontSize: "11px", color: "#64748b" }}>
             Tăng 3.7x so với tham quan truyền thống
           </div>
         </div>
 
-        <div style={cardStyle}>
-          <div style={{ fontSize: "11.5px", color: "#808894" }}>Câu hỏi Trợ lý AI</div>
-          <div style={{ fontSize: "24px", fontWeight: 700, color: "#f2f2ee", margin: "6px 0" }}>
+        <div className="admin-card" style={cardStyle}>
+          <div style={{ fontSize: "11.5px", color: "#64748b" }}>Câu hỏi Trợ lý AI</div>
+          <div style={{ fontSize: "24px", fontWeight: 700, color: "#172b3a", margin: "6px 0" }}>
             {totalRagQueries.toLocaleString()}
           </div>
-          <div style={{ fontSize: "11px", color: "#10b981" }}>
+          <div style={{ fontSize: "11px", color: "#17836b" }}>
             100% trích xuất từ hồ sơ bảo tàng
           </div>
         </div>
 
-        <div style={cardStyle}>
-          <div style={{ fontSize: "11.5px", color: "#808894" }}>Kỷ vật & Ưu đãi đã cấp</div>
-          <div style={{ fontSize: "24px", fontWeight: 700, color: "#f2f2ee", margin: "6px 0" }}>
+        <div className="admin-card" style={cardStyle}>
+          <div style={{ fontSize: "11.5px", color: "#64748b" }}>Kỷ vật & Ưu đãi đã cấp</div>
+          <div style={{ fontSize: "24px", fontWeight: 700, color: "#172b3a", margin: "6px 0" }}>
             {(totalSouvenirs + store.vouchersClaimed).toLocaleString()}
           </div>
-          <div style={{ fontSize: "11px", color: "#808894" }}>
+          <div style={{ fontSize: "11px", color: "#64748b" }}>
             Ảnh kỷ niệm AI: {totalSouvenirs} · Voucher: {store.vouchersClaimed}
           </div>
         </div>
       </div>
 
       {/* 2 CỘT CHÍNH: MỞ KHÓA TẠI QUẦY (TRÁI) & THỐNG KÊ HIỆN VẬT (PHẢI) */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "18px" }}>
+      <div className="admin-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "18px" }}>
         {/* Cột trái: Xác nhận & Mở khóa Watermark tại Quầy */}
-        <div
+        <div className="admin-card"
           style={{
             ...cardStyle,
             border: "1px solid rgba(200, 170, 110, 0.4)",
@@ -158,7 +158,7 @@ export function AdminCenter() {
                 marginBottom: "14px",
               }}
             >
-              <strong style={{ fontSize: "14px", color: "#f2f2ee" }}>
+              <strong style={{ fontSize: "14px", color: "#172b3a" }}>
                 Mở khóa Ảnh kỷ niệm tại Quầy (POS Override)
               </strong>
               <span
@@ -169,7 +169,7 @@ export function AdminCenter() {
                   background: store.watermarkUnlocked
                     ? "rgba(16, 185, 129, 0.14)"
                     : "rgba(245, 158, 11, 0.15)",
-                  color: store.watermarkUnlocked ? "#10b981" : "#f59e0b",
+                  color: store.watermarkUnlocked ? "#17836b" : "#f59e0b",
                   fontWeight: 600,
                 }}
               >
@@ -177,7 +177,7 @@ export function AdminCenter() {
               </span>
             </div>
 
-            <div
+            <div className="admin-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
@@ -186,7 +186,7 @@ export function AdminCenter() {
               }}
             >
               <div>
-                <label style={{ fontSize: "11px", color: "#808894", display: "block", marginBottom: "5px" }}>
+                <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
                   Mã ảnh của du khách
                 </label>
                 <input
@@ -196,17 +196,17 @@ export function AdminCenter() {
                   style={{
                     width: "100%",
                     padding: "9px 12px",
-                    background: "#07090c",
-                    border: "1px solid #c8aa6e",
+                    background: "#f6f7f9",
+                    border: "1px solid #163e43",
                     borderRadius: "7px",
-                    color: "#e4cfa3",
+                    color: "#846036",
                     fontWeight: 700,
                     fontSize: "12.5px",
                   }}
                 />
               </div>
               <div>
-                <label style={{ fontSize: "11px", color: "#808894", display: "block", marginBottom: "5px" }}>
+                <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
                   Mã PIN Quản lý (2026)
                 </label>
                 <input
@@ -216,10 +216,10 @@ export function AdminCenter() {
                   style={{
                     width: "100%",
                     padding: "9px 12px",
-                    background: "#07090c",
-                    border: "1px solid #1d232d",
+                    background: "#f6f7f9",
+                    border: "1px solid #dce2e9",
                     borderRadius: "7px",
-                    color: "#fff",
+                    color: "#172b3a",
                     fontSize: "12.5px",
                   }}
                 />
@@ -230,10 +230,10 @@ export function AdminCenter() {
             <div
               style={{
                 padding: "12px",
-                background: "#07090c",
+                background: "#f6f7f9",
                 border: receiptFileName
                   ? "1px solid rgba(16, 185, 129, 0.4)"
-                  : "1px dashed #242b38",
+                  : "1px dashed #dce2e9",
                 borderRadius: "8px",
                 marginBottom: "14px",
               }}
@@ -246,7 +246,7 @@ export function AdminCenter() {
                   marginBottom: receiptPreview ? "10px" : "0",
                 }}
               >
-                <span style={{ fontSize: "12px", color: "#d6d8d2" }}>
+                <span style={{ fontSize: "12px", color: "#34495a" }}>
                   Ảnh xác nhận tại quầy *
                 </span>
                 <div style={{ display: "flex", gap: "6px" }}>
@@ -256,9 +256,9 @@ export function AdminCenter() {
                     style={{
                       padding: "4px 9px",
                       background: "rgba(200, 170, 110, 0.12)",
-                      border: "1px solid #c8aa6e",
+                      border: "1px solid #163e43",
                       borderRadius: "5px",
-                      color: "#e4cfa3",
+                      color: "#846036",
                       fontSize: "11px",
                       fontWeight: 600,
                       cursor: "pointer",
@@ -269,10 +269,10 @@ export function AdminCenter() {
                   <label
                     style={{
                       padding: "4px 9px",
-                      background: "#121720",
-                      border: "1px solid #242b38",
+                      background: "#f0f3f6",
+                      border: "1px solid #dce2e9",
                       borderRadius: "5px",
-                      color: "#d6d8d2",
+                      color: "#34495a",
                       fontSize: "11px",
                       cursor: "pointer",
                     }}
@@ -298,10 +298,10 @@ export function AdminCenter() {
                       height: "42px",
                       objectFit: "cover",
                       borderRadius: "4px",
-                      border: "1px solid #10b981",
+                      border: "1px solid #17836b",
                     }}
                   />
-                  <span style={{ fontSize: "11.5px", color: "#10b981", fontWeight: 600 }}>
+                  <span style={{ fontSize: "11.5px", color: "#17836b", fontWeight: 600 }}>
                     ✓ {receiptFileName}
                   </span>
                 </div>
@@ -312,7 +312,7 @@ export function AdminCenter() {
               <div
                 style={{
                   fontSize: "12px",
-                  color: posNotice.startsWith("✓") ? "#10b981" : "#f59e0b",
+                  color: posNotice.startsWith("✓") ? "#17836b" : "#f59e0b",
                   marginBottom: "10px",
                   fontWeight: 600,
                 }}
@@ -328,8 +328,8 @@ export function AdminCenter() {
             style={{
               width: "100%",
               padding: "11px",
-              background: receiptFileName ? "#c8aa6e" : "#171c24",
-              color: receiptFileName ? "#07090c" : "#525860",
+              background: receiptFileName ? "#163e43" : "#e4e8ee",
+              color: receiptFileName ? "#f6f7f9" : "#83909d",
               border: "none",
               borderRadius: "7px",
               fontWeight: 700,
@@ -343,12 +343,12 @@ export function AdminCenter() {
 
         {/* Cột phải: Thống kê theo Hiện vật & Danh sách chờ */}
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-          <div style={cardStyle}>
-            <div style={{ fontSize: "13px", fontWeight: 600, color: "#f2f2ee", marginBottom: "10px" }}>
+          <div className="admin-card" style={cardStyle}>
+            <div style={{ fontSize: "13px", fontWeight: 600, color: "#172b3a", marginBottom: "10px" }}>
               Mức độ quan tâm theo Hiện vật
             </div>
 
-            <table
+            <table className="admin-table"
               style={{
                 width: "100%",
                 borderCollapse: "collapse",
@@ -357,7 +357,7 @@ export function AdminCenter() {
               }}
             >
               <thead>
-                <tr style={{ borderBottom: "1px solid #171c24", color: "#808894", fontSize: "11px" }}>
+                <tr style={{ borderBottom: "1px solid #e4e8ee", color: "#64748b", fontSize: "11px" }}>
                   <th style={{ padding: "6px 4px" }}>Hiện vật</th>
                   <th style={{ padding: "6px 4px" }}>Lượt xem</th>
                   <th style={{ padding: "6px 4px" }}>Thời gian</th>
@@ -366,35 +366,36 @@ export function AdminCenter() {
               </thead>
               <tbody>
                 {metricsList.map((m) => (
-                  <tr key={m.id} style={{ borderBottom: "1px solid #12161e" }}>
-                    <td style={{ padding: "8px 4px", fontWeight: 600, color: "#f2f2ee" }}>
-                      <span style={{ color: "#c8aa6e" }}>{m.code}</span> {m.name}
+                  <tr key={m.id} style={{ borderBottom: "1px solid #edf0f4" }}>
+                    <td style={{ padding: "8px 4px", fontWeight: 600, color: "#172b3a" }}>
+                      <span style={{ color: "#163e43" }}>{m.code}</span> {m.name}
                     </td>
                     <td style={{ padding: "8px 4px" }}>{m.views}</td>
-                    <td style={{ padding: "8px 4px", color: "#e4cfa3" }}>{m.avgDwellMin}p</td>
-                    <td style={{ padding: "8px 4px", color: "#10b981" }}>{m.ragQueries}</td>
+                    <td style={{ padding: "8px 4px", color: "#846036" }}>{m.avgDwellMin}p</td>
+                    <td style={{ padding: "8px 4px", color: "#17836b" }}>{m.ragQueries}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <div style={{ ...cardStyle, flex: 1 }}>
-            <div style={{ fontSize: "13px", fontWeight: 600, color: "#f2f2ee", marginBottom: "8px" }}>
+          <div className="admin-card" style={{ ...cardStyle, flex: 1 }}>
+            <div style={{ fontSize: "13px", fontWeight: 600, color: "#172b3a", marginBottom: "8px" }}>
               Danh sách Mã ảnh kỷ niệm gần đây
             </div>
             <div style={{ display: "grid", gap: "6px" }}>
               {store.orders.slice(0, 3).map((ord) => (
                 <div
+                  className="admin-order"
                   key={ord.id}
                   onClick={() => updateStore((prev) => ({ ...prev, activeOrderId: ord.id }))}
                   style={{
                     padding: "8px 10px",
-                    background: ord.id === store.activeOrderId ? "#121720" : "#07090c",
+                    background: ord.id === store.activeOrderId ? "#f0f3f6" : "#f6f7f9",
                     border:
                       ord.id === store.activeOrderId
-                        ? "1px solid #c8aa6e"
-                        : "1px solid #171c24",
+                        ? "1px solid #163e43"
+                        : "1px solid #e4e8ee",
                     borderRadius: "6px",
                     display: "flex",
                     justifyContent: "space-between",
@@ -404,7 +405,7 @@ export function AdminCenter() {
                   }}
                 >
                   <span>
-                    <strong style={{ color: "#e4cfa3" }}>#{ord.id}</strong> — {ord.exhibitName}
+                    <strong style={{ color: "#846036" }}>#{ord.id}</strong> — {ord.exhibitName}
                   </span>
                   <span
                     style={{
@@ -412,7 +413,7 @@ export function AdminCenter() {
                       color:
                         ord.status === "pending_payment" && !store.watermarkUnlocked
                           ? "#f59e0b"
-                          : "#10b981",
+                          : "#17836b",
                       fontWeight: 600,
                     }}
                   >
