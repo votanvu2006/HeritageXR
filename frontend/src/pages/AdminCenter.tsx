@@ -138,7 +138,7 @@ export function AdminCenter() {
       </div>
 
       {/* 2 CỘT CHÍNH: MỞ KHÓA TẠI QUẦY (TRÁI) & THỐNG KÊ HIỆN VẬT (PHẢI) */}
-      <div className="admin-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "18px" }}>
+      <div className="admin-grid admin-center-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "18px" }}>
         {/* Cột trái: Xác nhận & Mở khóa Watermark tại Quầy */}
         <div className="admin-card"
           style={{
@@ -342,8 +342,8 @@ export function AdminCenter() {
         </div>
 
         {/* Cột phải: Thống kê theo Hiện vật & Danh sách chờ */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-          <div className="admin-card" style={cardStyle}>
+        <div className="admin-center-detail" style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+          <div className="admin-card admin-interest" style={cardStyle}>
             <div style={{ fontSize: "13px", fontWeight: 600, color: "#172b3a", marginBottom: "10px" }}>
               Mức độ quan tâm theo Hiện vật
             </div>
@@ -379,11 +379,11 @@ export function AdminCenter() {
             </table>
           </div>
 
-          <div className="admin-card" style={{ ...cardStyle, flex: 1 }}>
+          <div className="admin-card admin-orders" style={{ ...cardStyle, flex: 1 }}>
             <div style={{ fontSize: "13px", fontWeight: 600, color: "#172b3a", marginBottom: "8px" }}>
               Danh sách Mã ảnh kỷ niệm gần đây
             </div>
-            <div style={{ display: "grid", gap: "6px" }}>
+            <div className="admin-order-list" style={{ display: "grid", gap: "6px" }}>
               {store.orders.slice(0, 3).map((ord) => (
                 <div
                   className="admin-order"
