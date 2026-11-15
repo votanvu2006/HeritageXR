@@ -262,26 +262,26 @@ export function AdminStudio() {
   };
 
   const cardStyle: React.CSSProperties = {
-    background: "#0b0e13",
-    border: "1px solid #171c24",
-    borderRadius: "10px",
+    background: "#ffffff",
+    border: "1px solid #e4e8ee",
+    borderRadius: "18px",
     padding: "20px",
   };
 
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "9px 12px",
-    background: "#07090c",
-    border: "1px solid #1d232d",
+    background: "#f6f7f9",
+    border: "1px solid #dce2e9",
     borderRadius: "7px",
-    color: "#f2f2ee",
+    color: "#172b3a",
     fontSize: "12.5px",
   };
 
   return (
-    <div>
+    <div className="admin-page admin-studio">
       {/* HEADER GỌN GÀNG */}
-      <div
+      <div className="admin-page-header"
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -289,7 +289,7 @@ export function AdminStudio() {
           marginBottom: "16px",
         }}
       >
-        <h1 style={{ margin: 0, fontSize: "20px", fontWeight: 700, color: "#f2f2ee" }}>
+        <h1 style={{ margin: 0, fontSize: "28px", fontWeight: 700, color: "#172b3a" }}>
           AI Creator Studio
         </h1>
 
@@ -319,7 +319,7 @@ export function AdminStudio() {
               padding: "9px 14px",
               background: "rgba(16, 185, 129, 0.12)",
               border: "1px solid rgba(16, 185, 129, 0.4)",
-              color: "#10b981",
+              color: "#17836b",
               borderRadius: "7px",
               fontWeight: 600,
               fontSize: "12px",
@@ -332,7 +332,7 @@ export function AdminStudio() {
       </div>
 
       {/* STEPPER 4 BƯỚC 1 DÒNG */}
-      <div
+      <div className="admin-steps"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
@@ -356,12 +356,12 @@ export function AdminStudio() {
                 padding: "11px 14px",
                 borderRadius: "8px",
                 border: active
-                  ? "1px solid #c8aa6e"
+                  ? "1px solid #163e43"
                   : item.done
                   ? "1px solid rgba(16, 185, 129, 0.35)"
-                  : "1px solid #171c24",
-                background: active ? "rgba(200, 170, 110, 0.1)" : "#0b0e13",
-                color: active ? "#f2f2ee" : "#808894",
+                  : "1px solid #e4e8ee",
+                background: active ? "rgba(200, 170, 110, 0.1)" : "#ffffff",
+                color: active ? "#172b3a" : "#64748b",
                 fontWeight: active ? 600 : 500,
                 fontSize: "12.5px",
                 cursor: "pointer",
@@ -371,7 +371,7 @@ export function AdminStudio() {
               }}
             >
               <span>{item.title}</span>
-              {item.done && <span style={{ color: "#10b981", fontWeight: 700 }}>✓</span>}
+              {item.done && <span style={{ color: "#17836b", fontWeight: 700 }}>✓</span>}
             </button>
           );
         })}
@@ -379,7 +379,7 @@ export function AdminStudio() {
 
       {/* BƯỚC 1: HỒ SƠ & TẠO 3D */}
       {step === 1 && (
-        <div
+        <div className="admin-card"
           style={{
             ...cardStyle,
             display: "grid",
@@ -389,20 +389,20 @@ export function AdminStudio() {
         >
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             <div style={{ display: "grid", gap: "14px" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "95px 1fr", gap: "10px" }}>
+              <div className="admin-grid" style={{ display: "grid", gridTemplateColumns: "95px 1fr", gap: "10px" }}>
                 <div>
-                  <label style={{ fontSize: "11px", color: "#808894", display: "block", marginBottom: "5px" }}>
+                  <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
                     Mã số
                   </label>
                   <input
                     type="text"
                     value={artifactCode}
                     onChange={(e) => setArtifactCode(e.target.value)}
-                    style={{ ...inputStyle, fontWeight: 700, color: "#c8aa6e" }}
+                    style={{ ...inputStyle, fontWeight: 700, color: "#163e43" }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: "11px", color: "#808894", display: "block", marginBottom: "5px" }}>
+                  <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
                     Tên hiện vật
                   </label>
                   <input
@@ -415,7 +415,7 @@ export function AdminStudio() {
               </div>
 
               <div>
-                <label style={{ fontSize: "11px", color: "#808894", display: "block", marginBottom: "5px" }}>
+                <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
                   Bộ sưu tập
                 </label>
                 <input
@@ -429,8 +429,8 @@ export function AdminStudio() {
               <div
                 style={{
                   padding: "12px",
-                  background: "#07090c",
-                  border: "1px dashed #1d232d",
+                  background: "#f6f7f9",
+                  border: "1px dashed #dce2e9",
                   borderRadius: "8px",
                 }}
               >
@@ -442,17 +442,17 @@ export function AdminStudio() {
                     marginBottom: "8px",
                   }}
                 >
-                  <span style={{ fontSize: "12px", color: "#d6d8d2", fontWeight: 500 }}>
+                  <span style={{ fontSize: "12px", color: "#34495a", fontWeight: 500 }}>
                     Ảnh chụp hiện vật
                   </span>
                   <label
                     style={{
                       padding: "4px 10px",
-                      background: "#121720",
-                      border: "1px solid #242b38",
+                      background: "#f0f3f6",
+                      border: "1px solid #dce2e9",
                       borderRadius: "5px",
                       fontSize: "11px",
-                      color: "#e4cfa3",
+                      color: "#846036",
                       cursor: "pointer",
                     }}
                   >
@@ -476,7 +476,7 @@ export function AdminStudio() {
                         padding: "3px 8px",
                         background: "#0d1412",
                         border: "1px solid rgba(16, 185, 129, 0.25)",
-                        color: "#10b981",
+                        color: "#17836b",
                         borderRadius: "4px",
                       }}
                     >
@@ -493,9 +493,9 @@ export function AdminStudio() {
                 onClick={handleGenerate3DMesh}
                 style={{
                   padding: "10px 14px",
-                  background: "#121720",
-                  border: "1px solid #c8aa6e",
-                  color: "#e4cfa3",
+                  background: "#f0f3f6",
+                  border: "1px solid #163e43",
+                  color: "#846036",
                   borderRadius: "7px",
                   fontWeight: 600,
                   fontSize: "12px",
@@ -515,8 +515,8 @@ export function AdminStudio() {
                 style={{
                   flex: 1,
                   padding: "10px 16px",
-                  background: mesh3DReady ? "#c8aa6e" : "#171c24",
-                  color: mesh3DReady ? "#07090c" : "#525860",
+                  background: mesh3DReady ? "#163e43" : "#e4e8ee",
+                  color: mesh3DReady ? "#f6f7f9" : "#83909d",
                   border: "none",
                   borderRadius: "7px",
                   fontWeight: 700,
@@ -531,8 +531,8 @@ export function AdminStudio() {
 
           <div
             style={{
-              background: "#07090c",
-              border: "1px solid #171c24",
+              background: "#f6f7f9",
+              border: "1px solid #e4e8ee",
               borderRadius: "8px",
               overflow: "hidden",
               minHeight: "340px",
@@ -551,7 +551,7 @@ export function AdminStudio() {
 
       {/* BƯỚC 2: GẮN HOTSPOT 3D TRẦN */}
       {step === 2 && (
-        <div
+        <div className="admin-card"
           style={{
             ...cardStyle,
             display: "grid",
@@ -568,7 +568,7 @@ export function AdminStudio() {
                 marginBottom: "8px",
               }}
             >
-              <span style={{ fontSize: "12px", color: "#808894" }}>
+              <span style={{ fontSize: "12px", color: "#64748b" }}>
                 Kéo để xoay 3D · Click trực tiếp lên bề mặt cổ vật để gắn điểm chạm
               </span>
             </div>
@@ -579,7 +579,7 @@ export function AdminStudio() {
                 height: "365px",
                 borderRadius: "8px",
                 overflow: "hidden",
-                border: "1px solid #1d232d",
+                border: "1px solid #dce2e9",
               }}
             >
               <InteractiveScene
@@ -600,7 +600,7 @@ export function AdminStudio() {
                     right: "12px",
                     zIndex: 25,
                     background: "rgba(11, 14, 19, 0.94)",
-                    border: "1px solid #c8aa6e",
+                    border: "1px solid #163e43",
                     borderRadius: "7px",
                     padding: "10px 12px",
                     display: "flex",
@@ -609,10 +609,10 @@ export function AdminStudio() {
                   }}
                 >
                   <div>
-                    <strong style={{ fontSize: "12px", color: "#e4cfa3" }}>
+                    <strong style={{ fontSize: "12px", color: "#846036" }}>
                       [{activeHotspotPreview.roman}] {activeHotspotPreview.title}
                     </strong>
-                    <div style={{ fontSize: "11px", color: "#d6d8d2", marginTop: "2px" }}>
+                    <div style={{ fontSize: "11px", color: "#34495a", marginTop: "2px" }}>
                       {activeHotspotPreview.description}
                     </div>
                   </div>
@@ -622,7 +622,7 @@ export function AdminStudio() {
                     style={{
                       background: "transparent",
                       border: "none",
-                      color: "#808894",
+                      color: "#64748b",
                       cursor: "pointer",
                       fontSize: "15px",
                     }}
@@ -637,8 +637,8 @@ export function AdminStudio() {
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "10px" }}>
             <div
               style={{
-                background: "#07090c",
-                border: "1px solid #171c24",
+                background: "#f6f7f9",
+                border: "1px solid #e4e8ee",
                 padding: "12px",
                 borderRadius: "8px",
               }}
@@ -651,7 +651,7 @@ export function AdminStudio() {
                   marginBottom: "8px",
                 }}
               >
-                <span style={{ fontSize: "11px", color: "#c8aa6e", fontWeight: 600 }}>
+                <span style={{ fontSize: "11px", color: "#163e43", fontWeight: 600 }}>
                   Điểm chạm mới
                 </span>
                 <div style={{ display: "flex", gap: "4px" }}>
@@ -666,9 +666,9 @@ export function AdminStudio() {
                       style={{
                         padding: "3px 7px",
                         fontSize: "10px",
-                        background: "#121720",
-                        border: "1px solid #242b38",
-                        color: "#e4cfa3",
+                        background: "#f0f3f6",
+                        border: "1px solid #dce2e9",
+                        color: "#846036",
                         borderRadius: "4px",
                         cursor: "pointer",
                       }}
@@ -695,8 +695,8 @@ export function AdminStudio() {
 
             <div
               style={{
-                background: "#07090c",
-                border: "1px solid #171c24",
+                background: "#f6f7f9",
+                border: "1px solid #e4e8ee",
                 padding: "12px",
                 borderRadius: "8px",
                 flex: 1,
@@ -712,20 +712,20 @@ export function AdminStudio() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     padding: "7px 10px",
-                    background: "#0b0e13",
-                    border: "1px solid #171c24",
+                    background: "#ffffff",
+                    border: "1px solid #e4e8ee",
                     borderRadius: "6px",
                     marginBottom: "6px",
                   }}
                 >
                   <div style={{ minWidth: 0 }}>
-                    <strong style={{ color: "#e4cfa3", fontSize: "12px" }}>
+                    <strong style={{ color: "#846036", fontSize: "12px" }}>
                       [{hs.roman}] {hs.title}
                     </strong>
                     <div
                       style={{
                         fontSize: "11px",
-                        color: "#808894",
+                        color: "#64748b",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -760,9 +760,9 @@ export function AdminStudio() {
                 onClick={() => setStep(1)}
                 style={{
                   padding: "10px 14px",
-                  background: "#121720",
-                  border: "1px solid #242b38",
-                  color: "#d6d8d2",
+                  background: "#f0f3f6",
+                  border: "1px solid #dce2e9",
+                  color: "#34495a",
                   borderRadius: "7px",
                   fontSize: "12px",
                   cursor: "pointer",
@@ -779,8 +779,8 @@ export function AdminStudio() {
                 style={{
                   flex: 1,
                   padding: "10px 16px",
-                  background: "#c8aa6e",
-                  color: "#07090c",
+                  background: "#163e43",
+                  color: "#f6f7f9",
                   border: "none",
                   borderRadius: "7px",
                   fontWeight: 700,
@@ -797,7 +797,7 @@ export function AdminStudio() {
 
       {/* BƯỚC 3: NỘI DUNG AI & REVIEW */}
       {step === 3 && (
-        <div style={cardStyle}>
+        <div className="admin-card" style={cardStyle}>
           <div
             style={{
               display: "flex",
@@ -805,16 +805,16 @@ export function AdminStudio() {
               alignItems: "center",
               paddingBottom: "14px",
               marginBottom: "16px",
-              borderBottom: "1px solid #171c24",
+              borderBottom: "1px solid #e4e8ee",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ fontSize: "12.5px", color: "#808894" }}>Tài liệu PDF:</span>
-              <strong style={{ fontSize: "12.5px", color: "#10b981" }}>{pdfFileName}</strong>
+              <span style={{ fontSize: "12.5px", color: "#64748b" }}>Tài liệu PDF:</span>
+              <strong style={{ fontSize: "12.5px", color: "#17836b" }}>{pdfFileName}</strong>
               <label
                 style={{
                   fontSize: "11.5px",
-                  color: "#c8aa6e",
+                  color: "#163e43",
                   cursor: "pointer",
                   textDecoration: "underline",
                 }}
@@ -837,8 +837,8 @@ export function AdminStudio() {
               onClick={handleRunAIPipeline}
               style={{
                 padding: "8px 16px",
-                background: "#c8aa6e",
-                color: "#07090c",
+                background: "#163e43",
+                color: "#f6f7f9",
                 border: "none",
                 borderRadius: "7px",
                 fontWeight: 700,
@@ -852,10 +852,10 @@ export function AdminStudio() {
 
           {pipelineDone && (
             <div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                <div style={{ display: "grid", gap: "12px" }}>
+              <div className="admin-grid admin-review-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                <div className="admin-review-fields" style={{ display: "grid", gap: "12px" }}>
                   <div>
-                    <label style={{ fontSize: "11px", color: "#808894", display: "block", marginBottom: "5px" }}>
+                    <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
                       Kịch bản thuyết minh
                     </label>
                     <textarea
@@ -867,7 +867,7 @@ export function AdminStudio() {
                   </div>
 
                   <div>
-                    <label style={{ fontSize: "11px", color: "#808894", display: "block", marginBottom: "5px" }}>
+                    <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
                       Mô tả không gian 360°
                     </label>
                     <textarea
@@ -881,15 +881,15 @@ export function AdminStudio() {
                   <div
                     style={{
                       padding: "9px 12px",
-                      background: "#07090c",
-                      border: "1px solid #1d232d",
+                      background: "#f6f7f9",
+                      border: "1px solid #dce2e9",
                       borderRadius: "7px",
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
                     }}
                   >
-                    <span style={{ fontSize: "12px", color: "#d6d8d2" }}>
+                    <span style={{ fontSize: "12px", color: "#34495a" }}>
                       🔊 Giọng đọc AI ({artifactName})
                     </span>
                     <button
@@ -897,9 +897,9 @@ export function AdminStudio() {
                       onClick={handlePreviewVoice}
                       style={{
                         padding: "5px 12px",
-                        background: isPlayingVoice ? "#10b981" : "#121720",
-                        border: "1px solid #c8aa6e",
-                        color: isPlayingVoice ? "#07090c" : "#e4cfa3",
+                        background: isPlayingVoice ? "#17836b" : "#f0f3f6",
+                        border: "1px solid #163e43",
+                        color: isPlayingVoice ? "#f6f7f9" : "#846036",
                         borderRadius: "5px",
                         fontSize: "11px",
                         fontWeight: 600,
@@ -911,8 +911,8 @@ export function AdminStudio() {
                   </div>
                 </div>
 
-                <div>
-                  <label style={{ fontSize: "11px", color: "#808894", display: "block", marginBottom: "5px" }}>
+                <div className="admin-review-preview">
+                  <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
                     Video lịch sử (.mp4)
                   </label>
                   <StoryPlayer
@@ -928,7 +928,7 @@ export function AdminStudio() {
                 style={{
                   marginTop: "16px",
                   paddingTop: "14px",
-                  borderTop: "1px solid #171c24",
+                  borderTop: "1px solid #e4e8ee",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -947,7 +947,7 @@ export function AdminStudio() {
                     type="checkbox"
                     checked={step3Reviewed}
                     onChange={(e) => setStep3Reviewed(e.target.checked)}
-                    style={{ width: "16px", height: "16px", accentColor: "#10b981" }}
+                    style={{ width: "16px", height: "16px", accentColor: "#17836b" }}
                   />
                   Đã kiểm tra nội dung
                 </label>
@@ -961,8 +961,8 @@ export function AdminStudio() {
                   }}
                   style={{
                     padding: "10px 20px",
-                    background: step3Reviewed ? "#c8aa6e" : "#171c24",
-                    color: step3Reviewed ? "#07090c" : "#525860",
+                    background: step3Reviewed ? "#163e43" : "#e4e8ee",
+                    color: step3Reviewed ? "#f6f7f9" : "#83909d",
                     border: "none",
                     borderRadius: "7px",
                     fontWeight: 700,
@@ -980,7 +980,7 @@ export function AdminStudio() {
 
       {/* BƯỚC 4: KIỂM DUYỆT & XUẤT BẢN (SIÊU GỌN) */}
       {step === 4 && (
-        <div
+        <div className="admin-card"
           style={{
             ...cardStyle,
             display: "grid",
@@ -990,14 +990,14 @@ export function AdminStudio() {
         >
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             <div>
-              <div style={{ fontSize: "13.5px", fontWeight: 600, color: "#f2f2ee", marginBottom: "12px" }}>
+              <div style={{ fontSize: "13.5px", fontWeight: 600, color: "#172b3a", marginBottom: "12px" }}>
                 Xác nhận kiểm duyệt trước khi xuất bản
               </div>
 
               <div
                 style={{
-                  background: "#07090c",
-                  border: "1px solid #171c24",
+                  background: "#f6f7f9",
+                  border: "1px solid #e4e8ee",
                   borderRadius: "8px",
                   padding: "16px",
                   display: "grid",
@@ -1010,7 +1010,7 @@ export function AdminStudio() {
                     type="checkbox"
                     checked={checkCostume}
                     onChange={(e) => setCheckCostume(e.target.checked)}
-                    style={{ width: "15px", height: "15px", accentColor: "#c8aa6e" }}
+                    style={{ width: "15px", height: "15px", accentColor: "#163e43" }}
                   />
                   <span>Hình ảnh & Video đúng chuẩn lịch sử văn hóa Đông Sơn</span>
                 </label>
@@ -1020,7 +1020,7 @@ export function AdminStudio() {
                     type="checkbox"
                     checked={checkPedestal}
                     onChange={(e) => setCheckPedestal(e.target.checked)}
-                    style={{ width: "15px", height: "15px", accentColor: "#c8aa6e" }}
+                    style={{ width: "15px", height: "15px", accentColor: "#163e43" }}
                   />
                   <span>Mô hình 3D đặt chuẩn trên bệ đỡ trưng bày</span>
                 </label>
@@ -1030,7 +1030,7 @@ export function AdminStudio() {
                     type="checkbox"
                     checked={checkFactRAG}
                     onChange={(e) => setCheckFactRAG(e.target.checked)}
-                    style={{ width: "15px", height: "15px", accentColor: "#c8aa6e" }}
+                    style={{ width: "15px", height: "15px", accentColor: "#163e43" }}
                   />
                   <span>Trợ lý AI bám sát tài liệu bảo tàng (Chặn câu hỏi ngoài lề)</span>
                 </label>
@@ -1044,8 +1044,8 @@ export function AdminStudio() {
                 style={{
                   width: "100%",
                   padding: "12px",
-                  background: doneSteps.s4 ? "#10b981" : "#c8aa6e",
-                  color: "#07090c",
+                  background: doneSteps.s4 ? "#17836b" : "#163e43",
+                  color: "#f6f7f9",
                   border: "none",
                   borderRadius: "7px",
                   fontWeight: 700,
@@ -1066,7 +1066,7 @@ export function AdminStudio() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     fontSize: "12px",
-                    color: "#10b981",
+                    color: "#17836b",
                   }}
                 >
                   <span>Đã đồng bộ sang trang Du khách.</span>
@@ -1076,8 +1076,8 @@ export function AdminStudio() {
                     style={{
                       padding: "6px 12px",
                       background: "transparent",
-                      color: "#e4cfa3",
-                      border: "1px solid #c8aa6e",
+                      color: "#846036",
+                      border: "1px solid #163e43",
                       borderRadius: "5px",
                       fontSize: "11.5px",
                       cursor: "pointer",
@@ -1091,7 +1091,7 @@ export function AdminStudio() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: "13.5px", fontWeight: 600, color: "#f2f2ee", marginBottom: "12px" }}>
+            <div style={{ fontSize: "13.5px", fontWeight: 600, color: "#172b3a", marginBottom: "12px" }}>
               Kiểm thử Trợ lý AI ({artifactCode})
             </div>
 
@@ -1101,8 +1101,8 @@ export function AdminStudio() {
                 minHeight: "170px",
                 maxHeight: "185px",
                 overflowY: "auto",
-                background: "#07090c",
-                border: "1px solid #171c24",
+                background: "#f6f7f9",
+                border: "1px solid #e4e8ee",
                 padding: "10px",
                 fontSize: "12px",
                 marginBottom: "8px",
@@ -1118,9 +1118,9 @@ export function AdminStudio() {
                   style={{
                     padding: "7px 10px",
                     borderRadius: "6px",
-                    background: item.role === "user" ? "#121720" : "#0b0e13",
+                    background: item.role === "user" ? "#f0f3f6" : "#ffffff",
                     borderLeft:
-                      item.role === "user" ? "2.5px solid #c8aa6e" : "2.5px solid #10b981",
+                      item.role === "user" ? "2.5px solid #163e43" : "2.5px solid #17836b",
                     whiteSpace: "pre-line",
                     lineHeight: 1.45,
                   }}
@@ -1137,9 +1137,9 @@ export function AdminStudio() {
                 style={{
                   fontSize: "11px",
                   padding: "4px 8px",
-                  background: "#07090c",
-                  border: "1px solid #1d232d",
-                  color: "#e4cfa3",
+                  background: "#f6f7f9",
+                  border: "1px solid #dce2e9",
+                  color: "#846036",
                   borderRadius: "4px",
                   cursor: "pointer",
                 }}
@@ -1152,9 +1152,9 @@ export function AdminStudio() {
                 style={{
                   fontSize: "11px",
                   padding: "4px 8px",
-                  background: "#07090c",
-                  border: "1px solid #1d232d",
-                  color: "#e4cfa3",
+                  background: "#f6f7f9",
+                  border: "1px solid #dce2e9",
+                  color: "#846036",
                   borderRadius: "4px",
                   cursor: "pointer",
                 }}
@@ -1167,7 +1167,7 @@ export function AdminStudio() {
                 style={{
                   fontSize: "11px",
                   padding: "4px 8px",
-                  background: "#07090c",
+                  background: "#f6f7f9",
                   border: "1px solid rgba(239, 68, 68, 0.3)",
                   color: "#fca5a5",
                   borderRadius: "4px",
@@ -1192,9 +1192,9 @@ export function AdminStudio() {
                 onClick={() => handleTestSandbox()}
                 style={{
                   padding: "8px 14px",
-                  background: "#121720",
-                  color: "#e4cfa3",
-                  border: "1px solid #c8aa6e",
+                  background: "#f0f3f6",
+                  color: "#846036",
+                  border: "1px solid #163e43",
                   borderRadius: "6px",
                   fontWeight: 600,
                   fontSize: "12px",
