@@ -863,6 +863,19 @@ export function InteractiveScene({
       const width = container.clientWidth || 1;
       const height = container.clientHeight || 1;
 
+      if (alignToGallery) {
+        const isPhone = window.innerWidth <= 760;
+        keyLight.intensity = isPhone ? 1.4 : 2.5;
+        focusLight.intensity = isPhone ? 1.5 : 5;
+        models.forEach((model) => {
+          const displayCase = model.userData.displayCase as THREE.Group;
+          displayCase.traverse((object) => {
+            if (object instanceof THREE.PointLight)
+              object.intensity = isPhone ? 0.5 : 1.4;
+          });
+        });
+      }
+
       renderer.setSize(width, height);
       if (camera instanceof THREE.OrthographicCamera) {
         camera.left = (-3.4 * width) / height;
