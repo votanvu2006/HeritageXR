@@ -223,9 +223,11 @@ function MuseumApp() {
                 <button
                   className="spatial-back-button"
                   type="button"
+                  aria-label="Quay lại phòng trưng bày"
                   onClick={handleBackToScan}
                 >
-                  ← Quay lại quét
+                  <span className="object-back-arrow" aria-hidden="true">←</span>
+                  <span className="object-back-text">Quay lại quét</span>
                 </button>
 
                 <div className="object-title-copy">

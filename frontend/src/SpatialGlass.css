@@ -1903,3 +1903,85 @@
     line-height: 1.35;
   }
 }
+
+.object-back-arrow { margin-right: 4px; }
+@media (max-width: 760px) {
+  .heritage-experience .object-experience-heading {
+    grid-template-columns: 44px minmax(0, 1fr) 78px;
+    align-items: center;
+  }
+  .heritage-experience .object-experience-heading :is(.spatial-back-button, .spatial-assistant-button) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .heritage-experience .object-experience-heading .spatial-back-button {
+    width: 44px;
+    color: #fff;
+    font-size: 22px;
+  }
+  .heritage-experience .object-experience-heading .spatial-back-button::before { content: none; }
+  .heritage-experience .object-experience-heading .object-back-arrow { margin: 0; }
+  .heritage-experience .object-experience-heading .object-back-text { display: none; }
+  .heritage-experience .object-experience-heading .spatial-assistant-button {
+    width: 78px;
+    font-size: 12px;
+  }
+  .heritage-experience .object-title-copy { min-width: 0; }
+}
+@media (max-width: 760px) and (orientation: portrait) {
+  .heritage-experience .mobile-gallery-setting {
+    background:
+      linear-gradient(90deg, #11080799, transparent 18%, transparent 82%, #11080799),
+      linear-gradient(180deg, #140b08 0%, #3e1b12 22%, transparent 48%),
+      radial-gradient(ellipse at 22% 55%, #c16a3350, transparent 24%),
+      radial-gradient(ellipse at 50% 55%, #c16a3350, transparent 24%),
+      radial-gradient(ellipse at 78% 55%, #c16a3350, transparent 24%),
+      #572217;
+  }
+  .heritage-experience .mobile-gallery-bays i {
+    position: relative;
+    background:
+      radial-gradient(ellipse at 50% 0%, #ffc17a99, transparent 65%),
+      linear-gradient(90deg, #210d0c99, #793621aa 50%, #210d0c99);
+    box-shadow: inset 0 9px 15px #18090499, inset 0 0 22px #14080580, 0 5px 10px #200c0880;
+  }
+  .heritage-experience .mobile-gallery-bays i::before {
+    content: '';
+    position: absolute;
+    top: -58px;
+    left: calc(50% - 9px);
+    width: 18px;
+    height: 13px;
+    border: 1px solid #776044;
+    border-radius: 3px 3px 7px 7px;
+    background: linear-gradient(#1c1510 0 60%, #fff0c4 85%);
+    box-shadow: 0 5px 10px #ffc77c80;
+  }
+  .heritage-experience .mobile-gallery-bays i::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: -46px;
+    left: -18%;
+    width: 136%;
+    height: calc(100% + 46px);
+    background: radial-gradient(ellipse at 50% 65%, #ffb46755, #d8763233 40%, transparent 72%);
+    clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%);
+    pointer-events: none;
+  }
+  .heritage-experience .mobile-gallery-setting::after {
+    background:
+      radial-gradient(ellipse at 22% 0%, #efad5b55, transparent 25%),
+      radial-gradient(ellipse at 50% 0%, #efad5b55, transparent 25%),
+      radial-gradient(ellipse at 78% 0%, #efad5b55, transparent 25%),
+      linear-gradient(90deg, #10070480, transparent 25%, transparent 75%, #10070480),
+      #342017 url('/images/museum-balanced-gallery.webp') center bottom / 100% 400% no-repeat;
+  }
+}
