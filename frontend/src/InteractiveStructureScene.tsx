@@ -235,10 +235,20 @@ export function InteractiveStructureScene({
     const resize = () => {
       const width = viewport.clientWidth || 1;
       const height = viewport.clientHeight || 1;
+      // The visitor layout reserves its last two grid rows for the cutaway
+      // button and note. Frame the model in the remaining row, preserving its
+      // aspect ratio and the original orbit/cutaway behavior.
+      const modelHeight =
+        Number.parseFloat(window.getComputedStyle(viewport).gridTemplateRows) ||
+        height;
+      viewport.style.setProperty(
+        "--structure-footer-height",
+        `${Math.max(0, height - modelHeight)}px`,
+      );
 
-      renderer.setSize(width, height);
+      renderer.setSize(width, modelHeight);
 
-      camera.aspect = width / height;
+      camera.aspect = width / modelHeight;
       camera.updateProjectionMatrix();
 
       connectorSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -281,7 +291,7 @@ export function InteractiveStructureScene({
 
       const viewportRect = viewport.getBoundingClientRect();
       const width = viewport.clientWidth;
-      const height = viewport.clientHeight;
+      const height = renderer.domElement.clientHeight;
       const lineOpacity = Math.min(cutawayProgress, 1);
 
       parts.forEach((part) => {

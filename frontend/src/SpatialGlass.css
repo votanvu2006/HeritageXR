@@ -1183,3 +1183,292 @@
     flex: 0 0 60px;
   }
 }
+
+/* Compact spatial layout: let the heading, viewer and dock share actual grid
+   rows instead of positioning footer controls outside the viewer with offsets. */
+.heritage-experience.spatial-app {
+  padding: 16px 24px 20px;
+}
+.heritage-experience .spatial-header {
+  flex-basis: 56px;
+  min-height: 56px;
+  padding: 8px 20px;
+  border-radius: 24px;
+}
+.heritage-experience .heritage-brand strong {
+  font-size: 19px;
+}
+.heritage-experience :is(.heritage-total-points, .spatial-admin-link) {
+  min-height: 36px;
+  padding: 8px 14px;
+  font-size: 12px;
+}
+.heritage-experience .spatial-stage {
+  margin-top: 16px;
+}
+.heritage-experience .scan-guidance {
+  width: min(350px, calc(100% - 32px));
+  padding: 16px 18px;
+  border-radius: 24px;
+}
+.heritage-experience .scan-guidance strong {
+  font-size: 18px;
+}
+.heritage-experience .scan-guidance p {
+  font-size: 12px;
+}
+.heritage-experience .object-experience {
+  display: grid;
+  grid-template: auto minmax(0, 1fr) auto / minmax(0, 1fr);
+  gap: 14px 20px;
+}
+.heritage-experience .object-experience-heading {
+  position: relative;
+  inset: auto;
+  grid-area: 1 / 1;
+  justify-self: center;
+  width: min(680px, 100%);
+  min-height: 74px;
+  padding: 12px 16px;
+  gap: 16px;
+  border-radius: 24px;
+  transform: none;
+}
+.heritage-experience .object-title-copy .section-label {
+  margin-bottom: 4px;
+  font-size: 9px;
+}
+.heritage-experience .object-title-copy h1 {
+  font-size: clamp(18px, 1.6vw, 22px);
+  line-height: 1.25;
+}
+.heritage-experience .object-title-copy p {
+  margin-top: 4px;
+  font-size: 11px;
+}
+.heritage-experience
+  .object-experience-heading
+  :is(.spatial-back-button, .spatial-assistant-button) {
+  min-height: 44px;
+  padding: 10px 14px;
+  font-size: 12px;
+}
+.heritage-experience .object-experience > .interactive-structure-scene {
+  position: relative;
+  inset: auto;
+  grid-area: 2 / 1;
+  min-height: 0;
+  height: 100%;
+}
+.heritage-experience .object-experience .structure-scene-viewport {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  row-gap: 8px;
+  overflow: hidden;
+}
+.heritage-experience .object-experience .structure-cutaway-toggle {
+  position: relative;
+  inset: auto;
+  grid-row: 2;
+  justify-self: center;
+  align-self: end;
+  min-height: 44px;
+  padding: 10px 18px;
+  margin: 0;
+  transform: none;
+  font-size: 12px;
+}
+.heritage-experience .object-experience .structure-scene-footnote {
+  position: relative;
+  inset: auto;
+  grid-row: 3;
+  justify-self: center;
+  width: fit-content;
+  max-width: min(720px, calc(100% - 24px));
+  margin: 0;
+  transform: none;
+  font-size: 10px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.heritage-experience .object-action-dock {
+  position: relative;
+  inset: auto;
+  grid-area: 3 / 1;
+  justify-self: center;
+  width: min(520px, 100%);
+  padding: 10px 12px;
+  border-radius: 24px;
+  transform: none;
+}
+.heritage-experience .object-action-dock > p {
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+.heritage-experience .object-action-list {
+  gap: 6px;
+}
+.heritage-experience .object-action-button {
+  min-height: 52px;
+  padding: 6px 4px;
+  gap: 5px;
+  font-size: 12px;
+}
+.heritage-experience .object-action-icon,
+.heritage-experience .object-action-icon::before {
+  width: 21px;
+  height: 21px;
+}
+.heritage-experience .object-experience .structure-part-card {
+  bottom: 82px;
+  width: min(280px, calc(100% - 32px));
+  max-height: calc(100% - 110px);
+  overflow-y: auto;
+  padding: 16px 18px;
+  border-radius: 22px;
+}
+.heritage-experience .structure-part-card h3 {
+  font-size: 17px;
+}
+.heritage-experience .structure-part-card p {
+  font-size: 12px;
+}
+/* Opening the existing AI guide gives it its own column on wide displays. */
+.heritage-experience .object-experience:has(.spatial-assistant-panel) {
+  grid-template-columns: minmax(0, 1fr) 360px;
+}
+.heritage-experience
+  .object-experience:has(.spatial-assistant-panel)
+  > .object-experience-heading {
+  grid-column: 1 / -1;
+}
+.heritage-experience .object-experience .spatial-assistant-panel {
+  position: relative;
+  inset: auto;
+  grid-area: 2 / 2 / 4 / 3;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  min-height: 0;
+  border-radius: 26px;
+}
+.heritage-experience .spatial-assistant-panel > header {
+  padding: 16px 18px 12px;
+}
+.heritage-experience .spatial-assistant-panel > header strong {
+  font-size: 17px;
+}
+.camera-passthrough-control {
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 24px;
+  max-width: min(220px, calc((100vw - 568px) / 2));
+}
+.camera-toggle-button {
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 12px;
+}
+.camera-passthrough-caption {
+  max-width: 100%;
+  font-size: 10px;
+}
+@media (max-width: 900px) {
+  .heritage-experience.spatial-app {
+    padding: 12px 12px 94px;
+  }
+  .heritage-experience .spatial-stage {
+    margin-top: 12px;
+  }
+  .heritage-experience .object-experience {
+    row-gap: 12px;
+  }
+  .heritage-experience .object-experience-heading {
+    width: min(640px, 100%);
+    gap: 10px;
+    padding: 12px;
+  }
+  .heritage-experience .object-experience:has(.spatial-assistant-panel) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .heritage-experience .object-experience .spatial-assistant-panel {
+    position: absolute;
+    inset: 86px 0 0;
+    grid-area: auto;
+    width: min(392px, 100%);
+    height: auto;
+    margin-left: auto;
+  }
+  .camera-passthrough-control {
+    bottom: max(14px, env(safe-area-inset-bottom));
+    left: 16px;
+    max-width: calc(100vw - 32px);
+  }
+  .camera-passthrough-caption {
+    max-width: 280px;
+  }
+}
+@media (max-width: 760px) {
+  .heritage-experience .spatial-header {
+    flex-basis: 56px;
+    min-height: 56px;
+    padding: 8px 12px;
+  }
+  .heritage-experience .heritage-brand strong {
+    font-size: 17px;
+  }
+  .heritage-experience .heritage-header-actions {
+    gap: 5px;
+  }
+  .heritage-experience :is(.heritage-total-points, .spatial-admin-link) {
+    padding: 8px 9px;
+    font-size: 10px;
+  }
+  .heritage-experience .object-experience-heading {
+    min-height: 78px;
+  }
+  .heritage-experience .object-title-copy h1 {
+    font-size: 16px;
+    white-space: normal;
+  }
+  .heritage-experience .object-title-copy p {
+    font-size: 10px;
+  }
+  .heritage-experience .object-experience-heading .spatial-back-button {
+    padding-inline: 0;
+  }
+  .heritage-experience .object-experience .spatial-assistant-panel {
+    width: 100%;
+  }
+  .heritage-experience .object-action-dock {
+    padding: 9px 8px;
+  }
+  .heritage-experience .object-action-button {
+    min-height: 50px;
+    font-size: 11px;
+  }
+  .heritage-experience .object-experience .structure-scene-footnote {
+    font-size: 9px;
+  }
+}
+@media (max-height: 500px) {
+  .heritage-experience .object-experience {
+    grid-template-rows: auto minmax(180px, 1fr) auto;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+  .heritage-experience .object-experience-heading {
+    min-height: 64px;
+    padding-block: 8px;
+  }
+  .heritage-experience .object-title-copy .section-label {
+    font-size: 8px;
+  }
+  .heritage-experience .object-title-copy h1 {
+    font-size: 17px;
+  }
+}
+
+.heritage-experience .object-experience .structure-part-card {
+  bottom: calc(var(--structure-footer-height, 82px) + 12px);
+  max-height: calc(100% - var(--structure-footer-height, 82px) - 24px);
+}
