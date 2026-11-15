@@ -10,7 +10,7 @@
   position: fixed;
   z-index: -1;
   inset: 0;
-  background: #581f16 url("/images/museum-red-gallery.webp") center / cover
+  background: #581f16 url("/images/museum-balanced-gallery.webp") center / cover
     no-repeat;
   pointer-events: none;
   transition: opacity 260ms ease;
@@ -30,8 +30,8 @@
 }
 .heritage-experience {
   --spatial-secondary: #e8dfd1;
-  --spatial-glass: linear-gradient(135deg, #392824d4, #281c19cc);
-  --spatial-border: #f0d9b847;
+  --spatial-glass: linear-gradient(135deg, #352921d9, #241c18d4);
+  --spatial-border: #cbb08452;
   --spatial-button: #f0dfc51a;
   --spatial-shadow: 0 14px 36px #2920152e, inset 0 1px 0 #fff1dc1f;
   color: #fff;
@@ -1474,4 +1474,46 @@
 .heritage-experience .object-experience .structure-part-card {
   bottom: calc(var(--structure-footer-height, 82px) + 12px);
   max-height: calc(100% - var(--structure-footer-height, 82px) - 24px);
+}
+
+/* The overview is a stationary display; rotation belongs to the object view. */
+.heritage-experience .scan-experience .three-canvas {
+  cursor: pointer;
+  touch-action: pan-y;
+}
+.heritage-experience .scan-experience .exhibit-hotspot {
+  border-color: #e1c59399;
+  background: #34271da6;
+  box-shadow:
+    0 0 0 5px #d7b57912,
+    0 5px 18px #180d0933;
+}
+.heritage-experience .scan-experience .exhibit-hotspot::after {
+  border-color: #cbb08466;
+  color: #f6ebd9;
+  background: #30231de8;
+}
+.heritage-experience .scan-experience .scan-guidance {
+  top: 0;
+  left: 50%;
+  width: min(540px, calc(100% - 24px));
+  padding: 12px 18px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.heritage-experience .scan-experience .scan-guidance strong {
+  font-size: 16px;
+}
+.heritage-experience .scan-experience .scan-guidance p {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+  .camera-passthrough-shell:has(.scan-experience)::before {
+    background-image: url("/images/museum-balanced-gallery-portrait.webp");
+  }
+  .heritage-experience .scan-experience .exhibit-hotspot::after {
+    max-width: min(150px, 24vw);
+  }
 }

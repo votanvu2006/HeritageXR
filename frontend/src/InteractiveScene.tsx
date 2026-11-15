@@ -517,6 +517,56 @@ export function createExhibitArtifact(id: ExhibitId) {
   return createDrum(false);
 }
 
+// Visitor-only display furniture; artifact meshes and admin cases stay intact.
+function styleGalleryCase(model: THREE.Group) {
+  const displayCase = model.userData.displayCase as THREE.Group | undefined;
+  if (!displayCase) return;
+  displayCase.traverse((object) => {
+    if (
+      !(object instanceof THREE.Mesh) ||
+      !(object.material instanceof THREE.MeshStandardMaterial)
+    )
+      return;
+    const material = object.material;
+    switch (material.color.getHex()) {
+      case 0xe7e4dc:
+        object.visible = false;
+        break;
+      case 0x806638:
+        material.color.setHex(0x8f7048);
+        material.roughness = 0.4;
+        break;
+      case 0x171a18:
+        material.color.setHex(0x241d18);
+        break;
+      case 0xb8d2c6:
+        material.color.setHex(0xf0e4ce);
+        material.opacity = 0.035;
+        break;
+    }
+  });
+  addMesh(
+    displayCase,
+    new THREE.BoxGeometry(1.7, 0.76, 1.7),
+    new THREE.MeshStandardMaterial({
+      color: 0x42362d,
+      roughness: 0.78,
+      metalness: 0.06,
+    }),
+    [0, 0.42, 0],
+  );
+  addMesh(
+    displayCase,
+    new THREE.BoxGeometry(1.74, 0.06, 1.74),
+    new THREE.MeshStandardMaterial({
+      color: 0x9b8563,
+      roughness: 0.56,
+      metalness: 0.18,
+    }),
+    [0, 0.83, 0],
+  );
+}
+
 function tagModel(group: THREE.Group, id: ExhibitId) {
   group.userData.exhibitId = id;
 
@@ -601,11 +651,13 @@ export function InteractiveScene({
 
     models.forEach((model, id) => {
       model.position.x = positions[id];
+      if (alignToGallery) styleGalleryCase(model);
       tagModel(model, id);
       scene.add(model);
     });
 
     const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enabled = !alignToGallery;
     controls.enableDamping = true;
     controls.enablePan = false;
     controls.minDistance = 3.5;
@@ -622,14 +674,16 @@ export function InteractiveScene({
       const bounds = container.getBoundingClientRect();
       if (!bounds.width || !bounds.height) return;
       camera.updateMatrixWorld();
-      const wallCenters = [0.199, 0.503, 0.804];
-      const floorY = window.innerHeight * 0.72;
+      const isPortrait =
+        window.innerWidth <= 900 && window.innerHeight > window.innerWidth;
+      const wallCenters = isPortrait ? [0.22, 0.5, 0.78] : [0.24, 0.5, 0.76];
+      const floorY = window.innerHeight * (isPortrait ? 0.74 : 0.72);
       const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
       const layoutRay = new THREE.Raycaster();
       const point = new THREE.Vector3();
       const box = new THREE.Box3();
       const corner = new THREE.Vector3();
-      const maxWidth = window.innerWidth * 0.17;
+      const maxWidth = window.innerWidth * (isPortrait ? 0.21 : 0.19);
       const maxHeight = window.innerHeight * 0.44;
 
       const placeCase = (model: THREE.Group, index: number, scale: number) => {
@@ -697,10 +751,14 @@ export function InteractiveScene({
 
       const isMobileScan = selectedIdRef.current === null && width < 760;
 
-      camera.fov = isMobileScan ? 54 : 42;
+      camera.fov = alignToGallery ? 26 : isMobileScan ? 54 : 42;
 
       if (selectedIdRef.current === null) {
-        camera.position.set(0, 4.3, isMobileScan ? 12.2 : 10.4);
+        camera.position.set(
+          0,
+          4.3,
+          alignToGallery ? 18 : isMobileScan ? 12.2 : 10.4,
+        );
       }
 
       camera.updateProjectionMatrix();
@@ -941,8 +999,12 @@ export function InteractiveScene({
     if (selectedId === null) {
       const isMobile = window.innerWidth < 760;
 
-      state.camera.fov = isMobile ? 54 : 42;
-      state.camera.position.set(0, 4.3, isMobile ? 12.2 : 10.4);
+      state.camera.fov = alignToGallery ? 26 : isMobile ? 54 : 42;
+      state.camera.position.set(
+        0,
+        4.3,
+        alignToGallery ? 18 : isMobile ? 12.2 : 10.4,
+      );
       state.controls.target.set(0, 1.95, 0);
       state.focusLight.position.set(0, 2.6, 1.2);
     } else {
@@ -973,7 +1035,7 @@ export function InteractiveScene({
     state.camera.updateProjectionMatrix();
     state.controls.update();
     state.layoutGallery();
-  }, [selectedId, effectiveShowDisplayCase]);
+  }, [selectedId, effectiveShowDisplayCase, alignToGallery]);
 
   return (
     <div className="scene-container" ref={containerRef}>
