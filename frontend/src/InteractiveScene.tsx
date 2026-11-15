@@ -980,7 +980,7 @@ export function InteractiveScene({
         const position = alignToGallery
           ? new THREE.Vector3(
               model.position.x,
-              model.position.y + 0.48 * scale,
+              model.position.y + 1.3 * scale,
               model.position.z + 1.06 * scale,
             )
           : new THREE.Vector3(

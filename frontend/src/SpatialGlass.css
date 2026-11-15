@@ -1518,45 +1518,16 @@
   }
 }
 
-/* One centered nameplate on each plinth, on the same baseline. */
+/* Compact touch targets retain the original hotspot interaction. */
 .heritage-experience .scan-experience .exhibit-hotspot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: min(210px, 22vw);
-  height: 44px;
-  padding: 6px 12px;
-  border-radius: 18px;
-  background: #30231de8;
-  box-shadow: 0 4px 14px #180d0926;
-}
-.heritage-experience .scan-experience .exhibit-hotspot .hotspot-marker {
-  display: none;
-}
-.heritage-experience .scan-experience .exhibit-hotspot::after {
-  position: static;
-  width: auto;
-  max-width: 100%;
-  padding: 0;
-  transform: none;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  font-size: 12px;
-  text-align: center;
-}
-.heritage-experience .scan-experience .exhibit-hotspot:hover {
-  background: #59422ff2;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
 }
 @media (max-width: 760px) {
   .heritage-experience .scan-experience .exhibit-hotspot {
-    width: 24vw;
-    padding: 5px 6px;
-    border-radius: 14px;
-  }
-  .heritage-experience .scan-experience .exhibit-hotspot::after {
-    font-size: 9px;
+    width: 44px;
+    height: 44px;
   }
 }
 @media (max-height: 500px) and (min-width: 761px) {
