@@ -1943,35 +1943,52 @@
       radial-gradient(ellipse 70% 40% at 50% 58%, #af73422e, transparent 90%),
       #50271c;
   }
+  /* Sample the three lit wall bays from the desktop artwork while retaining
+     the selected phone layout's fixed frame dimensions. */
+  .heritage-experience .mobile-gallery-bays::before {
+    content: '';
+    position: absolute;
+    top: -62px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #21150f;
+    box-shadow: 0 1px 1px #9a764333;
+  }
   .heritage-experience .mobile-gallery-bays i {
     position: relative;
-    background:
-      radial-gradient(ellipse 95% 90% at 50% -8%, #efc68a80 0%, #ce975b50 35%, #a2653320 65%, transparent 95%),
-      linear-gradient(90deg, #24110d99, #633323 35%, #633323 65%, #24110d99);
-    border-color: #9e7d50;
-    box-shadow: inset 0 4px 7px #1a0a0770, inset 0 0 12px #1a0a0755, 0 2px 1px #1d0d0a, 0 6px 12px #1d0d0a66;
+    border: 0;
+    outline: none;
+    background-image: url('/images/museum-balanced-gallery.webp');
+    background-repeat: no-repeat;
+    background-size: 476.19% 238.1%;
+    background-position: 17.1% 40%;
+    box-shadow: 0 4px 8px #1d0d0a66;
   }
+  .heritage-experience .mobile-gallery-bays i:nth-child(2) { background-position-x: 50%; }
+  .heritage-experience .mobile-gallery-bays i:nth-child(3) { background-position-x: 82.9%; }
   .heritage-experience .mobile-gallery-bays i::before {
     content: '';
     position: absolute;
-    top: -58px;
+    top: -60px;
     left: calc(50% - 9px);
     width: 18px;
-    height: 13px;
-    border: 1px solid #776044;
-    border-radius: 3px 3px 7px 7px;
-    background: linear-gradient(#1c1510 0 62%, #c4a06a 68%, #fff4d8 83%, #fff9eb);
-    box-shadow: 0 2px 2px #0c0504, 0 3px 6px #e6be7d50;
+    height: 38px;
+    background: url('/images/museum-balanced-gallery.webp') 23.4% 7% / 5560% 1653% no-repeat;
+    mask-image: linear-gradient(transparent, #000 6px, #000 32px, transparent);
+    -webkit-mask-image: linear-gradient(transparent, #000 6px, #000 32px, transparent);
   }
+  .heritage-experience .mobile-gallery-bays i:nth-child(2)::before { background-position-x: 50%; }
+  .heritage-experience .mobile-gallery-bays i:nth-child(3)::before { background-position-x: 76.6%; }
   .heritage-experience .mobile-gallery-bays i::after {
     content: '';
     position: absolute;
     z-index: -1;
-    top: -46px;
-    left: -18%;
-    width: 136%;
-    height: calc(100% + 46px);
-    background: radial-gradient(ellipse 48% 55% at 50% 55%, #dfb47d2e, #bb87501a 48%, transparent 85%);
+    top: -25px;
+    left: -12%;
+    width: 124%;
+    height: 60px;
+    background: radial-gradient(ellipse at 50% 100%, #d88c4c55, transparent 72%);
     pointer-events: none;
   }
   .heritage-experience .mobile-gallery-setting::after {
