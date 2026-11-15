@@ -11,6 +11,7 @@ import { PhuChatbot } from "./components/PhuChatbot";
 import { CameraPassthrough } from "./CameraPassthrough";
 import "./App.css";
 import "./HeritageExperience.css";
+import "./SpatialGlass.css";
 
 const RagSandbox = lazy(() => import("./components/RagSandbox"));
 
@@ -176,19 +177,7 @@ function MuseumApp() {
             <a
               href="/admin"
               aria-label="Mở trang quản trị"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                minHeight: "34px",
-                padding: "7px 11px",
-                border: "1px solid rgba(218, 190, 119, 0.5)",
-                borderRadius: "8px",
-                color: "#f1e3c1",
-                background: "rgba(14, 17, 15, 0.88)",
-                font: "inherit",
-                fontSize: "11px",
-                textDecoration: "none",
-              }}
+              className="spatial-admin-link"
             >
               Quản trị
             </a>
