@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { InteractiveScene, type ExhibitId } from "./InteractiveScene";
 import { InteractiveStructureScene } from "./InteractiveStructureScene";
 import { exhibitInformation } from "./exhibitInformation";
@@ -6,7 +6,7 @@ import { exhibitStories } from "./exhibitStories";
 import { CraftingVideo } from "./CraftingVideo";
 import { NarratedVideo } from "./NarratedVideo";
 import { QuizPanel } from "./QuizPanel";
-import { quizProgressKey, readDemoPoints } from "./quizProgress";
+import { readDemoPoints } from "./quizProgress";
 import type { ExhibitChatContext } from "./Chatbot";
 import { PhuChatbot } from "./components/PhuChatbot";
 import { CameraPassthrough } from "./CameraPassthrough";
@@ -76,16 +76,6 @@ function MuseumApp() {
   const [points, setPoints] = useState(readDemoPoints);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [storyVideoUnavailable, setStoryVideoUnavailable] = useState(false);
-
-  useEffect(() => {
-    const syncPoints = (event: StorageEvent) => {
-      if (event.key === quizProgressKey || event.key === null) {
-        setPoints(readDemoPoints());
-      }
-    };
-    window.addEventListener("storage", syncPoints);
-    return () => window.removeEventListener("storage", syncPoints);
-  }, []);
 
   const selectedExhibit = selectedId
     ? exhibits.find((exhibit) => exhibit.id === selectedId) ?? exhibits[0]

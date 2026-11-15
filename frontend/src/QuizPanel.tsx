@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ExhibitId } from "./InteractiveScene";
 import { exhibitNames, questions } from "./quizQuestions";
 import {
   answerQuizQuestion,
-  quizProgressKey,
   quizResult,
   readQuizProgress,
   redeemQuizReward,
@@ -39,20 +38,6 @@ export function QuizPanel({
   const selectedAnswer = progress.answers[question.id] ?? null;
   const isCorrect = selectedAnswer === question.answer;
 
-  useEffect(() => {
-    const syncProgress = () => {
-      const latest = readQuizProgress();
-      setProgress(latest);
-      onPointsChange(latest.points);
-    };
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === quizProgressKey || event.key === null) syncProgress();
-    };
-    window.addEventListener("storage", handleStorage);
-    syncProgress();
-    return () => window.removeEventListener("storage", handleStorage);
-  }, [onPointsChange]);
-
   const handleAnswer = async (answerIndex: number) => {
     if (selectedAnswer !== null || isSaving || result.completed) return;
     setIsSaving(true);
@@ -66,7 +51,7 @@ export function QuizPanel({
       setProgress(next);
       onPointsChange(next.points);
     } catch {
-      setSaveError("Chưa lưu được câu trả lời trên thiết bị. Bạn hãy thử lại.");
+      setSaveError("Chưa ghi nhận được câu trả lời. Bạn hãy thử lại.");
     } finally {
       setIsSaving(false);
     }
@@ -93,9 +78,7 @@ export function QuizPanel({
           `HX-DEMO-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
         );
     } catch {
-      setSaveError(
-        "Chưa lưu được lượt đổi quà trên thiết bị. Bạn hãy thử lại.",
-      );
+      setSaveError("Chưa ghi nhận được lượt đổi quà. Bạn hãy thử lại.");
     } finally {
       setIsSaving(false);
     }
@@ -130,7 +113,7 @@ export function QuizPanel({
           </p>
           <p>
             Bạn đã hoàn thành lượt chơi của {exhibitNames[exhibitId]}. Mỗi hiện
-            vật chỉ được tham gia đố vui một lần.
+            vật được tham gia đố vui một lần trong mỗi lần truy cập.
           </p>
         </div>
       ) : (
@@ -214,8 +197,8 @@ export function QuizPanel({
         )}
       </div>
       <p className="quiz-demo-note">
-        Điểm và mã quà chỉ lưu trên thiết bị để trình diễn; chưa kết nối hệ
-        thống đổi quà thật.
+        Điểm và lượt chơi chỉ tính trong lần truy cập này. Tải lại trang sẽ bắt
+        đầu từ 0 điểm. Mã quà chỉ dùng để minh họa.
       </p>
     </section>
   );

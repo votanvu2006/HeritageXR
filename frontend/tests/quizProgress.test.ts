@@ -3,34 +3,30 @@ import assert from "node:assert/strict";
 import {
   answerQuizQuestion,
   readQuizProgress,
-  quizProgressKey,
   quizResult,
   redeemQuizReward,
+  startQuizVisit,
 } from "../src/quizProgress.ts";
 import { questions } from "../src/quizQuestions.ts";
 
-class MemoryStorage {
-  values = new Map<string, string>();
-  failWrites = false;
-  getItem(key: string) {
-    return this.values.get(key) ?? null;
-  }
-  setItem(key: string, value: string) {
-    if (this.failWrites) throw new Error("Storage unavailable");
-    this.values.set(key, value);
-  }
-}
-let storage: MemoryStorage;
-beforeEach(() => {
-  storage = new MemoryStorage();
+beforeEach(startQuizVisit);
+
+test("a visit starts at zero without consulting old browser points or completion", () => {
   Object.defineProperty(globalThis, "window", {
     configurable: true,
-    value: { localStorage: storage },
+    value: {
+      get localStorage() {
+        throw new Error("Previous visit storage must not be read");
+      },
+    },
   });
+  assert.deepEqual(readQuizProgress(), { points: 0, answers: {} });
+  for (const id of ["drum", "jar", "dagger"] as const)
+    assert.equal(quizResult(id, readQuizProgress()).completed, false);
 });
 
-test("one correct and two wrong answers complete the quiz at ten points; replay cannot improve it", async () => {
-  for (const [index, question] of questions.drum.entries()) {
+test("one correct and two wrong answers complete one quiz at ten points without replay", async () => {
+  for (const [index, question] of questions.drum.entries())
     await answerQuizQuestion(
       "drum",
       question.id,
@@ -38,7 +34,6 @@ test("one correct and two wrong answers complete the quiz at ten points; replay 
         ? question.answer
         : (question.answer + 1) % question.options.length,
     );
-  }
   const first = readQuizProgress();
   assert.deepEqual(quizResult("drum", first), {
     answered: 3,
@@ -51,19 +46,46 @@ test("one correct and two wrong answers complete the quiz at ten points; replay 
   assert.deepEqual(readQuizProgress(), first);
 });
 
-test("a wrong first answer survives reopening and cannot be replaced with a correct one", async () => {
+test("finishing drum leaves all three jar questions available and scores accumulate in the visit", async () => {
+  for (const question of questions.drum)
+    await answerQuizQuestion("drum", question.id, question.answer);
+  assert.equal(quizResult("jar", readQuizProgress()).answered, 0);
+  assert.equal(quizResult("dagger", readQuizProgress()).answered, 0);
+  for (const question of questions.jar)
+    await answerQuizQuestion("jar", question.id, question.answer);
+  assert.equal(readQuizProgress().points, 60);
+  assert.equal(quizResult("jar", readQuizProgress()).completed, true);
+  assert.equal(quizResult("drum", readQuizProgress()).completed, true);
+  assert.equal(quizResult("dagger", readQuizProgress()).completed, false);
+});
+
+test("a wrong answer stays final when returning to the quiz during the same visit", async () => {
   const question = questions.jar[0];
   const wrong = (question.answer + 1) % question.options.length;
   await answerQuizQuestion("jar", question.id, wrong);
-  const reopened = JSON.parse(storage.getItem(quizProgressKey)!);
-  assert.equal(reopened.answers[question.id], wrong);
   await answerQuizQuestion("jar", question.id, question.answer);
   assert.equal(readQuizProgress().answers[question.id], wrong);
   assert.equal(readQuizProgress().points, 0);
-  assert.equal(quizResult("jar", readQuizProgress()).completed, false);
 });
 
-test("zero-score completion is still final, while another exhibit has its own attempt", async () => {
+test("a new visit resets the balance and all three attempts together", async () => {
+  for (const id of ["drum", "jar", "dagger"] as const)
+    for (const question of questions[id])
+      await answerQuizQuestion(id, question.id, question.answer);
+  assert.equal(readQuizProgress().points, 90);
+  startQuizVisit();
+  assert.deepEqual(readQuizProgress(), { points: 0, answers: {} });
+  for (const id of ["drum", "jar", "dagger"] as const)
+    assert.equal(quizResult(id, readQuizProgress()).completed, false);
+  await answerQuizQuestion(
+    "drum",
+    questions.drum[0].id,
+    questions.drum[0].answer,
+  );
+  assert.equal(readQuizProgress().points, 10);
+});
+
+test("a zero-score attempt completes independently of the other exhibits", async () => {
   for (const question of questions.drum)
     await answerQuizQuestion(
       "drum",
@@ -72,39 +94,13 @@ test("zero-score completion is still final, while another exhibit has its own at
     );
   assert.equal(quizResult("drum", readQuizProgress()).completed, true);
   assert.equal(quizResult("jar", readQuizProgress()).completed, false);
-  await answerQuizQuestion("jar", questions.jar[0].id, questions.jar[0].answer);
-  assert.equal(readQuizProgress().points, 10);
+  assert.equal(readQuizProgress().points, 0);
 });
 
-test("old earned questions and the existing balance migrate without a second award", async () => {
-  storage.setItem("heritagexr-demo-points-v1", "10");
-  storage.setItem(
-    "heritagexr-demo-earned-quiz-v1",
-    JSON.stringify([questions.drum[0].id]),
-  );
-  assert.equal(readQuizProgress().points, 10);
-  await answerQuizQuestion(
-    "drum",
-    questions.drum[0].id,
-    questions.drum[0].answer,
-  );
-  assert.equal(readQuizProgress().points, 10);
-  for (const question of questions.drum.slice(1))
-    await answerQuizQuestion(
-      "drum",
-      question.id,
-      (question.answer + 1) % question.options.length,
-    );
-  assert.equal(quizResult("drum", readQuizProgress()).earnedPoints, 10);
-  assert.equal(quizResult("drum", readQuizProgress()).completed, true);
-});
-
-test("redeeming a reward does not reopen the completed quiz or regenerate spent points", async () => {
+test("spending points never reopens a completed attempt during the visit", async () => {
   for (const question of questions.jar)
     await answerQuizQuestion("jar", question.id, question.answer);
-  const redeemed = await redeemQuizReward();
-  assert.equal(redeemed.redeemed, true);
-  assert.equal(redeemed.progress.points, 0);
+  assert.equal((await redeemQuizReward()).redeemed, true);
   for (const question of questions.jar)
     await answerQuizQuestion("jar", question.id, question.answer);
   assert.equal(readQuizProgress().points, 0);
@@ -112,46 +108,16 @@ test("redeeming a reward does not reopen the completed quiz or regenerate spent 
   assert.equal((await redeemQuizReward()).redeemed, false);
 });
 
-test("duplicate submissions award only once, while different questions accumulate", async () => {
+test("duplicate submissions award once and invalid answers leave progress unchanged", async () => {
   const first = questions.dagger[0];
   await Promise.all(
     Array.from({ length: 5 }, () =>
       answerQuizQuestion("dagger", first.id, first.answer),
     ),
   );
-  assert.equal(readQuizProgress().points, 10);
-  await Promise.all(
-    questions.dagger
-      .slice(1)
-      .map((question) =>
-        answerQuizQuestion("dagger", question.id, question.answer),
-      ),
-  );
-  assert.equal(readQuizProgress().points, 30);
-  assert.equal(quizResult("dagger", readQuizProgress()).completed, true);
-});
-
-test("a failed save commits neither an answer nor its points", async () => {
-  storage.failWrites = true;
-  await assert.rejects(
-    answerQuizQuestion("drum", questions.drum[0].id, questions.drum[0].answer),
-  );
-  assert.equal(readQuizProgress().points, 0);
-  assert.deepEqual(readQuizProgress().answers, {});
-});
-
-test("malformed saved progress recovers the old balance and rejects invalid answer values", () => {
-  storage.setItem("heritagexr-demo-points-v1", "20");
-  storage.setItem(quizProgressKey, "broken json");
-  assert.equal(readQuizProgress().points, 20);
-  storage.setItem(
-    quizProgressKey,
-    JSON.stringify({
-      version: 2,
-      points: 20,
-      answers: { [questions.drum[0].id]: 999, unknown: 0 },
-    }),
-  );
-  assert.equal(readQuizProgress().points, 20);
-  assert.deepEqual(readQuizProgress().answers, {});
+  const progress = readQuizProgress();
+  assert.equal(progress.points, 10);
+  await assert.rejects(answerQuizQuestion("jar", first.id, first.answer));
+  await assert.rejects(answerQuizQuestion("dagger", first.id, 99));
+  assert.deepEqual(readQuizProgress(), progress);
 });

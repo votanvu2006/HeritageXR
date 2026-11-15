@@ -1,6 +1,7 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
+import { startQuizVisit } from "./quizProgress";
 import { AdminLayout } from "./components/AdminLayout";
 import { AdminCenter } from "./pages/AdminCenter";
 import { AdminStudio } from "./pages/AdminStudio";
@@ -50,6 +51,9 @@ function RootApp() {
     </AdminLayout>
   );
 }
+
+// Start once per document, before React StrictMode can mount components twice.
+startQuizVisit();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
