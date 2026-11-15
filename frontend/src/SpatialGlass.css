@@ -1,4 +1,7 @@
 /* Presentation-only skin, scoped to the visitor experience. */
+.camera-passthrough-shell:has(.scan-experience)::before {
+  background-size: 100% 100%;
+}
 .camera-passthrough-shell {
   background: #581f16;
 }

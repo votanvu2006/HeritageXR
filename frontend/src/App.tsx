@@ -199,6 +199,7 @@ function MuseumApp() {
                 selectedId={null}
                 onSelect={handleSelectExhibit}
                 showDisplayCase
+                alignToGallery
               />
 
               <div className="scan-bottom-hint glass-surface">

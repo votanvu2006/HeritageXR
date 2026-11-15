@@ -10,6 +10,7 @@ type InteractiveSceneProps = {
   onSelect: (id: ExhibitId) => void;
   showDisplayCase?: boolean;
   hideCase?: boolean;
+  alignToGallery?: boolean;
   customHotspots?: CustomHotspot[];
   onSurfaceClick3D?: (localPos: [number, number, number]) => void;
   onHotspotClick?: (hotspot: CustomHotspot) => void;
@@ -20,6 +21,7 @@ type SceneState = {
   controls: OrbitControls;
   models: Map<ExhibitId, THREE.Group>;
   focusLight: THREE.PointLight;
+  layoutGallery: () => void;
 };
 
 const exhibitIds: ExhibitId[] = ["drum", "jar", "dagger"];
@@ -497,12 +499,7 @@ function createDagger(includeDisplayCase = true) {
     [0, 1.83, 0],
   );
 
-  addMesh(
-    artifact,
-    new THREE.SphereGeometry(0.09, 12, 8),
-    bronze,
-    [0, 2, 0],
-  );
+  addMesh(artifact, new THREE.SphereGeometry(0.09, 12, 8), bronze, [0, 2, 0]);
 
   return includeDisplayCase ? createDisplayCase(artifact) : artifact;
 }
@@ -533,6 +530,7 @@ export function InteractiveScene({
   onSelect,
   showDisplayCase = true,
   hideCase,
+  alignToGallery = false,
   customHotspots = [],
   onSurfaceClick3D,
   onHotspotClick,
@@ -617,6 +615,79 @@ export function InteractiveScene({
     controls.target.set(0, 1.95, 0);
     controls.update();
 
+    // Match the visitor room's wall-bay centers and floor line in viewport
+    // coordinates. Admin/detail scenes retain their existing arrangement.
+    const layoutGallery = () => {
+      if (!alignToGallery || selectedIdRef.current !== null) return;
+      const bounds = container.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      camera.updateMatrixWorld();
+      const wallCenters = [0.199, 0.503, 0.804];
+      const floorY = window.innerHeight * 0.72;
+      const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+      const layoutRay = new THREE.Raycaster();
+      const point = new THREE.Vector3();
+      const box = new THREE.Box3();
+      const corner = new THREE.Vector3();
+      const maxWidth = window.innerWidth * 0.17;
+      const maxHeight = window.innerHeight * 0.44;
+
+      const placeCase = (model: THREE.Group, index: number, scale: number) => {
+        model.scale.setScalar(scale);
+        const targetX =
+          ((window.innerWidth * wallCenters[index] - bounds.left) /
+            bounds.width) *
+            2 -
+          1;
+        const floorNdcY = -((floorY - bounds.top) / bounds.height) * 2 + 1;
+        layoutRay.setFromCamera(new THREE.Vector2(targetX, floorNdcY), camera);
+        if (!layoutRay.ray.intersectPlane(plane, point)) return;
+        model.position.set(point.x, point.y + 0.04 * scale, 0);
+        corner
+          .set(model.position.x, model.position.y + 1.6 * scale, 0)
+          .project(camera);
+        layoutRay.setFromCamera(new THREE.Vector2(targetX, corner.y), camera);
+        if (layoutRay.ray.intersectPlane(plane, point))
+          model.position.x = point.x;
+      };
+      let sharedScale = 1;
+      exhibitIds.forEach((id, index) => {
+        const model = models.get(id)!;
+        let scale = 1;
+        // Measure after placement, since perspective widens the outer cases.
+        for (let pass = 0; pass < 4; pass++) {
+          placeCase(model, index, scale);
+          if (pass === 3) break;
+          box.setFromObject(model);
+          let left = Infinity,
+            right = -Infinity;
+          let top = -Infinity,
+            bottom = Infinity;
+          for (const x of [box.min.x, box.max.x]) {
+            for (const y of [box.min.y, box.max.y]) {
+              for (const z of [box.min.z, box.max.z]) {
+                corner.set(x, y, z).project(camera);
+                left = Math.min(left, corner.x);
+                right = Math.max(right, corner.x);
+                top = Math.max(top, corner.y);
+                bottom = Math.min(bottom, corner.y);
+              }
+            }
+          }
+          scale *= Math.min(
+            1,
+            maxWidth / (((right - left) * bounds.width) / 2),
+            maxHeight / (((top - bottom) * bounds.height) / 2),
+          );
+        }
+        sharedScale = Math.min(sharedScale, scale);
+      });
+      // Matching case sizes preserve a balanced, level display across the room.
+      exhibitIds.forEach((id, index) =>
+        placeCase(models.get(id)!, index, sharedScale),
+      );
+    };
+
     const resize = () => {
       const width = container.clientWidth || 1;
       const height = container.clientHeight || 1;
@@ -624,20 +695,17 @@ export function InteractiveScene({
       renderer.setSize(width, height);
       camera.aspect = width / height;
 
-      const isMobileScan =
-        selectedIdRef.current === null && width < 760;
+      const isMobileScan = selectedIdRef.current === null && width < 760;
 
       camera.fov = isMobileScan ? 54 : 42;
 
       if (selectedIdRef.current === null) {
-        camera.position.set(
-          0,
-          4.3,
-          isMobileScan ? 12.2 : 10.4,
-        );
+        camera.position.set(0, 4.3, isMobileScan ? 12.2 : 10.4);
       }
 
       camera.updateProjectionMatrix();
+      controls.update();
+      layoutGallery();
     };
 
     const resizeObserver = new ResizeObserver(resize);
@@ -812,7 +880,13 @@ export function InteractiveScene({
 
     render();
 
-    sceneStateRef.current = { camera, controls, models, focusLight };
+    sceneStateRef.current = {
+      camera,
+      controls,
+      models,
+      focusLight,
+      layoutGallery,
+    };
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
@@ -843,7 +917,7 @@ export function InteractiveScene({
       renderer.domElement.remove();
       sceneStateRef.current = null;
     };
-  }, []);
+  }, [alignToGallery]);
 
   useEffect(() => {
     const state = sceneStateRef.current;
@@ -868,19 +942,18 @@ export function InteractiveScene({
       const isMobile = window.innerWidth < 760;
 
       state.camera.fov = isMobile ? 54 : 42;
-      state.camera.position.set(
-        0,
-        4.3,
-        isMobile ? 12.2 : 10.4,
-      );
+      state.camera.position.set(0, 4.3, isMobile ? 12.2 : 10.4);
       state.controls.target.set(0, 1.95, 0);
       state.focusLight.position.set(0, 2.6, 1.2);
     } else {
       const selectedModel = state.models.get(selectedId);
       if (!selectedModel) return;
 
-      const artifact = selectedModel.userData.artifact as THREE.Group | undefined;
-      const focusBounds = new THREE.Box3().setFromObject(artifact ?? selectedModel);
+      const artifact = selectedModel.userData.artifact as
+        THREE.Group | undefined;
+      const focusBounds = new THREE.Box3().setFromObject(
+        artifact ?? selectedModel,
+      );
       const focusTarget = focusBounds.getCenter(new THREE.Vector3());
 
       state.camera.fov = 42;
@@ -890,11 +963,16 @@ export function InteractiveScene({
         focusTarget.y + 1.5,
         focusTarget.z + 6.2,
       );
-      state.focusLight.position.set(focusTarget.x, focusTarget.y + 0.7, focusTarget.z + 1.2);
+      state.focusLight.position.set(
+        focusTarget.x,
+        focusTarget.y + 0.7,
+        focusTarget.z + 1.2,
+      );
     }
 
     state.camera.updateProjectionMatrix();
     state.controls.update();
+    state.layoutGallery();
   }, [selectedId, effectiveShowDisplayCase]);
 
   return (
