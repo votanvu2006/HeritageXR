@@ -1,13 +1,13 @@
 /* Presentation-only skin, scoped to the visitor experience. */
 .camera-passthrough-shell {
-  background: #8d806e;
+  background: #581f16;
 }
 .camera-passthrough-shell::before {
   content: "";
   position: fixed;
   z-index: -1;
   inset: 0;
-  background: #8d806e url("/images/spatial-gallery.svg") center / cover
+  background: #581f16 url("/images/museum-red-gallery.webp") center / cover
     no-repeat;
   pointer-events: none;
   transition: opacity 260ms ease;
@@ -16,7 +16,7 @@
   opacity: 0;
 }
 .camera-passthrough-shade {
-  background: linear-gradient(180deg, #29231d18, transparent 35%, #29231d26);
+  background: linear-gradient(180deg, #1e0e0b1f, transparent 35%, #1e0e0b30);
 }
 .heritage-experience,
 .heritage-experience *,
@@ -27,7 +27,7 @@
 }
 .heritage-experience {
   --spatial-secondary: #e8dfd1;
-  --spatial-glass: linear-gradient(135deg, #51493dcc, #39342cbf);
+  --spatial-glass: linear-gradient(135deg, #392824d4, #281c19cc);
   --spatial-border: #f0d9b847;
   --spatial-button: #f0dfc51a;
   --spatial-shadow: 0 14px 36px #2920152e, inset 0 1px 0 #fff1dc1f;
@@ -175,7 +175,7 @@
   border: 1px solid #ffffff4d;
   border-radius: 24px;
   color: #fff;
-  background: #443c30ed;
+  background: #35231fef;
   box-shadow: 0 8px 24px #11182726;
   font-size: 12px;
   font-weight: 550;
@@ -362,7 +362,7 @@
   width: 310px;
   padding: 20px;
   border-radius: 24px;
-  background: #3d362de8;
+  background: #30211eeb;
 }
 .heritage-experience .structure-scene-eyebrow {
   color: var(--spatial-secondary);
@@ -389,7 +389,7 @@
   padding: clamp(22px, 3vw, 36px);
   border-radius: 36px;
   color: #fff;
-  background: #3d362de8;
+  background: #30211eeb;
   box-shadow: var(--spatial-shadow);
   scrollbar-width: thin;
   scrollbar-color: #ffffff50 transparent;
@@ -598,7 +598,7 @@
   max-height: none;
   grid-template-rows: auto minmax(0, 1fr);
   border-radius: 30px;
-  background: #3d362df2;
+  background: #30211ef2;
 }
 .heritage-experience .spatial-assistant-panel > header {
   padding: 20px 20px 14px;
@@ -718,7 +718,7 @@
   border: 1px solid #ffffff50;
   border-radius: 26px;
   color: #fff;
-  background: #51473beb;
+  background: #432c25eb;
   box-shadow: 0 12px 32px #11182726;
   backdrop-filter: blur(28px);
   font-size: 13px;
@@ -733,7 +733,7 @@
   border-color: #ffffff30;
   border-radius: 16px;
   color: #fff;
-  background: #3d362df2;
+  background: #30211ef2;
   font-size: 11px;
   text-align: left;
 }
@@ -741,7 +741,7 @@
   (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
 ) {
   .heritage-experience .glass-surface {
-    background: #3d362df2;
+    background: #30211ef2;
   }
 }
 @media (max-width: 1000px) and (min-width: 761px) {
