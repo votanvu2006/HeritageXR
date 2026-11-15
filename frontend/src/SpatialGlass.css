@@ -1556,3 +1556,166 @@
     flex-shrink: 0;
   }
 }
+
+/* AI guide: shared insets and separate message/composer rows. */
+.heritage-experience .object-experience .spatial-assistant-panel {
+  min-width: 0;
+  overflow: hidden;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.heritage-experience .spatial-assistant-panel > header {
+  min-height: 72px;
+  padding: 14px 18px;
+  gap: 12px;
+}
+.heritage-experience .spatial-assistant-panel > header > div {
+  min-width: 0;
+}
+.heritage-experience .spatial-assistant-panel > header button {
+  width: 44px;
+  height: 44px;
+}
+.heritage-experience .spatial-assistant-panel .phu-chat-embedded {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+.heritage-experience .spatial-assistant-panel .assistant-panel.chat-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 12px 18px 16px;
+  overflow: hidden;
+}
+.heritage-experience .spatial-assistant-panel .chat-context {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+.heritage-experience .spatial-assistant-panel .chat-messages {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0 6px 0 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.heritage-experience .spatial-assistant-panel .chat-compose {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  padding: 12px 0 0;
+}
+.heritage-experience .spatial-assistant-panel .chat-compose form {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+  margin: 0;
+}
+.heritage-experience .spatial-assistant-panel .chat-compose label {
+  margin: 0;
+}
+.heritage-experience .spatial-assistant-panel .chat-compose textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 72px;
+  min-height: 64px;
+  max-height: 104px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 16px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.heritage-experience .spatial-assistant-panel .chat-compose textarea:focus-visible {
+  border-color: #f3e4c5;
+  outline: 2px solid #f3e4c5;
+  outline-offset: -2px;
+  box-shadow: none;
+}
+.heritage-experience .spatial-assistant-panel .chat-send {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  margin: 0;
+  border-radius: 16px;
+}
+.heritage-experience .spatial-assistant-panel .voice-control {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  margin: 0;
+}
+.heritage-experience .spatial-assistant-panel .voice-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.heritage-experience .spatial-assistant-panel :is(.voice-hold, .voice-toggle) {
+  display: flex;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 16px;
+  line-height: 1.35;
+}
+.heritage-experience .spatial-assistant-panel .voice-note {
+  margin: 0;
+  line-height: 1.45;
+}
+@media (max-width: 900px) {
+  .heritage-experience .object-experience .spatial-assistant-panel {
+    position: fixed;
+    inset: 12px 12px 12px auto;
+    z-index: 40;
+    width: min(420px, calc(100vw - 24px));
+    height: auto;
+    max-height: calc(100dvh - 24px);
+    margin: 0;
+  }
+}
+@media (max-height: 500px) {
+  .heritage-experience .spatial-assistant-panel > header {
+    min-height: 64px;
+    padding-block: 10px;
+  }
+  .heritage-experience .spatial-assistant-panel .assistant-panel.chat-panel {
+    gap: 8px;
+    padding-top: 8px;
+    padding-bottom: 12px;
+  }
+  .heritage-experience .spatial-assistant-panel .chat-compose {
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .heritage-experience .spatial-assistant-panel .chat-compose form {
+    grid-template-columns: minmax(0, 1fr) 88px;
+    gap: 6px 8px;
+  }
+  .heritage-experience .spatial-assistant-panel .chat-compose label {
+    grid-column: 1 / -1;
+  }
+  .heritage-experience .spatial-assistant-panel .chat-compose textarea {
+    height: 52px;
+    min-height: 52px;
+    max-height: 64px;
+  }
+  .heritage-experience .spatial-assistant-panel .chat-send {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+}
+
+@media (max-width: 760px) {
+  .camera-passthrough-shell:has(.spatial-assistant-panel) .camera-passthrough-control {
+    visibility: hidden;
+  }
+}
