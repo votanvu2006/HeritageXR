@@ -1938,19 +1938,20 @@
 @media (max-width: 760px) and (orientation: portrait) {
   .heritage-experience .mobile-gallery-setting {
     background:
-      linear-gradient(90deg, #11080799, transparent 18%, transparent 82%, #11080799),
-      linear-gradient(180deg, #140b08 0%, #3e1b12 22%, transparent 48%),
-      radial-gradient(ellipse at 22% 55%, #c16a3350, transparent 24%),
-      radial-gradient(ellipse at 50% 55%, #c16a3350, transparent 24%),
-      radial-gradient(ellipse at 78% 55%, #c16a3350, transparent 24%),
-      #572217;
+      linear-gradient(90deg, #0e0504cc, transparent 19%, transparent 81%, #0e0504cc),
+      linear-gradient(180deg, #100907 0%, #28100c 26%, transparent 48%),
+      radial-gradient(ellipse 19% 24% at 22% 58%, #b65b2b80, transparent 88%),
+      radial-gradient(ellipse 19% 24% at 50% 58%, #b65b2b80, transparent 88%),
+      radial-gradient(ellipse 19% 24% at 78% 58%, #b65b2b80, transparent 88%),
+      #48180f;
   }
   .heritage-experience .mobile-gallery-bays i {
     position: relative;
     background:
-      radial-gradient(ellipse at 50% 0%, #ffc17a99, transparent 65%),
-      linear-gradient(90deg, #210d0c99, #793621aa 50%, #210d0c99);
-    box-shadow: inset 0 9px 15px #18090499, inset 0 0 22px #14080580, 0 5px 10px #200c0880;
+      radial-gradient(ellipse 62% 46% at 50% 15%, #ffd294aa 0%, #ed9b5270 28%, #b75d2e38 55%, transparent 85%),
+      linear-gradient(90deg, #170807d9, #652719 30%, #652719 70%, #170807d9);
+    border-color: #b18b55;
+    box-shadow: inset 0 4px 5px #100503cc, inset 0 0 10px #100503b3, 0 2px 1px #100503, 0 7px 12px #16060599;
   }
   .heritage-experience .mobile-gallery-bays i::before {
     content: '';
@@ -1961,8 +1962,8 @@
     height: 13px;
     border: 1px solid #776044;
     border-radius: 3px 3px 7px 7px;
-    background: linear-gradient(#1c1510 0 60%, #fff0c4 85%);
-    box-shadow: 0 5px 10px #ffc77c80;
+    background: linear-gradient(#1c1510 0 62%, #c4a06a 68%, #fff4d8 83%, #fff9eb);
+    box-shadow: 0 2px 2px #0c0504, 0 4px 7px #ffcf8999;
   }
   .heritage-experience .mobile-gallery-bays i::after {
     content: '';
@@ -1972,16 +1973,16 @@
     left: -18%;
     width: 136%;
     height: calc(100% + 46px);
-    background: radial-gradient(ellipse at 50% 65%, #ffb46755, #d8763233 40%, transparent 72%);
+    background: radial-gradient(ellipse at 50% 65%, #ffc37a70, #df843b3d 42%, transparent 72%);
     clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%);
     pointer-events: none;
   }
   .heritage-experience .mobile-gallery-setting::after {
     background:
-      radial-gradient(ellipse at 22% 0%, #efad5b55, transparent 25%),
-      radial-gradient(ellipse at 50% 0%, #efad5b55, transparent 25%),
-      radial-gradient(ellipse at 78% 0%, #efad5b55, transparent 25%),
-      linear-gradient(90deg, #10070480, transparent 25%, transparent 75%, #10070480),
+      radial-gradient(ellipse 12% 80% at 22% 0%, #f4b66180, #d7843033 44%, transparent 82%),
+      radial-gradient(ellipse 12% 80% at 50% 0%, #f4b66180, #d7843033 44%, transparent 82%),
+      radial-gradient(ellipse 12% 80% at 78% 0%, #f4b66180, #d7843033 44%, transparent 82%),
+      linear-gradient(90deg, #100704b3, transparent 25%, transparent 75%, #100704b3),
       #342017 url('/images/museum-balanced-gallery.webp') center bottom / 100% 400% no-repeat;
   }
 }
