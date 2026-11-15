@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "../lib/api";
+import { mediaFailure } from "../device/deviceSupport";
 
 type Props = { disabled: boolean; onTranscript: (text: string) => void; onActivityChange: (active: boolean) => void };
 type Phase = "idle" | "requesting" | "recording" | "transcribing";
@@ -48,8 +49,12 @@ export function PushToTalk({ disabled, onTranscript, onActivityChange }: Props) 
   }
   async function start() {
     if (disabled || phaseRef.current !== "idle") return;
-    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
-      setMessage("Micro cần trình duyệt hỗ trợ và đường dẫn HTTPS hoặc localhost. Bạn vẫn có thể nhập câu hỏi.");
+    if (!window.isSecureContext) {
+      setMessage("Micro cần đường dẫn HTTPS. Bạn vẫn có thể nhập câu hỏi.");
+      return;
+    }
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      setMessage("Trình duyệt chưa hỗ trợ ghi âm. Hãy dùng Safari hoặc Chrome đã cập nhật, hoặc nhập câu hỏi.");
       return;
     }
     active.current = true;
@@ -105,9 +110,7 @@ export function PushToTalk({ disabled, onTranscript, onActivityChange }: Props) 
     } catch (error) {
       releaseTracks();
       if (mounted.current) {
-        setMessage(error instanceof DOMException && error.name === "NotAllowedError"
-          ? "Bạn chưa cấp quyền micro. Hãy cho phép trong trình duyệt hoặc nhập câu hỏi."
-          : "Chưa mở được micro. Bạn hãy kiểm tra thiết bị rồi thử lại.");
+        setMessage(`${mediaFailure("micro", error)} Bạn vẫn có thể nhập câu hỏi.`);
         updatePhase("idle");
       }
     }

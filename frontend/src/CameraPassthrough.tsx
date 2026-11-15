@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import "./CameraPassthrough.css";
+import { mediaFailure } from "./device/deviceSupport";
 
 type CameraPassthroughProps = {
   children: ReactNode;
@@ -14,6 +15,7 @@ type CameraPassthroughProps = {
 export function CameraPassthrough({ children }: CameraPassthroughProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const mountedRef = useRef(true);
   const [isCameraOn, setIsCameraOn] = useState(false);
   const [cameraMessage, setCameraMessage] = useState("");
 
@@ -35,9 +37,13 @@ export function CameraPassthrough({ children }: CameraPassthroughProps) {
       return;
     }
 
+    if (!window.isSecureContext) {
+      setCameraMessage("Camera cần đường dẫn HTTPS. Bạn vẫn có thể xem phòng mô phỏng.");
+      return;
+    }
     if (!navigator.mediaDevices?.getUserMedia) {
       setCameraMessage(
-        "Trình duyệt chưa hỗ trợ camera. Hãy mở demo bằng HTTPS hoặc localhost.",
+        "Trình duyệt chưa hỗ trợ camera. Hãy mở bằng Safari hoặc Chrome đã cập nhật.",
       );
       return;
     }
@@ -54,6 +60,11 @@ export function CameraPassthrough({ children }: CameraPassthroughProps) {
         },
       });
 
+      if (!mountedRef.current) {
+        stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
+
       streamRef.current = stream;
 
       if (videoRef.current) {
@@ -63,27 +74,15 @@ export function CameraPassthrough({ children }: CameraPassthroughProps) {
 
       setIsCameraOn(true);
     } catch (error) {
-      const errorName = error instanceof DOMException ? error.name : "";
-      const messages: Record<string, string> = {
-        NotAllowedError:
-          "Fen chưa cấp quyền camera. Hãy cho phép camera trong trình duyệt rồi thử lại.",
-        NotFoundError: "Không tìm thấy camera trên thiết bị này.",
-        NotReadableError:
-          "Camera đang được ứng dụng khác sử dụng. Đóng ứng dụng đó rồi thử lại.",
-        SecurityError:
-          "Camera cần trang HTTPS hoặc localhost và quyền truy cập từ trình duyệt.",
-      };
-
-      setCameraMessage(
-        messages[errorName] ??
-          "Chưa mở được camera. Kiểm tra quyền camera của trình duyệt rồi thử lại.",
-      );
+      setCameraMessage(mediaFailure("camera", error));
       stopCamera();
     }
   }, [isCameraOn, stopCamera]);
 
   useEffect(() => {
+    mountedRef.current = true;
     return () => {
+      mountedRef.current = false;
       streamRef.current?.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     };
