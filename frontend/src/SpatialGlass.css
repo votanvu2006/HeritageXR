@@ -1517,3 +1517,71 @@
     max-width: min(150px, 24vw);
   }
 }
+
+/* One centered nameplate on each plinth, on the same baseline. */
+.heritage-experience .scan-experience .exhibit-hotspot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(210px, 22vw);
+  height: 44px;
+  padding: 6px 12px;
+  border-radius: 18px;
+  background: #30231de8;
+  box-shadow: 0 4px 14px #180d0926;
+}
+.heritage-experience .scan-experience .exhibit-hotspot .hotspot-marker {
+  display: none;
+}
+.heritage-experience .scan-experience .exhibit-hotspot::after {
+  position: static;
+  width: auto;
+  max-width: 100%;
+  padding: 0;
+  transform: none;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 12px;
+  text-align: center;
+}
+.heritage-experience .scan-experience .exhibit-hotspot:hover {
+  background: #59422ff2;
+}
+@media (max-width: 760px) {
+  .heritage-experience .scan-experience .exhibit-hotspot {
+    width: 24vw;
+    padding: 5px 6px;
+    border-radius: 14px;
+  }
+  .heritage-experience .scan-experience .exhibit-hotspot::after {
+    font-size: 9px;
+  }
+}
+@media (max-height: 500px) and (min-width: 761px) {
+  .heritage-experience.spatial-app:has(.scan-experience) {
+    padding-bottom: 80px;
+  }
+  .heritage-experience .scan-experience .scan-bottom-hint {
+    position: fixed;
+    right: 16px;
+    bottom: 14px;
+    left: auto;
+    width: min(360px, 45vw);
+    max-width: none;
+    padding: 10px 14px;
+    transform: none;
+    font-size: 10px;
+    pointer-events: none;
+  }
+  .camera-passthrough-shell:has(.scan-experience) .camera-passthrough-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: calc(50vw - 24px);
+  }
+  .camera-passthrough-shell:has(.scan-experience) .camera-toggle-button {
+    flex-shrink: 0;
+  }
+}

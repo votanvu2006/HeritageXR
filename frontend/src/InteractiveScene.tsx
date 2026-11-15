@@ -17,7 +17,7 @@ type InteractiveSceneProps = {
 };
 
 type SceneState = {
-  camera: THREE.PerspectiveCamera;
+  camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
   controls: OrbitControls;
   models: Map<ExhibitId, THREE.Group>;
   focusLight: THREE.PointLight;
@@ -667,7 +667,11 @@ export function InteractiveScene({
 
     const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    // A fixed frontal projection keeps all three cases the same apparent size.
+    // Perspective and orbit behavior remain available in admin/detail viewers.
+    const camera = alignToGallery
+      ? new THREE.OrthographicCamera(-5, 5, 3.4, -3.4, 0.1, 100)
+      : new THREE.PerspectiveCamera(42, 1, 0.1, 100);
     camera.position.set(0, 4.3, 10.4);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -798,7 +802,7 @@ export function InteractiveScene({
       exhibitIds.forEach((id, index) => {
         const model = models.get(id)!;
         let scale = 1;
-        // Measure after placement, since perspective widens the outer cases.
+        // Measure the complete case, then keep the same scale for all three.
         for (let pass = 0; pass < 4; pass++) {
           placeCase(model, index, scale);
           if (pass === 3) break;
@@ -854,11 +858,19 @@ export function InteractiveScene({
       const height = container.clientHeight || 1;
 
       renderer.setSize(width, height);
-      camera.aspect = width / height;
+      if (camera instanceof THREE.OrthographicCamera) {
+        camera.left = (-3.4 * width) / height;
+        camera.right = (3.4 * width) / height;
+        camera.top = 3.4;
+        camera.bottom = -3.4;
+      } else {
+        camera.aspect = width / height;
+      }
 
       const isMobileScan = selectedIdRef.current === null && width < 760;
 
-      camera.fov = alignToGallery ? 26 : isMobileScan ? 54 : 42;
+      if (camera instanceof THREE.PerspectiveCamera)
+        camera.fov = isMobileScan ? 54 : 42;
 
       if (selectedIdRef.current === null) {
         camera.position.set(
@@ -965,11 +977,17 @@ export function InteractiveScene({
           ? (artifact?.position.y ?? pedestalTop)
           : 0;
 
-        const position = new THREE.Vector3(
-          model.position.x + localX * scale,
-          model.position.y + (localY + pedestalOffset) * scale,
-          model.position.z + localZ * scale,
-        );
+        const position = alignToGallery
+          ? new THREE.Vector3(
+              model.position.x,
+              model.position.y + 0.48 * scale,
+              model.position.z + 1.06 * scale,
+            )
+          : new THREE.Vector3(
+              model.position.x + localX * scale,
+              model.position.y + (localY + pedestalOffset) * scale,
+              model.position.z + localZ * scale,
+            );
 
         position.project(camera);
 
@@ -1118,7 +1136,8 @@ export function InteractiveScene({
     if (selectedId === null) {
       const isMobile = window.innerWidth < 760;
 
-      state.camera.fov = alignToGallery ? 26 : isMobile ? 54 : 42;
+      if (state.camera instanceof THREE.PerspectiveCamera)
+        state.camera.fov = isMobile ? 54 : 42;
       state.camera.position.set(
         0,
         4.3,
@@ -1137,7 +1156,8 @@ export function InteractiveScene({
       );
       const focusTarget = focusBounds.getCenter(new THREE.Vector3());
 
-      state.camera.fov = 42;
+      if (state.camera instanceof THREE.PerspectiveCamera)
+        state.camera.fov = 42;
       state.controls.target.copy(focusTarget);
       state.camera.position.set(
         focusTarget.x + 2.6,
