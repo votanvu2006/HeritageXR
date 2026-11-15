@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./AdminCenter.css";
 import {
   getStore,
   subscribeStore,
@@ -86,7 +87,7 @@ export function AdminCenter() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+    <div className="admin-center" style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
       {/* HEADER */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1 style={{ margin: 0, fontSize: "20px", fontWeight: 700, color: "#f2f2ee" }}>
@@ -95,7 +96,7 @@ export function AdminCenter() {
       </div>
 
       {/* 4 THẺ CHỈ SỐ TƯƠNG TÁC (KHÔNG CÓ TIỀN BẠC) */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
+      <div className="admin-center-metrics">
         <div style={cardStyle}>
           <div style={{ fontSize: "11.5px", color: "#808894" }}>Lượt quét tham quan</div>
           <div style={{ fontSize: "24px", fontWeight: 700, color: "#f2f2ee", margin: "6px 0" }}>
@@ -138,7 +139,7 @@ export function AdminCenter() {
       </div>
 
       {/* 2 CỘT CHÍNH: MỞ KHÓA TẠI QUẦY (TRÁI) & THỐNG KÊ HIỆN VẬT (PHẢI) */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "18px" }}>
+      <div className="admin-center-columns">
         {/* Cột trái: Xác nhận & Mở khóa Watermark tại Quầy */}
         <div
           style={{
@@ -151,6 +152,7 @@ export function AdminCenter() {
         >
           <div>
             <div
+              className="admin-pos-heading"
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -178,9 +180,10 @@ export function AdminCenter() {
             </div>
 
             <div
+              className="admin-pos-fields"
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
+                gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 180px), 1fr))",
                 gap: "10px",
                 marginBottom: "12px",
               }}
@@ -239,6 +242,7 @@ export function AdminCenter() {
               }}
             >
               <div
+                className="admin-receipt-heading"
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -249,7 +253,7 @@ export function AdminCenter() {
                 <span style={{ fontSize: "12px", color: "#d6d8d2" }}>
                   Ảnh xác nhận tại quầy *
                 </span>
-                <div style={{ display: "flex", gap: "6px" }}>
+                <div className="admin-receipt-actions" style={{ display: "flex", gap: "6px" }}>
                   <button
                     type="button"
                     onClick={handleLoadSampleReceipt}
@@ -289,7 +293,7 @@ export function AdminCenter() {
               </div>
 
               {receiptPreview && (
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div className="admin-receipt-preview" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   <img
                     src={receiptPreview}
                     alt="Verification"
@@ -386,6 +390,7 @@ export function AdminCenter() {
             <div style={{ display: "grid", gap: "6px" }}>
               {store.orders.slice(0, 3).map((ord) => (
                 <div
+                  className="admin-recent-order"
                   key={ord.id}
                   onClick={() => updateStore((prev) => ({ ...prev, activeOrderId: ord.id }))}
                   style={{
