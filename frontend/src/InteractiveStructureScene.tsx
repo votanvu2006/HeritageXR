@@ -245,6 +245,7 @@ export function InteractiveStructureScene({
         "--structure-footer-height",
         `${Math.max(0, height - modelHeight)}px`,
       );
+      viewport.style.setProperty("--structure-model-height", `${modelHeight}px`);
 
       renderer.setSize(width, modelHeight);
 
@@ -258,6 +259,8 @@ export function InteractiveStructureScene({
 
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(viewport);
+    const contentObserver = new MutationObserver(resize);
+    contentObserver.observe(viewport, { childList: true });
     resize();
 
     const clock = new THREE.Clock();
@@ -373,6 +376,7 @@ export function InteractiveStructureScene({
     return () => {
       window.cancelAnimationFrame(animationFrame);
       resizeObserver.disconnect();
+      contentObserver.disconnect();
       controls.dispose();
 
       const geometries = new Set<THREE.BufferGeometry>();
@@ -468,7 +472,7 @@ export function InteractiveStructureScene({
             type="button"
             aria-label={`Xem ${part.name}`}
             aria-pressed={activePart?.id === part.id}
-            style={{ top: `${part.lane * 100}%` }}
+            style={{ top: `calc(${part.lane} * var(--structure-model-height, 100%))` }}
             onClick={() => setActivePartId(part.id)}
           >
             <span className="structure-hotspot-number">

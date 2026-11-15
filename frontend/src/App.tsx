@@ -181,12 +181,20 @@ function MuseumApp() {
         <div className={`spatial-stage spatial-stage-${screen}`}>
           {screen === "scan" && (
             <section className="scan-experience" aria-label="Quét hiện vật">
+              <div className="mobile-gallery-setting" aria-hidden="true" />
               <div className="scan-guidance glass-surface">
+                <div className="mobile-demo-intro">
+                  <span className="section-label">THAM QUAN MÔ PHỎNG</span>
+                  <strong>Khám phá bộ sưu tập Đông Sơn</strong>
+                  <p>Chạm điểm sáng trên hiện vật để bắt đầu.</p>
+                </div>
+                <div className="desktop-scan-intro">
                 <span className="section-label">GÓC NHÌN CAMERA</span>
                 <strong>Hướng camera về hiện vật muốn khám phá</strong>
                 <p>
                   Chạm hotspot trên hiện vật để mở không gian xem riêng.
                 </p>
+                </div>
               </div>
 
               <InteractiveScene
@@ -198,7 +206,8 @@ function MuseumApp() {
 
               <div className="scan-bottom-hint glass-surface">
                 <span className="scan-status-dot" />
-                Cảnh xung quanh vẫn hiển thị khi fen lia điện thoại
+                <span className="desktop-scan-intro">Cảnh xung quanh vẫn hiển thị khi fen lia điện thoại</span>
+                <span className="mobile-demo-intro">3 hiện vật · Chạm để khám phá</span>
               </div>
             </section>
           )}
@@ -212,9 +221,11 @@ function MuseumApp() {
                 <button
                   className="spatial-back-button"
                   type="button"
+                  aria-label="Quay lại phòng trưng bày"
                   onClick={handleBackToScan}
                 >
-                  ← Quay lại quét
+                  <span className="object-back-arrow" aria-hidden="true">←</span>
+                  <span className="object-back-text">Quay lại quét</span>
                 </button>
 
                 <div className="object-title-copy">
