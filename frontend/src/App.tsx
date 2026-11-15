@@ -181,6 +181,9 @@ function MuseumApp() {
         <div className={`spatial-stage spatial-stage-${screen}`}>
           {screen === "scan" && (
             <section className="scan-experience" aria-label="Quét hiện vật">
+              <div className="mobile-gallery-setting" aria-hidden="true">
+                <div className="mobile-gallery-bays"><i /><i /><i /></div>
+              </div>
               <div className="scan-guidance glass-surface">
                 <div className="mobile-demo-intro">
                   <span className="section-label">THAM QUAN MÔ PHỎNG</span>

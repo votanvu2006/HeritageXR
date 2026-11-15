@@ -770,19 +770,20 @@ export function InteractiveScene({
       camera.updateMatrixWorld();
       const isPortrait =
         window.innerWidth <= 900 && window.innerHeight > window.innerWidth;
+      const isPhonePortrait = isPortrait && window.innerWidth <= 760;
       const wallCenters = isPortrait ? [0.22, 0.5, 0.78] : [0.24, 0.5, 0.76];
       // Seat the cases at the bays' lower edge on narrow or short screens;
       // otherwise the cases and their labels fall below the wall display.
       const isShortPhoneLandscape =
         window.innerWidth <= 900 && window.innerHeight <= 500;
       const floorY =
-        window.innerHeight * (isPortrait || isShortPhoneLandscape ? 0.67 : 0.75);
+        window.innerHeight * (isPhonePortrait ? 0.73 : isPortrait || isShortPhoneLandscape ? 0.67 : 0.75);
       const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
       const layoutRay = new THREE.Raycaster();
       const point = new THREE.Vector3();
       const box = new THREE.Box3();
       const corner = new THREE.Vector3();
-      const maxWidth = window.innerWidth * (isPortrait ? 0.21 : 0.19);
+      const maxWidth = window.innerWidth * (isPhonePortrait ? 0.23 : isPortrait ? 0.21 : 0.19);
       const maxHeight = window.innerHeight * 0.44;
 
       const placeCase = (model: THREE.Group, index: number, scale: number) => {
