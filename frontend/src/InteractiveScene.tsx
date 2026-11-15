@@ -779,7 +779,9 @@ export function InteractiveScene({
       const roomTop = Math.max(170, Math.min(window.innerHeight * 0.25, 210));
       const roomHeight = Math.min(window.innerWidth * 1.1, window.innerHeight - roomTop);
       const floorY = isPhonePortrait
-        ? roomTop + roomHeight * 0.75
+        // Compress only the wall section to 72%; ceiling lights retain their
+        // proportions. Match the floor baseline to those same image sections.
+        ? roomTop + roomHeight * (0.23 + 0.48 * 0.72 + 0.04)
         : window.innerHeight * (isPortrait || isShortPhoneLandscape ? 0.67 : 0.75);
       const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
       const layoutRay = new THREE.Raycaster();

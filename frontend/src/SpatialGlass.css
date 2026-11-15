@@ -1884,18 +1884,39 @@
   }
   .heritage-experience .mobile-gallery-setting {
     --mobile-room-height: min(110vw, calc(100dvh - clamp(170px, 25dvh, 210px)));
+    --mobile-wall-bottom: calc(var(--mobile-room-height) * 0.5756);
     display: block;
     position: fixed;
     inset: clamp(170px, 25dvh, 210px) 0 0;
     pointer-events: none;
-    background: #3e1c12 url('/images/museum-balanced-gallery.webp') center top / 100% var(--mobile-room-height) no-repeat;
+    background: #3e1c12;
     mask-image: linear-gradient(transparent, #000 24px);
     -webkit-mask-image: linear-gradient(transparent, #000 24px);
+  }
+  .heritage-experience .mobile-gallery-ceiling,
+  .heritage-experience .mobile-gallery-wall {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-image: url('/images/museum-balanced-gallery.webp');
+    background-repeat: no-repeat;
+  }
+  .heritage-experience .mobile-gallery-ceiling {
+    top: 0;
+    height: calc(var(--mobile-room-height) * 0.23);
+    background-size: 100% var(--mobile-room-height);
+    background-position: center top;
+  }
+  .heritage-experience .mobile-gallery-wall {
+    top: calc(var(--mobile-room-height) * 0.23);
+    height: calc(var(--mobile-room-height) * 0.3456);
+    background-size: 100% calc(var(--mobile-room-height) * 0.72);
+    background-position: center calc(var(--mobile-room-height) * -0.1656);
   }
   .heritage-experience .mobile-gallery-setting::after {
     content: '';
     position: absolute;
-    inset: calc(var(--mobile-room-height) * 0.71) 0 0;
+    inset: var(--mobile-wall-bottom) 0 0;
     background: #342017 url('/images/museum-balanced-gallery.webp') center bottom / 100% 400% no-repeat;
     mask-image: linear-gradient(transparent, #000 20px);
     -webkit-mask-image: linear-gradient(transparent, #000 20px);
