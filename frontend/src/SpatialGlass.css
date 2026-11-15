@@ -1883,13 +1883,22 @@
     background: linear-gradient(#20110c, #3e1c12);
   }
   .heritage-experience .mobile-gallery-setting {
+    --mobile-room-height: min(110vw, calc(100dvh - clamp(170px, 25dvh, 210px)));
     display: block;
     position: fixed;
     inset: clamp(170px, 25dvh, 210px) 0 0;
     pointer-events: none;
-    background: #3e1c12 url('/images/museum-balanced-gallery.webp') center / 100% 100% no-repeat;
+    background: #3e1c12 url('/images/museum-balanced-gallery.webp') center top / 100% var(--mobile-room-height) no-repeat;
     mask-image: linear-gradient(transparent, #000 24px);
     -webkit-mask-image: linear-gradient(transparent, #000 24px);
+  }
+  .heritage-experience .mobile-gallery-setting::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--mobile-room-height) * 0.71) 0 0;
+    background: #342017 url('/images/museum-balanced-gallery.webp') center bottom / 100% 400% no-repeat;
+    mask-image: linear-gradient(transparent, #000 20px);
+    -webkit-mask-image: linear-gradient(transparent, #000 20px);
   }
   .heritage-experience .mobile-gallery-bays { display: none; }
   .heritage-experience .scan-experience .scene-container { z-index: 1; }

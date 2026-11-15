@@ -777,15 +777,16 @@ export function InteractiveScene({
       const isShortPhoneLandscape =
         window.innerWidth <= 900 && window.innerHeight <= 500;
       const roomTop = Math.max(170, Math.min(window.innerHeight * 0.25, 210));
+      const roomHeight = Math.min(window.innerWidth * 1.1, window.innerHeight - roomTop);
       const floorY = isPhonePortrait
-        ? roomTop + (window.innerHeight - roomTop) * 0.75
+        ? roomTop + roomHeight * 0.75
         : window.innerHeight * (isPortrait || isShortPhoneLandscape ? 0.67 : 0.75);
       const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
       const layoutRay = new THREE.Raycaster();
       const point = new THREE.Vector3();
       const box = new THREE.Box3();
       const corner = new THREE.Vector3();
-      const maxWidth = window.innerWidth * (isPortrait && !isPhonePortrait ? 0.21 : 0.19);
+      const maxWidth = window.innerWidth * (isPhonePortrait ? 0.21 : isPortrait ? 0.21 : 0.19);
       const maxHeight = window.innerHeight * 0.44;
 
       const placeCase = (model: THREE.Group, index: number, scale: number) => {
