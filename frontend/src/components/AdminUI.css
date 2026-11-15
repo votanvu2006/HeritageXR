@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Heritage Times';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/heritage-times-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Heritage Times';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/heritage-times-bold.woff2') format('woff2');
+}
 .admin-shell {
   --admin-ink: #172b3a;
   --admin-muted: #64748b;
@@ -267,7 +281,7 @@
 .admin-shell *,
 .admin-shell *::before,
 .admin-shell *::after {
-  font-family: 'Times New Roman', Times, 'Liberation Serif', serif !important;
+  font-family: 'Heritage Times', 'Times New Roman', Times, serif !important;
 }
 .admin-shell .admin-page label,
 .admin-shell .admin-page button {
@@ -285,4 +299,19 @@
 .admin-shell .admin-review-preview :is(.story-player-introduction, .craft-step-story p, .craft-process-sources a) {
   font-size: 14px;
   line-height: 1.65;
+}
+
+.admin-shell .admin-review-preview .story-player-title {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.6;
+  padding-block: 4px;
+  letter-spacing: normal;
+  text-shadow: none;
+  overflow: visible;
+}
+.admin-shell .admin-review-preview .craft-step-story h3 {
+  font-weight: 700;
+  line-height: 1.6;
+  padding-block: 2px;
 }
