@@ -1846,64 +1846,6 @@
 }
 
 .mobile-gallery-setting { display: none; }
-@media (max-width: 760px) and (orientation: portrait) {
-  .camera-passthrough-shell:has(.scan-experience)::before {
-    background: #391811;
-  }
-  .heritage-experience .mobile-gallery-setting {
-    display: block;
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(ellipse at 22% 40%, #c16a3350, transparent 25%),
-      radial-gradient(ellipse at 50% 40%, #c16a3340, transparent 25%),
-      radial-gradient(ellipse at 78% 40%, #c16a3350, transparent 25%),
-      linear-gradient(90deg, #3e1812, #713124 48%, #3e1812);
-  }
-  .heritage-experience .mobile-gallery-setting::after {
-    content: '';
-    position: absolute;
-    inset: 73% 0 0;
-    border-top: 4px double #947143;
-    background: #342017 url('/images/museum-balanced-gallery.webp') center bottom / 100% 400% no-repeat;
-    box-shadow: 0 -5px 12px #180a0770;
-  }
-  .heritage-experience .mobile-gallery-bays {
-    position: absolute;
-    left: 9%;
-    right: 9%;
-    bottom: 27%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2vw;
-    z-index: 1;
-  }
-  .heritage-experience .mobile-gallery-bays i {
-    display: block;
-    height: 48vw;
-    border: 2px solid #987344;
-    outline: 1px solid #392015;
-    outline-offset: 2px;
-    background:
-      radial-gradient(ellipse at 50% 0%, #eea85c60, transparent 65%),
-      linear-gradient(90deg, #210d0c80, #65291d70 50%, #210d0c80);
-    box-shadow: inset 0 0 18px #140805aa, 0 5px 10px #200c0860;
-  }
-  .heritage-experience .scan-experience .scene-container { z-index: 1; }
-  .heritage-experience .scan-experience .exhibit-hotspot::after {
-    width: 24vw;
-    min-height: 44px;
-    display: grid;
-    place-items: center;
-    top: calc(100% + 12px);
-    padding: 7px 5px;
-    border-radius: 12px;
-    font-size: 9px;
-    line-height: 1.35;
-  }
-}
-
 .object-back-arrow { margin-right: 4px; }
 @media (max-width: 760px) {
   .heritage-experience .object-experience-heading {
@@ -1935,68 +1877,45 @@
   }
   .heritage-experience .object-title-copy { min-width: 0; }
 }
+/* A single portrait room keeps lights, frame proportions and floor coherent. */
 @media (max-width: 760px) and (orientation: portrait) {
+  .camera-passthrough-shell:has(.scan-experience)::before { background: #31150e; }
   .heritage-experience .mobile-gallery-setting {
-    background:
-      linear-gradient(90deg, #170b0866, transparent 26%, transparent 74%, #170b0866),
-      linear-gradient(180deg, #1b100d 0%, #321910 24%, transparent 60%),
-      radial-gradient(ellipse 70% 40% at 50% 58%, #af73422e, transparent 90%),
-      #50271c;
-  }
-  /* Sample the three lit wall bays from the desktop artwork while retaining
-     the selected phone layout's fixed frame dimensions. */
-  .heritage-experience .mobile-gallery-bays::before {
-    content: '';
-    position: absolute;
-    top: -62px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: #21150f;
-    box-shadow: 0 1px 1px #9a764333;
-  }
-  .heritage-experience .mobile-gallery-bays i {
-    position: relative;
-    border: 0;
-    outline: none;
-    background-image: url('/images/museum-balanced-gallery.webp');
-    background-repeat: no-repeat;
-    background-size: 476.19% 238.1%;
-    background-position: 17.1% 40%;
-    box-shadow: 0 4px 8px #1d0d0a66;
-  }
-  .heritage-experience .mobile-gallery-bays i:nth-child(2) { background-position-x: 50%; }
-  .heritage-experience .mobile-gallery-bays i:nth-child(3) { background-position-x: 82.9%; }
-  .heritage-experience .mobile-gallery-bays i::before {
-    content: '';
-    position: absolute;
-    top: -60px;
-    left: calc(50% - 9px);
-    width: 18px;
-    height: 38px;
-    background: url('/images/museum-balanced-gallery.webp') 23.4% 7% / 5560% 1653% no-repeat;
-    mask-image: linear-gradient(transparent, #000 6px, #000 32px, transparent);
-    -webkit-mask-image: linear-gradient(transparent, #000 6px, #000 32px, transparent);
-  }
-  .heritage-experience .mobile-gallery-bays i:nth-child(2)::before { background-position-x: 50%; }
-  .heritage-experience .mobile-gallery-bays i:nth-child(3)::before { background-position-x: 76.6%; }
-  .heritage-experience .mobile-gallery-bays i::after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    top: -25px;
-    left: -12%;
-    width: 124%;
-    height: 60px;
-    background: radial-gradient(ellipse at 50% 100%, #d88c4c55, transparent 72%);
+    display: block;
+    position: fixed;
+    inset: 0;
     pointer-events: none;
+    background: #31150e url('/images/museum-mobile-room.webp') center / 100% 100% no-repeat;
   }
-  .heritage-experience .mobile-gallery-setting::after {
-    background:
-      radial-gradient(ellipse 20% 75% at 22% 0%, #dcb47a38, transparent 85%),
-      radial-gradient(ellipse 20% 75% at 50% 0%, #dcb47a38, transparent 85%),
-      radial-gradient(ellipse 20% 75% at 78% 0%, #dcb47a38, transparent 85%),
-      linear-gradient(90deg, #160d0866, transparent 30%, transparent 70%, #160d0866),
-      #342017 url('/images/museum-balanced-gallery.webp') center bottom / 100% 400% no-repeat;
+  .heritage-experience .mobile-gallery-bays { display: none; }
+  .heritage-experience .scan-experience .scene-container { z-index: 1; }
+  .heritage-experience .scan-experience .scan-guidance {
+    top: 8px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #35251ee6, #211710db);
+    border-color: #b3976a55;
+  }
+  .heritage-experience .scan-experience .exhibit-hotspot {
+    background: #382b20b3;
+    border-color: #e1c593aa;
+    box-shadow: 0 0 0 4px #d7b57912, 0 4px 12px #180d0933;
+  }
+  .heritage-experience .scan-experience .exhibit-hotspot::after {
+    width: 25vw;
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+    top: calc(100% + 12px);
+    padding: 7px 6px;
+    border-radius: 14px;
+    font-size: 9px;
+    line-height: 1.4;
+    background: #30231de8;
+    border-color: #b3976a66;
+  }
+  .heritage-experience .scan-experience .scan-bottom-hint {
+    padding: 10px 16px;
+    border-color: #b3976a55;
+    background: #30231dd9;
   }
 }
