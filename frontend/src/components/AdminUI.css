@@ -261,3 +261,28 @@
     overflow-wrap: normal;
   }
 }
+
+/* One typeface throughout admin, including inline-styled and embedded content. */
+.admin-shell,
+.admin-shell *,
+.admin-shell *::before,
+.admin-shell *::after {
+  font-family: 'Times New Roman', Times, 'Liberation Serif', serif !important;
+}
+.admin-shell .admin-page label,
+.admin-shell .admin-page button {
+  font-size: 14px !important;
+  line-height: 1.5;
+}
+.admin-shell .admin-page :is(input:not([type='checkbox']):not([type='file']), select, textarea) {
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+.admin-shell .admin-metrics > .admin-card > div:first-child,
+.admin-shell .admin-metrics > .admin-card > div:last-child {
+  font-size: 14px !important;
+}
+.admin-shell .admin-review-preview :is(.story-player-introduction, .craft-step-story p, .craft-process-sources a) {
+  font-size: 14px;
+  line-height: 1.65;
+}
