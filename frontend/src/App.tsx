@@ -1,11 +1,12 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { InteractiveScene, type ExhibitId } from "./InteractiveScene";
 import { InteractiveStructureScene } from "./InteractiveStructureScene";
 import { exhibitInformation } from "./exhibitInformation";
 import { exhibitStories } from "./exhibitStories";
 import { CraftingVideo } from "./CraftingVideo";
 import { NarratedVideo } from "./NarratedVideo";
-import { QuizPanel, readDemoPoints } from "./QuizPanel";
+import { QuizPanel } from "./QuizPanel";
+import { quizProgressKey, readDemoPoints } from "./quizProgress";
 import type { ExhibitChatContext } from "./Chatbot";
 import { PhuChatbot } from "./components/PhuChatbot";
 import { CameraPassthrough } from "./CameraPassthrough";
@@ -76,6 +77,16 @@ function MuseumApp() {
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [storyVideoUnavailable, setStoryVideoUnavailable] = useState(false);
 
+  useEffect(() => {
+    const syncPoints = (event: StorageEvent) => {
+      if (event.key === quizProgressKey || event.key === null) {
+        setPoints(readDemoPoints());
+      }
+    };
+    window.addEventListener("storage", syncPoints);
+    return () => window.removeEventListener("storage", syncPoints);
+  }, []);
+
   const selectedExhibit = selectedId
     ? exhibits.find((exhibit) => exhibit.id === selectedId) ?? exhibits[0]
     : null;
@@ -120,14 +131,6 @@ function MuseumApp() {
   const handleBackToObject = () => {
     setScreen("object");
     setIsAssistantOpen(false);
-  };
-
-  const handlePointsChange = (nextPoints: number) => {
-    setPoints(nextPoints);
-    window.localStorage.setItem(
-      "heritagexr-demo-points-v1",
-      String(nextPoints),
-    );
   };
 
   const openObjectSection = (section: ObjectSection) => {
@@ -424,9 +427,10 @@ function MuseumApp() {
                 {screen === "quiz" && (
                   <div className="spatial-quiz-content">
                     <QuizPanel
+                      key={selectedExhibit.id}
                       exhibitId={selectedExhibit.id}
                       points={points}
-                      onPointsChange={handlePointsChange}
+                      onPointsChange={setPoints}
                     />
                   </div>
                 )}
