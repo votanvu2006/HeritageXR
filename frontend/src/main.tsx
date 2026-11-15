@@ -5,6 +5,7 @@ import { startQuizVisit } from "./quizProgress";
 import { AdminLayout } from "./components/AdminLayout";
 import { AdminCenter } from "./pages/AdminCenter";
 import { AdminStudio } from "./pages/AdminStudio";
+import { DeviceGate } from "./device/DeviceGate";
 import "./index.css";
 
 type AdminDestination = "user" | "studio" | "center" | "split";
@@ -37,7 +38,7 @@ function RootApp() {
     pathname === "/admin" || pathname.startsWith("/admin/");
 
   if (!isAdminRoute) {
-    return <App />;
+    return <DeviceGate key="visitor"><App /></DeviceGate>;
   }
 
   const activePage = pathname === "/admin/studio" ? "studio" : "center";
@@ -47,7 +48,7 @@ function RootApp() {
       activePage={activePage}
       onNavigate={handleAdminNavigate}
     >
-      {activePage === "studio" ? <AdminStudio /> : <AdminCenter />}
+      {activePage === "studio" ? <DeviceGate key="studio"><AdminStudio /></DeviceGate> : <AdminCenter />}
     </AdminLayout>
   );
 }

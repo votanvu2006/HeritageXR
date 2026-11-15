@@ -1,0 +1,8 @@
+.device-checking, .device-notice { min-height: 100svh; display: grid; place-items: center; padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom)); color: #f3e8d6; background: radial-gradient(ellipse at top, #593124, #211610 65%); font: 16px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.device-notice-card { width: min(460px, 100%); padding: 30px 24px; border: 1px solid #b8996655; border-radius: 24px; background: #2d211bd9; box-shadow: 0 20px 60px #0003; }
+.device-notice-brand { display: block; font-size: 18px; font-weight: 700; }
+.device-notice-icon { display: grid; place-items: center; margin: 26px 0 18px; width: 48px; height: 48px; border: 1px solid #b8996680; border-radius: 14px; color: #e1c592; font-size: 28px; }
+.device-notice h1 { margin: 0 0 14px; font-size: 24px; line-height: 1.35; }
+.device-notice p { margin: 12px 0; color: #d3c5b5; font-size: 14px; }
+.device-notice button { margin-top: 16px; width: 100%; min-height: 48px; padding: 12px 18px; border: 1px solid #e9d8b8; border-radius: 14px; color: #32251b; background: #f2e6d0; font: inherit; font-weight: 600; cursor: pointer; }
+.device-notice button:focus-visible { outline: 3px solid #f2e6d0; outline-offset: 4px; }
