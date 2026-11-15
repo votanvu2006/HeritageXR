@@ -1,13 +1,13 @@
 /* Presentation-only skin, scoped to the visitor experience. */
 .camera-passthrough-shell {
-  background: #797d7c;
+  background: #8d806e;
 }
 .camera-passthrough-shell::before {
   content: "";
   position: fixed;
   z-index: -1;
   inset: 0;
-  background: #797d7c url("/images/spatial-gallery.svg") center / cover
+  background: #8d806e url("/images/spatial-gallery.svg") center / cover
     no-repeat;
   pointer-events: none;
   transition: opacity 260ms ease;
@@ -16,7 +16,7 @@
   opacity: 0;
 }
 .camera-passthrough-shade {
-  background: linear-gradient(180deg, #20263126, transparent 35%, #20263130);
+  background: linear-gradient(180deg, #29231d18, transparent 35%, #29231d26);
 }
 .heritage-experience,
 .heritage-experience *,
@@ -26,11 +26,11 @@
     -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif !important;
 }
 .heritage-experience {
-  --spatial-secondary: #e0e3ea;
-  --spatial-glass: linear-gradient(135deg, #eff3fc30, #b9c3d418);
-  --spatial-border: #ffffff40;
-  --spatial-button: #ffffff1f;
-  --spatial-shadow: 0 18px 48px #1017222b, inset 0 1px 0 #ffffff18;
+  --spatial-secondary: #e8dfd1;
+  --spatial-glass: linear-gradient(135deg, #51493dcc, #39342cbf);
+  --spatial-border: #f0d9b847;
+  --spatial-button: #f0dfc51a;
+  --spatial-shadow: 0 14px 36px #2920152e, inset 0 1px 0 #fff1dc1f;
   color: #fff;
   color-scheme: dark;
 }
@@ -175,7 +175,7 @@
   border: 1px solid #ffffff4d;
   border-radius: 24px;
   color: #fff;
-  background: #414751de;
+  background: #443c30ed;
   box-shadow: 0 8px 24px #11182726;
   font-size: 12px;
   font-weight: 550;
@@ -234,8 +234,8 @@
 }
 .heritage-experience
   :is(.spatial-next-button, .spatial-assistant-button[aria-expanded="true"]) {
-  color: #30343c;
-  background: #fffffff2;
+  color: #3d3325;
+  background: #f7eddd;
 }
 .heritage-experience
   :is(
@@ -245,8 +245,8 @@
     .structure-cutaway-toggle
   ):hover {
   border-color: #ffffff80;
-  color: #30343c;
-  background: #ffffffeb;
+  color: #3d3325;
+  background: #f7eddd;
 }
 /* Reserve model space between the existing heading and dock. */
 .heritage-experience .object-experience > .interactive-structure-scene {
@@ -263,13 +263,13 @@
   bottom: -32px;
   left: 50%;
   transform: translateX(-50%);
-  color: #30343c;
-  background: #ffffffed;
+  color: #3d3325;
+  background: #f7eddd;
   box-shadow: var(--spatial-shadow);
   white-space: nowrap;
 }
 .heritage-experience .object-experience .structure-cutaway-toggle.is-active {
-  background: #e0eaf8;
+  background: #ead8b8;
 }
 .heritage-experience .object-experience .structure-scene-footnote {
   bottom: -56px;
@@ -282,7 +282,7 @@
   background: transparent;
   font-size: 10px;
   text-align: center;
-  text-shadow: 0 1px 8px #1a2238;
+  text-shadow: 0 1px 8px #30261d;
   backdrop-filter: none;
 }
 .heritage-experience .object-action-dock {
@@ -333,7 +333,7 @@
   height: 34px;
   flex-basis: 34px;
   border-color: #fff;
-  color: #30343c;
+  color: #3d3325;
   background: #fff;
   box-shadow: none;
   font-size: 11px;
@@ -362,7 +362,7 @@
   width: 310px;
   padding: 20px;
   border-radius: 24px;
-  background: #454953d9;
+  background: #3d362de8;
 }
 .heritage-experience .structure-scene-eyebrow {
   color: var(--spatial-secondary);
@@ -389,7 +389,7 @@
   padding: clamp(22px, 3vw, 36px);
   border-radius: 36px;
   color: #fff;
-  background: #454953d9;
+  background: #3d362de8;
   box-shadow: var(--spatial-shadow);
   scrollbar-width: thin;
   scrollbar-color: #ffffff50 transparent;
@@ -476,7 +476,7 @@
 .heritage-experience :is(.spatial-story-video, .crafting-video) {
   border: 1px solid #ffffff30;
   border-radius: 22px;
-  background: #292e35;
+  background: #29231d;
 }
 .heritage-experience .spatial-story-video video {
   max-height: 48svh;
@@ -569,7 +569,7 @@
   font-size: 14px;
 }
 .heritage-experience .quiz-reward-box p {
-  color: #d9dfea;
+  color: #e8dfd1;
   font-size: 12px;
 }
 .heritage-experience
@@ -587,7 +587,7 @@
   font-size: 13px;
 }
 .heritage-experience .quiz-demo-note {
-  color: #d9dfea;
+  color: #e8dfd1;
   font-size: 12px;
 }
 .heritage-experience .object-experience .spatial-assistant-panel {
@@ -598,7 +598,7 @@
   max-height: none;
   grid-template-rows: auto minmax(0, 1fr);
   border-radius: 30px;
-  background: #454953ed;
+  background: #3d362df2;
 }
 .heritage-experience .spatial-assistant-panel > header {
   padding: 20px 20px 14px;
@@ -630,7 +630,7 @@
     .chat-compose label,
     .voice-note
   ) {
-  color: #e0e5ef;
+  color: #e8dfd1;
 }
 .heritage-experience .chat-dot {
   background: #c1e3cf;
@@ -668,7 +668,7 @@
   background: #ffffff24;
 }
 .heritage-experience .chat-speaker {
-  color: #e4e9f3;
+  color: #eee3d2;
 }
 .heritage-experience .chat-sources,
 .heritage-experience .chat-compose {
@@ -682,17 +682,17 @@
   font-size: 15px;
 }
 .heritage-experience .chat-compose textarea::placeholder {
-  color: #c9d0dc;
+  color: #cfc2ae;
 }
 .heritage-experience .chat-send {
   min-height: 44px;
   border: 0;
   border-radius: 24px;
-  color: #30343c;
+  color: #3d3325;
   background: #fff;
 }
 .heritage-experience .chat-send:hover:not(:disabled) {
-  background: #e4ebf7;
+  background: #ead8b8;
 }
 .heritage-experience .voice-hold.is-recording {
   border-color: #ffc1bc;
@@ -700,7 +700,7 @@
   color: #fff;
 }
 .heritage-experience .chat-working {
-  color: #e0e5ef;
+  color: #e8dfd1;
 }
 .camera-passthrough-control {
   top: auto;
@@ -718,7 +718,7 @@
   border: 1px solid #ffffff50;
   border-radius: 26px;
   color: #fff;
-  background: #5a606dcc;
+  background: #51473beb;
   box-shadow: 0 12px 32px #11182726;
   backdrop-filter: blur(28px);
   font-size: 13px;
@@ -733,7 +733,7 @@
   border-color: #ffffff30;
   border-radius: 16px;
   color: #fff;
-  background: #454953ed;
+  background: #3d362df2;
   font-size: 11px;
   text-align: left;
 }
@@ -741,7 +741,7 @@
   (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
 ) {
   .heritage-experience .glass-surface {
-    background: #454953ed;
+    background: #3d362df2;
   }
 }
 @media (max-width: 1000px) and (min-width: 761px) {
@@ -866,7 +866,7 @@
   .heritage-experience
     .object-experience-heading
     .spatial-back-button:hover::before {
-    color: #30343c;
+    color: #3d3325;
   }
   .heritage-experience .object-experience > .interactive-structure-scene {
     top: 100px;
@@ -1115,8 +1115,8 @@
   min-height: 0;
 }
 .heritage-experience .spatial-assistant-button {
-  color: #30343c;
-  background: #fffffff2;
+  color: #3d3325;
+  background: #f7eddd;
 }
 .heritage-experience .chat-send > span {
   font-size: 0;
