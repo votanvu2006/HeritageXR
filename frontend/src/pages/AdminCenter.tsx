@@ -372,7 +372,7 @@ export function AdminCenter() {
                   <tr key={m.id} style={{ borderBottom: "1px solid var(--admin-line)" }}>
                     <td><span className={`admin-rank admin-rank-${index + 1}`}>TOP {index + 1}</span></td>
                     <td style={{ padding: "8px 4px", fontWeight: 600, color: "var(--admin-ink)" }}>
-                      <span style={{ color: "var(--admin-accent)" }}>{m.code}</span> {m.name}
+                      {m.name}
                     </td>
                     <td style={{ padding: "8px 4px" }}>{m.views}</td>
                     <td style={{ padding: "8px 4px", color: "var(--admin-gold)" }}>{m.avgDwellMin}p</td>

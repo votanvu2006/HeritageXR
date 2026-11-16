@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InteractiveScene, type ExhibitId } from "../InteractiveScene";
 import { exhibitInformation } from "../exhibitInformation";
 import { exhibitStories } from "../exhibitStories";
@@ -10,6 +10,13 @@ import {
   type CustomHotspot,
   type HXRSystemState,
 } from "../syncStore";
+
+const WORKFLOW_STEPS = [
+  { title: "Hồ sơ & mô hình 3D", description: "Thêm ảnh, điền thông tin và chuẩn bị bản dựng hiện vật." },
+  { title: "Điểm tương tác", description: "Chọn vị trí trên mô hình, thêm tên và nội dung cho từng điểm chạm." },
+  { title: "Nội dung khám phá", description: "Chuẩn bị tài liệu, câu chuyện và giọng đọc. Kiểm tra nội dung trước khi tiếp tục." },
+  { title: "Kiểm tra & xuất bản", description: "Duyệt mô hình và nội dung, kiểm thử trợ lý rồi xác nhận xuất bản." },
+];
 
 const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
 
@@ -47,6 +54,15 @@ const QUICK_HOTSPOT_TEMPLATES = [
 export function AdminStudio() {
   const [store, setStore] = useState<HXRSystemState>(() => getStore());
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const workflowHeadingRef = useRef<HTMLHeadingElement>(null);
+  const goToStep = (nextStep: 1 | 2 | 3 | 4) => {
+    setStep(nextStep);
+    window.requestAnimationFrame(() => {
+      workflowHeadingRef.current?.focus({ preventScroll: true });
+      workflowHeadingRef.current?.scrollIntoView({ block: "start", behavior: "auto" });
+    });
+  };
+  const currentStep = WORKFLOW_STEPS[step - 1];
   const [doneSteps, setDoneSteps] = useState({ s1: false, s2: false, s3: false, s4: false });
   const [previewCraftStep, setPreviewCraftStep] = useState(0);
 
@@ -120,12 +136,12 @@ export function AdminStudio() {
     }
     setActiveHotspotPreview(null);
     setDoneSteps({ s1: false, s2: false, s3: false, s4: false });
-    setStep(1);
+    goToStep(1);
   };
 
   const handleStartNewArtifact = () => {
     const nextNum = String(catalogList.length + 1).padStart(2, "0");
-    setStep(1);
+    goToStep(1);
     setDoneSteps({ s1: false, s2: false, s3: false, s4: false });
     setArtifactCode(`#${nextNum}`);
     setArtifactName(`Hiện vật mới #${nextNum}`);
@@ -332,53 +348,18 @@ export function AdminStudio() {
       </div>
 
       <p className="admin-workflow-intro">Chuẩn bị hồ sơ, dựng mô hình 3D và nội dung khám phá cho trang du khách.</p>
-      {/* STEPPER 4 BƯỚC 1 DÒNG */}
-      <div className="admin-steps"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "10px",
-          marginBottom: "18px",
-        }}
-      >
-        {[
-          { n: 1, title: "Hồ sơ & mô hình 3D", description: "Ảnh, thông tin và bản dựng hiện vật", done: doneSteps.s1 },
-          { n: 2, title: `Điểm tương tác (${currentHotspots.length})`, description: "Gắn điểm chạm lên mô hình", done: doneSteps.s2 },
-          { n: 3, title: "Nội dung khám phá", description: "Tài liệu, câu chuyện và giọng đọc", done: doneSteps.s3 },
-          { n: 4, title: "Kiểm tra & xuất bản", description: "Duyệt nội dung cho trang du khách", done: doneSteps.s4 },
-        ].map((item) => {
-          const active = step === item.n;
-          return (
-            <button
-              key={item.n}
-              className={`admin-step${active ? " is-active" : ""}${item.done ? " is-complete" : ""}`}
-              aria-current={active ? "step" : undefined}
-              type="button"
-              onClick={() => setStep(item.n as 1 | 2 | 3 | 4)}
-              style={{
-                padding: "11px 14px",
-                borderRadius: "8px",
-                border: active
-                  ? "1px solid var(--admin-accent)"
-                  : item.done
-                  ? "1px solid rgba(16, 185, 129, 0.35)"
-                  : "1px solid var(--admin-line)",
-                background: active ? "rgba(200, 170, 110, 0.1)" : "var(--admin-surface)",
-                color: active ? "var(--admin-ink)" : "var(--admin-muted)",
-                fontWeight: active ? 600 : 500,
-                fontSize: "12.5px",
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span className="admin-step-number" aria-hidden="true">{item.done ? "✓" : `0${item.n}`}</span>
-              <span className="admin-step-copy"><strong>{item.title}</strong><span>{item.description}</span></span>
-            </button>
-          );
-        })}
-      </div>
+      <section className="admin-wizard-header" aria-label="Tiến độ tạo hiện vật">
+        <div className="admin-wizard-summary">
+          <div>
+            <span className="admin-wizard-position">BƯỚC {step} / 4</span>
+            <h2 ref={workflowHeadingRef} tabIndex={-1}>{currentStep.title}</h2>
+            <p>{currentStep.description}</p>
+          </div>
+          {step > 1 && <button type="button" className="admin-wizard-back" onClick={() => goToStep((step - 1) as 1 | 2 | 3)}>← Quay lại bước {step - 1}</button>}
+        </div>
+        <progress className="admin-wizard-progress" max={4} value={step} aria-label={`Đang ở bước ${step} trên 4`} />
+        <div className="admin-wizard-status" aria-live="polite">{doneSteps.s4 ? "Đã xuất bản hiện vật" : step < 4 ? `Tiếp theo: ${WORKFLOW_STEPS[step].title}` : "Bước cuối · Kiểm tra trước khi xuất bản"}</div>
+      </section>
 
       {/* BƯỚC 1: HỒ SƠ & TẠO 3D */}
       {step === 1 && (
@@ -513,7 +494,7 @@ export function AdminStudio() {
                 disabled={!mesh3DReady}
                 onClick={() => {
                   setDoneSteps((prev) => ({ ...prev, s1: true }));
-                  setStep(2);
+                  goToStep(2);
                 }}
                 style={{
                   flex: 1,
@@ -760,7 +741,7 @@ export function AdminStudio() {
             <div style={{ display: "flex", gap: "8px" }}>
               <button
                 type="button"
-                onClick={() => setStep(1)}
+                onClick={() => goToStep(1)}
                 style={{
                   padding: "10px 14px",
                   background: "var(--admin-surface-raised)",
@@ -777,7 +758,7 @@ export function AdminStudio() {
                 type="button"
                 onClick={() => {
                   setDoneSteps((prev) => ({ ...prev, s2: true }));
-                  setStep(3);
+                  goToStep(3);
                 }}
                 style={{
                   flex: 1,
@@ -960,7 +941,7 @@ export function AdminStudio() {
                   disabled={!step3Reviewed}
                   onClick={() => {
                     setDoneSteps((prev) => ({ ...prev, s3: true }));
-                    setStep(4);
+                    goToStep(4);
                   }}
                   style={{
                     padding: "10px 20px",
