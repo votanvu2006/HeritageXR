@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InteractiveScene, type ExhibitId } from "../InteractiveScene";
 import { exhibitInformation } from "../exhibitInformation";
 import { exhibitStories } from "../exhibitStories";
@@ -10,6 +10,13 @@ import {
   type CustomHotspot,
   type HXRSystemState,
 } from "../syncStore";
+
+const WORKFLOW_STEPS = [
+  { title: "Hồ sơ & mô hình 3D", description: "Thêm ảnh, điền thông tin và chuẩn bị bản dựng hiện vật." },
+  { title: "Điểm tương tác", description: "Chọn vị trí trên mô hình, thêm tên và nội dung cho từng điểm chạm." },
+  { title: "Nội dung khám phá", description: "Chuẩn bị tài liệu, câu chuyện và giọng đọc. Kiểm tra nội dung trước khi tiếp tục." },
+  { title: "Kiểm tra & xuất bản", description: "Duyệt mô hình và nội dung, kiểm thử trợ lý rồi xác nhận xuất bản." },
+];
 
 const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
 
@@ -47,6 +54,15 @@ const QUICK_HOTSPOT_TEMPLATES = [
 export function AdminStudio() {
   const [store, setStore] = useState<HXRSystemState>(() => getStore());
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const workflowHeadingRef = useRef<HTMLHeadingElement>(null);
+  const goToStep = (nextStep: 1 | 2 | 3 | 4) => {
+    setStep(nextStep);
+    window.requestAnimationFrame(() => {
+      workflowHeadingRef.current?.focus({ preventScroll: true });
+      workflowHeadingRef.current?.scrollIntoView({ block: "start", behavior: "auto" });
+    });
+  };
+  const currentStep = WORKFLOW_STEPS[step - 1];
   const [doneSteps, setDoneSteps] = useState({ s1: false, s2: false, s3: false, s4: false });
   const [previewCraftStep, setPreviewCraftStep] = useState(0);
 
@@ -120,12 +136,12 @@ export function AdminStudio() {
     }
     setActiveHotspotPreview(null);
     setDoneSteps({ s1: false, s2: false, s3: false, s4: false });
-    setStep(1);
+    goToStep(1);
   };
 
   const handleStartNewArtifact = () => {
     const nextNum = String(catalogList.length + 1).padStart(2, "0");
-    setStep(1);
+    goToStep(1);
     setDoneSteps({ s1: false, s2: false, s3: false, s4: false });
     setArtifactCode(`#${nextNum}`);
     setArtifactName(`Hiện vật mới #${nextNum}`);
@@ -262,8 +278,8 @@ export function AdminStudio() {
   };
 
   const cardStyle: React.CSSProperties = {
-    background: "#ffffff",
-    border: "1px solid #e4e8ee",
+    background: "var(--admin-surface)",
+    border: "1px solid var(--admin-line)",
     borderRadius: "18px",
     padding: "20px",
   };
@@ -271,10 +287,10 @@ export function AdminStudio() {
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "9px 12px",
-    background: "#f6f7f9",
-    border: "1px solid #dce2e9",
+    background: "var(--admin-field)",
+    border: "1px solid var(--admin-line)",
     borderRadius: "7px",
-    color: "#172b3a",
+    color: "var(--admin-ink)",
     fontSize: "12.5px",
   };
 
@@ -289,8 +305,8 @@ export function AdminStudio() {
           marginBottom: "16px",
         }}
       >
-        <h1 style={{ margin: 0, fontSize: "28px", fontWeight: 700, color: "#172b3a" }}>
-          AI Creator Studio
+        <h1 style={{ margin: 0, fontSize: "28px", fontWeight: 700, color: "var(--admin-ink)" }}>
+          Xưởng hiện vật
         </h1>
 
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -319,7 +335,7 @@ export function AdminStudio() {
               padding: "9px 14px",
               background: "rgba(16, 185, 129, 0.12)",
               border: "1px solid rgba(16, 185, 129, 0.4)",
-              color: "#17836b",
+              color: "var(--admin-success)",
               borderRadius: "7px",
               fontWeight: 600,
               fontSize: "12px",
@@ -331,51 +347,19 @@ export function AdminStudio() {
         </div>
       </div>
 
-      {/* STEPPER 4 BƯỚC 1 DÒNG */}
-      <div className="admin-steps"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "10px",
-          marginBottom: "18px",
-        }}
-      >
-        {[
-          { n: 1, title: "1. Hồ sơ & Tạo 3D", done: doneSteps.s1 },
-          { n: 2, title: `2. Gắn Hotspot (${currentHotspots.length})`, done: doneSteps.s2 },
-          { n: 3, title: "3. Nội dung AI & Review", done: doneSteps.s3 },
-          { n: 4, title: "4. Kiểm duyệt & Xuất bản", done: doneSteps.s4 },
-        ].map((item) => {
-          const active = step === item.n;
-          return (
-            <button
-              key={item.n}
-              type="button"
-              onClick={() => setStep(item.n as 1 | 2 | 3 | 4)}
-              style={{
-                padding: "11px 14px",
-                borderRadius: "8px",
-                border: active
-                  ? "1px solid #163e43"
-                  : item.done
-                  ? "1px solid rgba(16, 185, 129, 0.35)"
-                  : "1px solid #e4e8ee",
-                background: active ? "rgba(200, 170, 110, 0.1)" : "#ffffff",
-                color: active ? "#172b3a" : "#64748b",
-                fontWeight: active ? 600 : 500,
-                fontSize: "12.5px",
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span>{item.title}</span>
-              {item.done && <span style={{ color: "#17836b", fontWeight: 700 }}>✓</span>}
-            </button>
-          );
-        })}
-      </div>
+      <p className="admin-workflow-intro">Chuẩn bị hồ sơ, dựng mô hình 3D và nội dung khám phá cho trang du khách.</p>
+      <section className="admin-wizard-header" aria-label="Tiến độ tạo hiện vật">
+        <div className="admin-wizard-summary">
+          <div>
+            <span className="admin-wizard-position">BƯỚC {step} / 4</span>
+            <h2 ref={workflowHeadingRef} tabIndex={-1}>{currentStep.title}</h2>
+            <p>{currentStep.description}</p>
+          </div>
+          {step > 1 && <button type="button" className="admin-wizard-back" onClick={() => goToStep((step - 1) as 1 | 2 | 3)}>← Quay lại bước {step - 1}</button>}
+        </div>
+        <progress className="admin-wizard-progress" max={4} value={step} aria-label={`Đang ở bước ${step} trên 4`} />
+        <div className="admin-wizard-status" aria-live="polite">{doneSteps.s4 ? "Đã xuất bản hiện vật" : step < 4 ? `Tiếp theo: ${WORKFLOW_STEPS[step].title}` : "Bước cuối · Kiểm tra trước khi xuất bản"}</div>
+      </section>
 
       {/* BƯỚC 1: HỒ SƠ & TẠO 3D */}
       {step === 1 && (
@@ -391,18 +375,18 @@ export function AdminStudio() {
             <div style={{ display: "grid", gap: "14px" }}>
               <div className="admin-grid" style={{ display: "grid", gridTemplateColumns: "95px 1fr", gap: "10px" }}>
                 <div>
-                  <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
+                  <label style={{ fontSize: "11px", color: "var(--admin-muted)", display: "block", marginBottom: "5px" }}>
                     Mã số
                   </label>
                   <input
                     type="text"
                     value={artifactCode}
                     onChange={(e) => setArtifactCode(e.target.value)}
-                    style={{ ...inputStyle, fontWeight: 700, color: "#163e43" }}
+                    style={{ ...inputStyle, fontWeight: 700, color: "var(--admin-accent)" }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
+                  <label style={{ fontSize: "11px", color: "var(--admin-muted)", display: "block", marginBottom: "5px" }}>
                     Tên hiện vật
                   </label>
                   <input
@@ -415,7 +399,7 @@ export function AdminStudio() {
               </div>
 
               <div>
-                <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
+                <label style={{ fontSize: "11px", color: "var(--admin-muted)", display: "block", marginBottom: "5px" }}>
                   Bộ sưu tập
                 </label>
                 <input
@@ -429,8 +413,8 @@ export function AdminStudio() {
               <div
                 style={{
                   padding: "12px",
-                  background: "#f6f7f9",
-                  border: "1px dashed #dce2e9",
+                  background: "var(--admin-field)",
+                  border: "1px dashed var(--admin-line)",
                   borderRadius: "8px",
                 }}
               >
@@ -442,17 +426,17 @@ export function AdminStudio() {
                     marginBottom: "8px",
                   }}
                 >
-                  <span style={{ fontSize: "12px", color: "#34495a", fontWeight: 500 }}>
+                  <span style={{ fontSize: "12px", color: "var(--admin-secondary)", fontWeight: 500 }}>
                     Ảnh chụp hiện vật
                   </span>
                   <label
                     style={{
                       padding: "4px 10px",
-                      background: "#f0f3f6",
-                      border: "1px solid #dce2e9",
+                      background: "var(--admin-surface-raised)",
+                      border: "1px solid var(--admin-line)",
                       borderRadius: "5px",
                       fontSize: "11px",
-                      color: "#846036",
+                      color: "var(--admin-gold)",
                       cursor: "pointer",
                     }}
                   >
@@ -474,9 +458,9 @@ export function AdminStudio() {
                       style={{
                         fontSize: "11px",
                         padding: "3px 8px",
-                        background: "#0d1412",
+                        background: "var(--admin-field)",
                         border: "1px solid rgba(16, 185, 129, 0.25)",
-                        color: "#17836b",
+                        color: "var(--admin-success)",
                         borderRadius: "4px",
                       }}
                     >
@@ -493,9 +477,9 @@ export function AdminStudio() {
                 onClick={handleGenerate3DMesh}
                 style={{
                   padding: "10px 14px",
-                  background: "#f0f3f6",
-                  border: "1px solid #163e43",
-                  color: "#846036",
+                  background: "var(--admin-surface-raised)",
+                  border: "1px solid var(--admin-accent)",
+                  color: "var(--admin-gold)",
                   borderRadius: "7px",
                   fontWeight: 600,
                   fontSize: "12px",
@@ -510,13 +494,13 @@ export function AdminStudio() {
                 disabled={!mesh3DReady}
                 onClick={() => {
                   setDoneSteps((prev) => ({ ...prev, s1: true }));
-                  setStep(2);
+                  goToStep(2);
                 }}
                 style={{
                   flex: 1,
                   padding: "10px 16px",
-                  background: mesh3DReady ? "#163e43" : "#e4e8ee",
-                  color: mesh3DReady ? "#f6f7f9" : "#83909d",
+                  background: mesh3DReady ? "var(--admin-accent)" : "var(--admin-line)",
+                  color: mesh3DReady ? "var(--admin-field)" : "var(--admin-muted)",
                   border: "none",
                   borderRadius: "7px",
                   fontWeight: 700,
@@ -531,8 +515,8 @@ export function AdminStudio() {
 
           <div
             style={{
-              background: "#f6f7f9",
-              border: "1px solid #e4e8ee",
+              background: "var(--admin-field)",
+              border: "1px solid var(--admin-line)",
               borderRadius: "8px",
               overflow: "hidden",
               minHeight: "340px",
@@ -568,7 +552,7 @@ export function AdminStudio() {
                 marginBottom: "8px",
               }}
             >
-              <span style={{ fontSize: "12px", color: "#64748b" }}>
+              <span style={{ fontSize: "12px", color: "var(--admin-muted)" }}>
                 Kéo để xoay 3D · Click trực tiếp lên bề mặt cổ vật để gắn điểm chạm
               </span>
             </div>
@@ -579,7 +563,7 @@ export function AdminStudio() {
                 height: "365px",
                 borderRadius: "8px",
                 overflow: "hidden",
-                border: "1px solid #dce2e9",
+                border: "1px solid var(--admin-line)",
               }}
             >
               <InteractiveScene
@@ -599,8 +583,8 @@ export function AdminStudio() {
                     bottom: "12px",
                     right: "12px",
                     zIndex: 25,
-                    background: "rgba(11, 14, 19, 0.94)",
-                    border: "1px solid #163e43",
+                    background: "var(--admin-surface-raised)",
+                    border: "1px solid var(--admin-accent)",
                     borderRadius: "7px",
                     padding: "10px 12px",
                     display: "flex",
@@ -609,10 +593,10 @@ export function AdminStudio() {
                   }}
                 >
                   <div>
-                    <strong style={{ fontSize: "12px", color: "#846036" }}>
+                    <strong style={{ fontSize: "12px", color: "var(--admin-gold)" }}>
                       [{activeHotspotPreview.roman}] {activeHotspotPreview.title}
                     </strong>
-                    <div style={{ fontSize: "11px", color: "#34495a", marginTop: "2px" }}>
+                    <div style={{ fontSize: "11px", color: "var(--admin-secondary)", marginTop: "2px" }}>
                       {activeHotspotPreview.description}
                     </div>
                   </div>
@@ -622,7 +606,7 @@ export function AdminStudio() {
                     style={{
                       background: "transparent",
                       border: "none",
-                      color: "#64748b",
+                      color: "var(--admin-muted)",
                       cursor: "pointer",
                       fontSize: "15px",
                     }}
@@ -637,8 +621,8 @@ export function AdminStudio() {
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "10px" }}>
             <div
               style={{
-                background: "#f6f7f9",
-                border: "1px solid #e4e8ee",
+                background: "var(--admin-field)",
+                border: "1px solid var(--admin-line)",
                 padding: "12px",
                 borderRadius: "8px",
               }}
@@ -651,7 +635,7 @@ export function AdminStudio() {
                   marginBottom: "8px",
                 }}
               >
-                <span style={{ fontSize: "11px", color: "#163e43", fontWeight: 600 }}>
+                <span style={{ fontSize: "11px", color: "var(--admin-accent)", fontWeight: 600 }}>
                   Điểm chạm mới
                 </span>
                 <div style={{ display: "flex", gap: "4px" }}>
@@ -666,9 +650,9 @@ export function AdminStudio() {
                       style={{
                         padding: "3px 7px",
                         fontSize: "10px",
-                        background: "#f0f3f6",
-                        border: "1px solid #dce2e9",
-                        color: "#846036",
+                        background: "var(--admin-surface-raised)",
+                        border: "1px solid var(--admin-line)",
+                        color: "var(--admin-gold)",
                         borderRadius: "4px",
                         cursor: "pointer",
                       }}
@@ -695,8 +679,8 @@ export function AdminStudio() {
 
             <div
               style={{
-                background: "#f6f7f9",
-                border: "1px solid #e4e8ee",
+                background: "var(--admin-field)",
+                border: "1px solid var(--admin-line)",
                 padding: "12px",
                 borderRadius: "8px",
                 flex: 1,
@@ -712,20 +696,20 @@ export function AdminStudio() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     padding: "7px 10px",
-                    background: "#ffffff",
-                    border: "1px solid #e4e8ee",
+                    background: "var(--admin-surface)",
+                    border: "1px solid var(--admin-line)",
                     borderRadius: "6px",
                     marginBottom: "6px",
                   }}
                 >
                   <div style={{ minWidth: 0 }}>
-                    <strong style={{ color: "#846036", fontSize: "12px" }}>
+                    <strong style={{ color: "var(--admin-gold)", fontSize: "12px" }}>
                       [{hs.roman}] {hs.title}
                     </strong>
                     <div
                       style={{
                         fontSize: "11px",
-                        color: "#64748b",
+                        color: "var(--admin-muted)",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -741,7 +725,7 @@ export function AdminStudio() {
                       padding: "4px 8px",
                       background: "transparent",
                       border: "1px solid rgba(239, 68, 68, 0.35)",
-                      color: "#fca5a5",
+                      color: "#f2a391",
                       borderRadius: "4px",
                       fontSize: "11px",
                       cursor: "pointer",
@@ -757,12 +741,12 @@ export function AdminStudio() {
             <div style={{ display: "flex", gap: "8px" }}>
               <button
                 type="button"
-                onClick={() => setStep(1)}
+                onClick={() => goToStep(1)}
                 style={{
                   padding: "10px 14px",
-                  background: "#f0f3f6",
-                  border: "1px solid #dce2e9",
-                  color: "#34495a",
+                  background: "var(--admin-surface-raised)",
+                  border: "1px solid var(--admin-line)",
+                  color: "var(--admin-secondary)",
                   borderRadius: "7px",
                   fontSize: "12px",
                   cursor: "pointer",
@@ -774,13 +758,13 @@ export function AdminStudio() {
                 type="button"
                 onClick={() => {
                   setDoneSteps((prev) => ({ ...prev, s2: true }));
-                  setStep(3);
+                  goToStep(3);
                 }}
                 style={{
                   flex: 1,
                   padding: "10px 16px",
-                  background: "#163e43",
-                  color: "#f6f7f9",
+                  background: "var(--admin-accent)",
+                  color: "var(--admin-on-accent)",
                   border: "none",
                   borderRadius: "7px",
                   fontWeight: 700,
@@ -805,16 +789,16 @@ export function AdminStudio() {
               alignItems: "center",
               paddingBottom: "14px",
               marginBottom: "16px",
-              borderBottom: "1px solid #e4e8ee",
+              borderBottom: "1px solid var(--admin-line)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ fontSize: "12.5px", color: "#64748b" }}>Tài liệu PDF:</span>
-              <strong style={{ fontSize: "12.5px", color: "#17836b" }}>{pdfFileName}</strong>
+              <span style={{ fontSize: "12.5px", color: "var(--admin-muted)" }}>Tài liệu PDF:</span>
+              <strong style={{ fontSize: "12.5px", color: "var(--admin-success)" }}>{pdfFileName}</strong>
               <label
                 style={{
                   fontSize: "11.5px",
-                  color: "#163e43",
+                  color: "var(--admin-accent)",
                   cursor: "pointer",
                   textDecoration: "underline",
                 }}
@@ -837,8 +821,8 @@ export function AdminStudio() {
               onClick={handleRunAIPipeline}
               style={{
                 padding: "8px 16px",
-                background: "#163e43",
-                color: "#f6f7f9",
+                background: "var(--admin-accent)",
+                color: "var(--admin-on-accent)",
                 border: "none",
                 borderRadius: "7px",
                 fontWeight: 700,
@@ -855,7 +839,7 @@ export function AdminStudio() {
               <div className="admin-grid admin-review-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                 <div className="admin-review-fields" style={{ display: "grid", gap: "12px" }}>
                   <div>
-                    <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
+                    <label style={{ fontSize: "11px", color: "var(--admin-muted)", display: "block", marginBottom: "5px" }}>
                       Kịch bản thuyết minh
                     </label>
                     <textarea
@@ -867,7 +851,7 @@ export function AdminStudio() {
                   </div>
 
                   <div>
-                    <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
+                    <label style={{ fontSize: "11px", color: "var(--admin-muted)", display: "block", marginBottom: "5px" }}>
                       Mô tả không gian 360°
                     </label>
                     <textarea
@@ -881,15 +865,15 @@ export function AdminStudio() {
                   <div
                     style={{
                       padding: "9px 12px",
-                      background: "#f6f7f9",
-                      border: "1px solid #dce2e9",
+                      background: "var(--admin-field)",
+                      border: "1px solid var(--admin-line)",
                       borderRadius: "7px",
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
                     }}
                   >
-                    <span style={{ fontSize: "12px", color: "#34495a" }}>
+                    <span style={{ fontSize: "12px", color: "var(--admin-secondary)" }}>
                       🔊 Giọng đọc AI ({artifactName})
                     </span>
                     <button
@@ -897,9 +881,9 @@ export function AdminStudio() {
                       onClick={handlePreviewVoice}
                       style={{
                         padding: "5px 12px",
-                        background: isPlayingVoice ? "#17836b" : "#f0f3f6",
-                        border: "1px solid #163e43",
-                        color: isPlayingVoice ? "#f6f7f9" : "#846036",
+                        background: isPlayingVoice ? "var(--admin-success)" : "var(--admin-surface-raised)",
+                        border: "1px solid var(--admin-accent)",
+                        color: isPlayingVoice ? "var(--admin-field)" : "var(--admin-gold)",
                         borderRadius: "5px",
                         fontSize: "11px",
                         fontWeight: 600,
@@ -912,7 +896,7 @@ export function AdminStudio() {
                 </div>
 
                 <div className="admin-review-preview">
-                  <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>
+                  <label style={{ fontSize: "11px", color: "var(--admin-muted)", display: "block", marginBottom: "5px" }}>
                     Video lịch sử (.mp4)
                   </label>
                   <StoryPlayer
@@ -928,7 +912,7 @@ export function AdminStudio() {
                 style={{
                   marginTop: "16px",
                   paddingTop: "14px",
-                  borderTop: "1px solid #e4e8ee",
+                  borderTop: "1px solid var(--admin-line)",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -947,7 +931,7 @@ export function AdminStudio() {
                     type="checkbox"
                     checked={step3Reviewed}
                     onChange={(e) => setStep3Reviewed(e.target.checked)}
-                    style={{ width: "16px", height: "16px", accentColor: "#17836b" }}
+                    style={{ width: "16px", height: "16px", accentColor: "var(--admin-success)" }}
                   />
                   Đã kiểm tra nội dung
                 </label>
@@ -957,12 +941,12 @@ export function AdminStudio() {
                   disabled={!step3Reviewed}
                   onClick={() => {
                     setDoneSteps((prev) => ({ ...prev, s3: true }));
-                    setStep(4);
+                    goToStep(4);
                   }}
                   style={{
                     padding: "10px 20px",
-                    background: step3Reviewed ? "#163e43" : "#e4e8ee",
-                    color: step3Reviewed ? "#f6f7f9" : "#83909d",
+                    background: step3Reviewed ? "var(--admin-accent)" : "var(--admin-line)",
+                    color: step3Reviewed ? "var(--admin-on-accent)" : "var(--admin-muted)",
                     border: "none",
                     borderRadius: "7px",
                     fontWeight: 700,
@@ -990,14 +974,14 @@ export function AdminStudio() {
         >
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             <div>
-              <div style={{ fontSize: "13.5px", fontWeight: 600, color: "#172b3a", marginBottom: "12px" }}>
+              <div style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--admin-ink)", marginBottom: "12px" }}>
                 Xác nhận kiểm duyệt trước khi xuất bản
               </div>
 
               <div
                 style={{
-                  background: "#f6f7f9",
-                  border: "1px solid #e4e8ee",
+                  background: "var(--admin-field)",
+                  border: "1px solid var(--admin-line)",
                   borderRadius: "8px",
                   padding: "16px",
                   display: "grid",
@@ -1010,7 +994,7 @@ export function AdminStudio() {
                     type="checkbox"
                     checked={checkCostume}
                     onChange={(e) => setCheckCostume(e.target.checked)}
-                    style={{ width: "15px", height: "15px", accentColor: "#163e43" }}
+                    style={{ width: "15px", height: "15px", accentColor: "var(--admin-accent)" }}
                   />
                   <span>Hình ảnh & Video đúng chuẩn lịch sử văn hóa Đông Sơn</span>
                 </label>
@@ -1020,7 +1004,7 @@ export function AdminStudio() {
                     type="checkbox"
                     checked={checkPedestal}
                     onChange={(e) => setCheckPedestal(e.target.checked)}
-                    style={{ width: "15px", height: "15px", accentColor: "#163e43" }}
+                    style={{ width: "15px", height: "15px", accentColor: "var(--admin-accent)" }}
                   />
                   <span>Mô hình 3D đặt chuẩn trên bệ đỡ trưng bày</span>
                 </label>
@@ -1030,7 +1014,7 @@ export function AdminStudio() {
                     type="checkbox"
                     checked={checkFactRAG}
                     onChange={(e) => setCheckFactRAG(e.target.checked)}
-                    style={{ width: "15px", height: "15px", accentColor: "#163e43" }}
+                    style={{ width: "15px", height: "15px", accentColor: "var(--admin-accent)" }}
                   />
                   <span>Trợ lý AI bám sát tài liệu bảo tàng (Chặn câu hỏi ngoài lề)</span>
                 </label>
@@ -1044,8 +1028,8 @@ export function AdminStudio() {
                 style={{
                   width: "100%",
                   padding: "12px",
-                  background: doneSteps.s4 ? "#17836b" : "#163e43",
-                  color: "#f6f7f9",
+                  background: doneSteps.s4 ? "var(--admin-success)" : "var(--admin-accent)",
+                  color: "var(--admin-on-accent)",
                   border: "none",
                   borderRadius: "7px",
                   fontWeight: 700,
@@ -1066,7 +1050,7 @@ export function AdminStudio() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     fontSize: "12px",
-                    color: "#17836b",
+                    color: "var(--admin-success)",
                   }}
                 >
                   <span>Đã đồng bộ sang trang Du khách.</span>
@@ -1076,8 +1060,8 @@ export function AdminStudio() {
                     style={{
                       padding: "6px 12px",
                       background: "transparent",
-                      color: "#846036",
-                      border: "1px solid #163e43",
+                      color: "var(--admin-gold)",
+                      border: "1px solid var(--admin-accent)",
                       borderRadius: "5px",
                       fontSize: "11.5px",
                       cursor: "pointer",
@@ -1091,7 +1075,7 @@ export function AdminStudio() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: "13.5px", fontWeight: 600, color: "#172b3a", marginBottom: "12px" }}>
+            <div style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--admin-ink)", marginBottom: "12px" }}>
               Kiểm thử Trợ lý AI ({artifactCode})
             </div>
 
@@ -1101,8 +1085,8 @@ export function AdminStudio() {
                 minHeight: "170px",
                 maxHeight: "185px",
                 overflowY: "auto",
-                background: "#f6f7f9",
-                border: "1px solid #e4e8ee",
+                background: "var(--admin-field)",
+                border: "1px solid var(--admin-line)",
                 padding: "10px",
                 fontSize: "12px",
                 marginBottom: "8px",
@@ -1118,9 +1102,9 @@ export function AdminStudio() {
                   style={{
                     padding: "7px 10px",
                     borderRadius: "6px",
-                    background: item.role === "user" ? "#f0f3f6" : "#ffffff",
+                    background: item.role === "user" ? "var(--admin-surface-raised)" : "var(--admin-surface)",
                     borderLeft:
-                      item.role === "user" ? "2.5px solid #163e43" : "2.5px solid #17836b",
+                      item.role === "user" ? "2.5px solid var(--admin-accent)" : "2.5px solid var(--admin-success)",
                     whiteSpace: "pre-line",
                     lineHeight: 1.45,
                   }}
@@ -1137,9 +1121,9 @@ export function AdminStudio() {
                 style={{
                   fontSize: "11px",
                   padding: "4px 8px",
-                  background: "#f6f7f9",
-                  border: "1px solid #dce2e9",
-                  color: "#846036",
+                  background: "var(--admin-field)",
+                  border: "1px solid var(--admin-line)",
+                  color: "var(--admin-gold)",
                   borderRadius: "4px",
                   cursor: "pointer",
                 }}
@@ -1152,9 +1136,9 @@ export function AdminStudio() {
                 style={{
                   fontSize: "11px",
                   padding: "4px 8px",
-                  background: "#f6f7f9",
-                  border: "1px solid #dce2e9",
-                  color: "#846036",
+                  background: "var(--admin-field)",
+                  border: "1px solid var(--admin-line)",
+                  color: "var(--admin-gold)",
                   borderRadius: "4px",
                   cursor: "pointer",
                 }}
@@ -1167,9 +1151,9 @@ export function AdminStudio() {
                 style={{
                   fontSize: "11px",
                   padding: "4px 8px",
-                  background: "#f6f7f9",
+                  background: "var(--admin-field)",
                   border: "1px solid rgba(239, 68, 68, 0.3)",
-                  color: "#fca5a5",
+                  color: "#f2a391",
                   borderRadius: "4px",
                   cursor: "pointer",
                 }}
@@ -1178,7 +1162,7 @@ export function AdminStudio() {
               </button>
             </div>
 
-            <div style={{ display: "flex", gap: "6px" }}>
+            <div className="admin-sandbox-composer" style={{ display: "flex", gap: "6px" }}>
               <input
                 type="text"
                 value={sandboxQuery}
@@ -1192,9 +1176,9 @@ export function AdminStudio() {
                 onClick={() => handleTestSandbox()}
                 style={{
                   padding: "8px 14px",
-                  background: "#f0f3f6",
-                  color: "#846036",
-                  border: "1px solid #163e43",
+                  background: "var(--admin-surface-raised)",
+                  color: "var(--admin-gold)",
+                  border: "1px solid var(--admin-accent)",
                   borderRadius: "6px",
                   fontWeight: 600,
                   fontSize: "12px",

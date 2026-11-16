@@ -192,7 +192,7 @@ function MuseumApp() {
 
       <main className="app heritage-experience spatial-app">
         <header className="visitor-identity">
-          <div className="heritage-brand visitor-brand"><strong>HeritageXR</strong><span>BẢO TÀNG TƯƠNG TÁC</span></div>
+          <div className="heritage-brand visitor-brand"><span className="visitor-brand-mark" aria-hidden="true">HX</span><div className="visitor-brand-copy"><strong>HeritageXR</strong><span>BẢO TÀNG TƯƠNG TÁC</span></div></div>
           <span className="heritage-total-points" aria-label={`Tổng điểm: ${points}`}>✦ {points} điểm</span>
         </header>
 

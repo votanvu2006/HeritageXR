@@ -243,3 +243,27 @@ body:has(.heritage-experience),
 @media (max-width: 900px) {
   .heritage-experience .object-experience-heading .object-back-text { display: none; }
 }
+
+/* Match the admin monogram while retaining the visitor's compact identity. */
+.heritage-experience .visitor-brand { display: flex; align-items: center; gap: 9px; }
+.heritage-experience .visitor-brand-copy { display: grid; gap: 3px; }
+.heritage-experience .visitor-brand .visitor-brand-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #c9aa7166;
+  border-radius: 11px;
+  color: #e4c48e;
+  background: #d9b5790d;
+  font-family: 'Heritage Times', 'Times New Roman', Times, serif !important;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.06em;
+  text-shadow: none;
+}
+@media (max-width: 900px) {
+  .heritage-experience .visitor-brand .visitor-brand-mark { width: 32px; height: 32px; flex-basis: 32px; font-size: 14px; border-radius: 10px; }
+}
