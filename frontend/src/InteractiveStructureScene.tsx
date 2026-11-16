@@ -235,9 +235,8 @@ export function InteractiveStructureScene({
     const resize = () => {
       const width = viewport.clientWidth || 1;
       const height = viewport.clientHeight || 1;
-      // The visitor layout reserves its last two grid rows for the cutaway
-      // button and note. Frame the model in the remaining row, preserving its
-      // aspect ratio and the original orbit/cutaway behavior.
+      // Keep the canvas inside the first grid row; the explanation and
+      // cutaway button occupy separate rows below it.
       const modelHeight =
         Number.parseFloat(window.getComputedStyle(viewport).gridTemplateRows) ||
         height;
@@ -268,17 +267,41 @@ export function InteractiveStructureScene({
 
     let cutawayProgress = 0;
     let animationFrame = 0;
+    let wasCutaway = false;
+    let resetProgress = 1;
+    const resetStart = new THREE.Vector3();
+    const frontView = new THREE.Vector3(0, radius * 0.12, radius * 3.5);
 
     const render = () => {
       animationFrame = window.requestAnimationFrame(render);
 
-      const delta = clock.getDelta();
-
-      controls.update();
+      const delta = Math.min(clock.getDelta(), 0.1);
+      const opening = cutawayTargetRef.current;
+      if (opening && !wasCutaway) {
+        controls.enableDamping = false;
+        controls.update();
+        resetStart.copy(camera.position);
+        resetProgress = 0;
+        cutawayProgress = 0;
+      }
+      if (!opening) resetProgress = 1;
+      if (opening && resetProgress < 1) {
+        controls.enabled = false;
+        resetProgress = Math.min(1, resetProgress + delta / 0.45);
+        const eased = resetProgress * resetProgress * (3 - 2 * resetProgress);
+        camera.position.lerpVectors(resetStart, frontView, eased);
+        controls.target.set(0, 0, 0);
+        controls.update();
+      } else {
+        controls.enabled = true;
+        controls.enableDamping = true;
+        controls.update();
+      }
+      wasCutaway = opening;
 
       cutawayProgress = THREE.MathUtils.damp(
         cutawayProgress,
-        cutawayTargetRef.current ? 1 : 0,
+        opening && resetProgress === 1 ? 1 : 0,
         2.5,
         delta,
       );
@@ -409,7 +432,7 @@ export function InteractiveStructureScene({
 
   return (
     <section
-      className="interactive-structure-scene"
+      className={`interactive-structure-scene${isCutaway ? " is-cutaway" : ""}`}
       aria-label={`Khám phá cấu tạo ${exhibitId}`}
     >
       <div className="structure-scene-viewport" ref={viewportRef}>
@@ -454,7 +477,10 @@ export function InteractiveStructureScene({
           }`}
           type="button"
           aria-pressed={isCutaway}
-          onClick={() => setIsCutaway((current) => !current)}
+          onClick={() => {
+            if (!isCutaway) setActivePartId(parts[0]?.id ?? "");
+            setIsCutaway((current) => !current);
+          }}
         >
           {isCutaway ? "Đóng mặt cắt" : "Mở mặt cắt bên trong"}
         </button>
@@ -496,10 +522,7 @@ export function InteractiveStructureScene({
           </article>
         )}
 
-        <p className="structure-scene-footnote">
-          Mặt cắt là hiệu ứng minh họa trên mô hình 3D dựng lại, không phải bản
-          quét CT của hiện vật.
-        </p>
+
       </div>
     </section>
   );

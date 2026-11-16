@@ -1,0 +1,245 @@
+/* Visitor-only interface: small identity, open 3D stage, focused reading view. */
+.heritage-experience.spatial-app {
+  --visitor-panel: linear-gradient(135deg, #2c251fdf, #201d1ae8);
+  --visitor-line: #ddc8a64d;
+  height: 100dvh;
+  min-height: 0;
+  padding: 16px 24px 76px;
+}
+.heritage-experience .visitor-identity { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+.heritage-experience .visitor-brand { display: grid; gap: 2px; padding: 8px 12px; border-radius: 14px; background: #211c16a6; border: 1px solid #ddc8a629; backdrop-filter: blur(12px); }
+.heritage-experience .visitor-brand strong { font-size: 17px; line-height: 1.1; }
+.heritage-experience .visitor-brand span { font-size: 7px; letter-spacing: .1em; }
+.heritage-experience .heritage-total-points { background: #211c16bf; border-color: var(--visitor-line); backdrop-filter: blur(12px); }
+.heritage-experience .spatial-stage { margin-top: 12px; min-height: 0; }
+.heritage-experience .glass-surface { background: var(--visitor-panel); border-color: var(--visitor-line); backdrop-filter: blur(18px) saturate(110%); -webkit-backdrop-filter: blur(18px) saturate(110%); }
+.heritage-experience .object-experience-heading { width: min(720px, 100%); min-height: 68px; padding: 10px 14px; border-radius: 22px; }
+.heritage-experience .object-action-dock { width: min(540px, 100%); padding: 6px 8px; border-radius: 20px; }
+.heritage-experience .object-action-button { min-height: 56px; padding: 7px 4px; gap: 6px; border-radius: 14px; }
+.heritage-experience .object-action-icon { font-size: 0; width: 22px; height: 22px; display: block; }
+.heritage-experience .object-action-icon::before { content: none; display: none; }
+.heritage-experience .object-action-icon svg { display: block; width: 100%; height: 100%; }
+.heritage-experience .object-action-button.is-active { color: #fff0cf; background: #ccb17b26; border-color: #ccb17b55; box-shadow: inset 0 -2px #d1b47b; }
+/* In reading mode the selected section owns the stage. */
+.heritage-experience .content-experience { padding: 0; background: transparent; overflow: hidden; }
+.heritage-experience .content-glass-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(1080px, 100%);
+  height: 100%;
+  max-height: 100%;
+  padding: 24px;
+  gap: 16px;
+  overflow: hidden;
+  border-radius: 26px;
+}
+.heritage-experience .content-experience-header { flex: 0 0 auto; grid-template-columns: 164px minmax(0, 1fr) 164px; gap: 18px; padding-bottom: 16px; }
+.heritage-experience .content-experience-header h1 { font-size: 24px; }
+.heritage-experience .content-experience-header button { height: auto; min-height: 44px; padding: 10px; white-space: normal; font-size: 12px; }
+.heritage-experience .content-glass-panel > .object-action-dock { position: relative; inset: auto; transform: none; flex: 0 0 auto; width: 100%; margin: 0; box-shadow: none; background: #ffffff08; backdrop-filter: none; border-radius: 18px; }
+.heritage-experience .content-scroll-region { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 6px 12px 0; scrollbar-width: thin; scrollbar-color: #ddc8a65c transparent; }
+.heritage-experience .content-scroll-region > * { min-width: 0; }
+.heritage-experience .spatial-story-content { grid-template-columns: minmax(0, 1fr); }
+/* Cutaway labels, explanation and action each have their own space. */
+.heritage-experience .object-experience .structure-scene-viewport { width: min(1000px, 100%); justify-self: center; grid-template-rows: minmax(160px, 1fr) auto; gap: 10px; }
+.heritage-experience .object-experience .structure-cutaway-toggle { grid-row: 2; }
+.heritage-experience .object-experience .is-cutaway .structure-scene-viewport,
+.heritage-experience .object-experience .structure-scene-viewport:has(.structure-part-card) { grid-template-rows: minmax(180px, 1fr) auto auto; }
+.heritage-experience .object-experience .structure-scene-viewport .structure-part-card {
+  position: relative;
+  inset: auto;
+  grid-row: 2;
+  justify-self: center;
+  width: min(660px, 100%);
+  max-height: none;
+  min-height: 0;
+  margin: 0;
+  padding: 14px 18px;
+  overflow: visible;
+  border-radius: 20px;
+}
+.heritage-experience .object-experience .is-cutaway .structure-cutaway-toggle { grid-row: 3; }
+.heritage-experience .structure-part-card h3 { margin: 5px 0; font-size: 17px; line-height: 1.4; }
+.heritage-experience .structure-part-card p { margin: 0; font-size: 13px; line-height: 1.6; }
+.heritage-experience .object-experience:has(.structure-part-card) { grid-template-rows: auto minmax(0, 1fr) auto; }
+.heritage-experience .structure-hotspot { width: auto; min-width: 44px; min-height: 44px; max-width: min(190px, 24%); gap: 6px; }
+.heritage-experience .structure-hotspot-label { padding: 9px 12px; line-height: 1.4; white-space: normal; }
+.camera-passthrough-shell:has(.heritage-experience) .camera-passthrough-control { display: grid; position: fixed; inset: auto auto max(12px, env(safe-area-inset-bottom)) 24px; z-index: 19; max-width: calc(100vw - 48px); }
+.camera-passthrough-shell:has(.heritage-experience) .camera-toggle-button { min-height: 44px; padding: 10px 14px; border-color: #ddc8a65c; background: #28221ce6; }
+.camera-passthrough-shell:has(.heritage-experience) .camera-passthrough-caption { max-width: min(420px, calc(100vw - 48px)); font-size: 12px; }
+@media (max-width: 900px) {
+  .heritage-experience.spatial-app { padding: max(10px, env(safe-area-inset-top)) 12px 70px; }
+  .heritage-experience .visitor-identity { min-height: 40px; }
+  .heritage-experience .visitor-brand { padding: 6px 10px; }
+  .heritage-experience .visitor-brand strong { font-size: 16px; }
+  .heritage-experience .spatial-stage { margin-top: 10px; }
+  .heritage-experience .object-experience { gap: 10px; overflow: hidden; }
+  .heritage-experience .object-experience-heading { width: 100%; min-height: 66px; grid-template-columns: 44px minmax(0, 1fr) 78px; padding: 10px; gap: 8px; }
+  .heritage-experience .object-title-copy h1 { font-size: 16px; }
+  .heritage-experience .object-title-copy :is(.section-label, p) { display: none; }
+  .heritage-experience .object-experience .structure-scene-viewport { grid-template-rows: minmax(140px, 1fr) auto; }
+  .heritage-experience .object-experience .structure-scene-viewport:has(.structure-part-card) { grid-template-rows: minmax(160px, 1fr) auto auto; }
+  .heritage-experience .object-experience .structure-scene-viewport .structure-part-card { padding: 12px 14px; width: 100%; max-height: none; }
+  .heritage-experience .structure-hotspot { max-width: none; width: 44px; height: 44px; justify-content: center; }
+  .heritage-experience .structure-hotspot-label { display: none; }
+  .heritage-experience .structure-hotspot-number { width: 32px; height: 32px; flex-basis: 32px; }
+  .heritage-experience .structure-hotspot.is-left { left: 2px; }
+  .heritage-experience .structure-hotspot.is-right { right: 2px; }
+  .heritage-experience .object-action-button { min-height: 54px; font-size: 11px; }
+  .heritage-experience .content-glass-panel { padding: 16px; gap: 12px; border-radius: 22px; }
+  .heritage-experience .content-experience-header { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: 'back next' 'title title'; gap: 12px 8px; padding-bottom: 0; border: 0; }
+  .heritage-experience .content-experience-header > div { grid-area: title; }
+  .heritage-experience .content-experience-header .spatial-back-button { grid-area: back; }
+  .heritage-experience .content-experience-header .spatial-next-button { grid-area: next; }
+  .heritage-experience .content-experience-header h1 { font-size: 21px; }
+  .heritage-experience .content-experience-header button { font-size: 11px; padding: 10px 5px; }
+  .heritage-experience .content-experience-header .section-label { font-size: 9px; }
+  .heritage-experience .content-glass-panel > .object-action-dock { padding: 4px; border-radius: 16px; }
+  .heritage-experience .content-glass-panel > .object-action-dock .object-action-button { min-height: 50px; padding: 5px 2px; gap: 4px; font-size: 10px; }
+  .heritage-experience .object-action-icon { width: 20px; height: 20px; }
+  .camera-passthrough-shell:has(.heritage-experience) .camera-passthrough-control { left: 12px; max-width: calc(100vw - 24px); }
+}
+
+/* Keep identity legible without putting it inside another panel. */
+.heritage-experience .visitor-brand {
+  padding: 4px 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  text-shadow: 0 1px 4px #000, 0 2px 12px #000b;
+}
+.heritage-experience .scan-experience .exhibit-hotspot,
+.heritage-experience .scan-experience .exhibit-hotspot:hover {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.heritage-experience .scan-experience .exhibit-hotspot .hotspot-marker {
+  display: grid;
+  place-items: center;
+  width: var(--hotspot-diameter, 22px);
+  height: var(--hotspot-diameter, 22px);
+  border: 1px solid #ffedc7dc;
+  border-radius: 50%;
+  background: #30271fc4;
+  box-shadow: 0 0 0 3px #e9cd9224, 0 2px 8px #0008;
+}
+.heritage-experience .scan-experience .hotspot-marker::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff8eb;
+}
+.heritage-experience .scan-experience .exhibit-hotspot::after {
+  top: calc(50% + var(--hotspot-diameter, 22px) / 2 + 7px);
+  padding: 6px 8px;
+  min-height: 0;
+  font-size: 10px;
+}
+.heritage-experience .scan-experience .exhibit-hotspot:focus-visible {
+  outline: 2px solid #fff0c9;
+  outline-offset: 2px;
+}
+
+/* Two clearly labelled demo modes replace the camera on/off control. */
+.camera-passthrough-shell:has(.heritage-experience) .camera-passthrough-control:has(.capture-toolbar) {
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 24px);
+}
+.capture-toolbar { display: flex; gap: 4px; padding: 5px; border: 1px solid #cbb08466; border-radius: 24px; background: #251e18ed; box-shadow: 0 4px 20px #0004; }
+.capture-toolbar button { display: flex; gap: 8px; align-items: center; justify-content: center; min-width: 112px; min-height: 44px; padding: 10px 20px; color: #eee5d7; background: transparent; border: 0; border-radius: 19px; font: inherit; font-size: 13px; cursor: pointer; }
+.capture-toolbar button.is-active { background: #f6ead3; color: #30271f; }
+.capture-toolbar svg { width: 20px; height: 20px; }
+.heritage-experience .capture-photo { background: transparent; border: 1px solid #d7bc8544; border-radius: 24px; overflow: hidden; }
+.heritage-experience .capture-photo .exhibit-hotspot { visibility: hidden !important; pointer-events: none; }
+.heritage-experience .capture-photo .scan-guidance { width: min(540px, calc(100% - 24px)); top: 12px; z-index: 3; }
+.heritage-experience .capture-photo .scene-container { position: absolute; inset: 0; height: 100%; }
+.heritage-experience .demo-photo-actions { position: absolute; z-index: 3; inset: auto 12px 12px; display: grid; justify-items: center; gap: 7px; color: #f8edda; font-size: 11px; text-align: center; }
+.demo-shutter { display: grid; place-items: center; width: 58px; height: 58px; padding: 4px; border: 2px solid #fff2dc; border-radius: 50%; background: transparent; cursor: pointer; }
+.demo-shutter span { width: 100%; height: 100%; border-radius: 50%; background: #fff2dc; }
+.heritage-experience .scan-bottom-hint { bottom: 8px; }
+.heritage-experience .visitor-identity { position: relative; z-index: 5; }
+.capture-toolbar { pointer-events: auto; }
+/* The visitor app owns one dynamic viewport, including browser chrome changes.
+   Only reading, chat and cutaway explanation panes can scroll internally. */
+html:has(.heritage-experience),
+body:has(.heritage-experience),
+#root:has(.heritage-experience) {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+.camera-passthrough-shell:has(.heritage-experience) {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+.camera-passthrough-shell:has(.heritage-experience) .camera-passthrough-content {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+.heritage-experience.spatial-app {
+  height: 100%;
+  min-height: 0;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  overflow: hidden;
+}
+.heritage-experience.spatial-app:has(.scan-experience) {
+  padding-bottom: max(82px, calc(env(safe-area-inset-bottom) + 70px));
+}
+.heritage-experience .spatial-stage,
+.heritage-experience .scan-experience,
+.heritage-experience .object-experience,
+.heritage-experience .object-experience:has(.structure-part-card) {
+  min-height: 0;
+  overflow: hidden;
+}
+.heritage-experience .object-experience,
+.heritage-experience .object-experience:has(.structure-part-card) {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+.heritage-experience .object-experience .structure-scene-viewport {
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+.heritage-experience .object-experience .is-cutaway .structure-scene-viewport {
+  grid-template-rows: minmax(0, 1fr) minmax(0, auto) auto;
+}
+.heritage-experience .object-experience .structure-scene-viewport .structure-part-card {
+  max-height: min(150px, 24dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+@media (max-height: 620px) {
+  .heritage-experience.spatial-app { padding-top: max(6px, env(safe-area-inset-top)); }
+  .heritage-experience .visitor-identity { min-height: 30px; }
+  .heritage-experience .visitor-brand { padding-block: 0; }
+  .heritage-experience .spatial-stage { margin-top: 6px; }
+  .heritage-experience .object-experience { gap: 6px; }
+  .heritage-experience .object-experience-heading { min-height: 48px; padding: 4px 8px; border-radius: 18px; }
+  .heritage-experience .object-title-copy :is(.section-label, p) { display: none; }
+  .heritage-experience .object-action-button { min-height: 44px; gap: 3px; padding: 4px 2px; }
+  .heritage-experience .object-action-dock { padding: 4px 6px; }
+  .heritage-experience .object-action-icon { width: 18px; height: 18px; }
+  .heritage-experience .object-experience .structure-scene-viewport { gap: 6px; }
+  .heritage-experience .object-experience .structure-scene-viewport .structure-part-card { max-height: 80px; padding: 8px 12px; }
+  .heritage-experience .structure-part-card h3 { font-size: 14px; margin-block: 2px; }
+  .heritage-experience .scan-experience .scan-guidance { padding: 8px 10px; }
+  .heritage-experience .scan-guidance p { margin-top: 4px; }
+  .heritage-experience .demo-photo-actions { gap: 3px; bottom: 6px; }
+  .demo-shutter { width: 44px; height: 44px; }
+}
+@media (max-width: 900px) {
+  .heritage-experience .object-experience-heading .object-back-text { display: none; }
+}

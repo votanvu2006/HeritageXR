@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useSyncExternalStore } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { InteractiveScene, type ExhibitId } from "./InteractiveScene";
 import { InteractiveStructureScene } from "./InteractiveStructureScene";
 import { exhibitInformation } from "./exhibitInformation";
@@ -13,6 +13,7 @@ import { CameraPassthrough } from "./CameraPassthrough";
 import "./App.css";
 import "./HeritageExperience.css";
 import "./SpatialGlass.css";
+import "./VisitorRefinement.css";
 
 const RagSandbox = lazy(() => import("./components/RagSandbox"));
 
@@ -54,13 +55,12 @@ const exhibits: {
 
 const objectSections: {
   id: ObjectSection;
-  icon: string;
   label: string;
 }[] = [
-  { id: "information", icon: "i", label: "Thông tin" },
-  { id: "story", icon: "▶", label: "Câu chuyện" },
-  { id: "crafting", icon: "⚒", label: "Chế tác" },
-  { id: "quiz", icon: "✦", label: "Đố vui" },
+  { id: "information", label: "Thông tin" },
+  { id: "story", label: "Câu chuyện" },
+  { id: "crafting", label: "Chế tác" },
+  { id: "quiz", label: "Đố vui" },
 ];
 
 const contentFlow: ObjectSection[] = [
@@ -70,11 +70,34 @@ const contentFlow: ObjectSection[] = [
   "quiz",
 ];
 
+function SectionIcon({ section }: { section: ObjectSection }) {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    {section === "information" && <><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7h.01" /></>}
+    {section === "story" && <><path d="M12 5v15M3 4.5c3-1 6-.5 9 1.5 3-2 6-2.5 9-1.5v14c-3-1-6-.5-9 1.5-3-2-6-2.5-9-1.5z" /></>}
+    {section === "crafting" && <><path d="m14 4 6 6-3 3-6-6zM12 10 4 18a2 2 0 0 0 3 3l8-8M13 5l3-3 6 6-3 3" /></>}
+    {section === "quiz" && <><circle cx="12" cy="12" r="9" /><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4M12 17h.01" /></>}
+  </svg>;
+}
+
+function ExhibitSectionNav({ active, onSelect }: { active: ExperienceScreen; onSelect: (section: ObjectSection) => void }) {
+  return <nav className="object-action-dock glass-surface" aria-label="Chọn nội dung hiện vật">
+    <div className="object-action-list">{objectSections.map((section) => <button className={`object-action-button${active === section.id ? " is-active" : ""}`} key={section.id} type="button" aria-current={active === section.id ? "page" : undefined} onClick={() => onSelect(section.id)}>
+      <span className="object-action-icon"><SectionIcon section={section.id} /></span><span>{section.label}</span>
+    </button>)}</div>
+  </nav>;
+}
+
 function MuseumApp() {
   const [selectedId, setSelectedId] = useState<ExhibitId | null>(null);
+  const [captureMode, setCaptureMode] = useState<"scan" | "photo" | "collection">("scan");
   const [screen, setScreen] = useState<ExperienceScreen>("scan");
   const quizProgress = useSyncExternalStore(subscribeQuizProgress, readQuizProgress);
   const points = quizProgress.points;
+  const isContentOpen = screen !== "scan" && screen !== "object";
+  const contentPanelRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    contentPanelRef.current?.scrollTo({ top: 0 });
+  }, [screen, selectedId]);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [storyVideoUnavailable, setStoryVideoUnavailable] = useState(false);
 
@@ -152,49 +175,35 @@ function MuseumApp() {
     crafting: "Quá trình chế tác",
     quiz: "Đố vui có thưởng",
   };
+  const nextSection = contentFlow[(contentFlow.indexOf(screen as ObjectSection) + 1) % contentFlow.length];
+  const nextSectionLabel = objectSections.find((section) => section.id === nextSection)?.label;
 
   return (
-    <CameraPassthrough>
+    <CameraPassthrough controls={screen === "scan" ? (
+      <div className="capture-toolbar" role="group" aria-label="Chế độ khám phá mô phỏng">
+        <button type="button" className={captureMode === "scan" ? "is-active" : ""} aria-pressed={captureMode === "scan"} onClick={() => setCaptureMode("scan")}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M3 12h18" /></svg>Quét
+        </button>
+        <button type="button" className={captureMode !== "scan" ? "is-active" : ""} aria-pressed={captureMode !== "scan"} onClick={() => setCaptureMode("photo")}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M4 6h4l2-3h4l2 3h4v14H4z" /><circle cx="12" cy="12" r="4" /></svg>Chụp
+        </button>
+      </div>
+    ) : <span />}>
+
       <main className="app heritage-experience spatial-app">
-        <header className="app-header heritage-app-header spatial-header">
-          <div className="heritage-brand">
-            <strong>HeritageXR</strong>
-            <span>BẢO TÀNG TƯƠNG TÁC</span>
-          </div>
-
-          <div className="spatial-header-center" aria-live="polite">
-            {selectedExhibit ? selectedExhibit.name : "Không gian trưng bày"}
-          </div>
-
-          <div className="heritage-header-actions">
-            <span className="heritage-total-points">✦ {points} điểm</span>
-            <a
-              href="/admin"
-              aria-label="Mở trang quản trị"
-              className="spatial-admin-link"
-            >
-              Quản trị
-            </a>
-          </div>
+        <header className="visitor-identity">
+          <div className="heritage-brand visitor-brand"><strong>HeritageXR</strong><span>BẢO TÀNG TƯƠNG TÁC</span></div>
+          <span className="heritage-total-points" aria-label={`Tổng điểm: ${points}`}>✦ {points} điểm</span>
         </header>
 
-        <div className={`spatial-stage spatial-stage-${screen}`}>
+        <div className={`spatial-stage spatial-stage-${screen}${isContentOpen ? " is-reading" : ""}`}>
           {screen === "scan" && (
-            <section className="scan-experience" aria-label="Quét hiện vật">
+            <section className={`scan-experience capture-${captureMode}`} aria-label="Khám phá hiện vật mô phỏng">
               <div className="mobile-gallery-setting" aria-hidden="true" />
               <div className="scan-guidance glass-surface">
-                <div className="mobile-demo-intro">
-                  <span className="section-label">THAM QUAN MÔ PHỎNG</span>
-                  <strong>Khám phá bộ sưu tập Đông Sơn</strong>
-                  <p>Chạm điểm sáng trên hiện vật để bắt đầu.</p>
-                </div>
-                <div className="desktop-scan-intro">
-                <span className="section-label">GÓC NHÌN CAMERA</span>
-                <strong>Hướng camera về hiện vật muốn khám phá</strong>
-                <p>
-                  Chạm hotspot trên hiện vật để mở không gian xem riêng.
-                </p>
-                </div>
+                <span className="section-label">{captureMode === "collection" ? "BỘ SƯU TẬP MÔ PHỎNG" : "TRẢI NGHIỆM MÔ PHỎNG"}</span>
+                <strong>{captureMode === "photo" ? "Đưa hiện vật vào khung hình" : captureMode === "collection" ? "Phòng trưng bày của bạn" : "Khám phá bộ sưu tập Đông Sơn"}</strong>
+                <p>{captureMode === "photo" ? "Chụp thử ba hiện vật demo để tạo phòng trưng bày." : "Chạm điểm sáng trên hiện vật để khám phá."}</p>
               </div>
 
               <InteractiveScene
@@ -204,11 +213,18 @@ function MuseumApp() {
                 alignToGallery
               />
 
-              <div className="scan-bottom-hint glass-surface">
-                <span className="scan-status-dot" />
-                <span className="desktop-scan-intro">Cảnh xung quanh vẫn hiển thị khi fen lia điện thoại</span>
-                <span className="mobile-demo-intro">3 hiện vật · Chạm để khám phá</span>
-              </div>
+              {captureMode === "photo" ? (
+                <div className="demo-photo-actions">
+                  <span>Ảnh demo · tối đa 3 hiện vật</span>
+                  <button type="button" className="demo-shutter" aria-label="Chụp mô phỏng và tạo phòng trưng bày" onClick={() => setCaptureMode("collection")}><span /></button>
+                  <span>Chụp để trưng bày</span>
+                </div>
+              ) : (
+                <div className="scan-bottom-hint glass-surface" role="status">
+                  <span className="scan-status-dot" />
+                  <span>{captureMode === "collection" ? "Đã trưng bày 3 hiện vật demo" : "3 hiện vật demo · Chạm để khám phá"}</span>
+                </div>
+              )}
             </section>
           )}
 
@@ -267,32 +283,7 @@ function MuseumApp() {
                 </aside>
               )}
 
-              <nav
-                className="object-action-dock glass-surface"
-                aria-label="Chọn nội dung hiện vật"
-              >
-                <p>Chọn nội dung muốn khám phá</p>
-
-                <div className="object-action-list">
-                  {objectSections.map((section) => (
-                    <button
-                      className="object-action-button"
-                      key={section.id}
-                      type="button"
-                      onClick={() => openObjectSection(section.id)}
-                    >
-                      <span
-                        className="object-action-icon"
-                        aria-hidden="true"
-                      >
-                        {section.icon}
-                      </span>
-
-                      <span>{section.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </nav>
+              <ExhibitSectionNav active={screen} onSelect={openObjectSection} />
             </section>
           )}
 
@@ -315,7 +306,7 @@ function MuseumApp() {
                     <span className="section-label">
                       {selectedExhibit.name}
                     </span>
-                    <h1>{screenTitles[screen]}</h1>
+                    <h1 aria-live="polite">{screenTitles[screen]}</h1>
                   </div>
 
                   <button
@@ -323,10 +314,12 @@ function MuseumApp() {
                     type="button"
                     onClick={handleNextContent}
                   >
-                    Tiếp theo
+                    {nextSectionLabel} →
                   </button>
                 </header>
 
+                <ExhibitSectionNav active={screen} onSelect={openObjectSection} />
+                <div className="content-scroll-region" ref={contentPanelRef}>
                 {screen === "information" && selectedInformation && (
                   <article className="spatial-information-content">
                     <div className="spatial-information-meta">
@@ -434,6 +427,7 @@ function MuseumApp() {
                     />
                   </div>
                 )}
+                </div>
               </div>
             </section>
           )}
