@@ -117,12 +117,7 @@ export function CameraPassthrough({ children }: CameraPassthroughProps) {
           {isCameraOn ? "Tắt camera" : "Bật camera thật"}
         </button>
 
-        <span className="camera-passthrough-caption" aria-live="polite">
-          {cameraMessage ||
-            (isCameraOn
-              ? "Cảnh thật đang hiển thị · xoay điện thoại để lia nhìn"
-              : "Bật camera để nhìn thấy không gian xung quanh")}
-        </span>
+        {cameraMessage && <span className="camera-passthrough-caption" role="status">{cameraMessage}</span>}
       </div>
     </div>
   );
