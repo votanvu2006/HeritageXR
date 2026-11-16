@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useSyncExternalStore } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { InteractiveScene, type ExhibitId } from "./InteractiveScene";
 import { InteractiveStructureScene } from "./InteractiveStructureScene";
 import { exhibitInformation } from "./exhibitInformation";
@@ -75,6 +75,11 @@ function MuseumApp() {
   const [screen, setScreen] = useState<ExperienceScreen>("scan");
   const quizProgress = useSyncExternalStore(subscribeQuizProgress, readQuizProgress);
   const points = quizProgress.points;
+  const isContentOpen = screen !== "scan" && screen !== "object";
+  const contentPanelRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    contentPanelRef.current?.scrollTo({ top: 0 });
+  }, [screen, selectedId]);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [storyVideoUnavailable, setStoryVideoUnavailable] = useState(false);
 
@@ -152,6 +157,8 @@ function MuseumApp() {
     crafting: "Quá trình chế tác",
     quiz: "Đố vui có thưởng",
   };
+  const nextSection = contentFlow[(contentFlow.indexOf(screen as ObjectSection) + 1) % contentFlow.length];
+  const nextSectionLabel = objectSections.find((section) => section.id === nextSection)?.label;
 
   return (
     <CameraPassthrough>
@@ -178,7 +185,7 @@ function MuseumApp() {
           </div>
         </header>
 
-        <div className={`spatial-stage spatial-stage-${screen}`}>
+        <div className={`spatial-stage spatial-stage-${screen}${isContentOpen ? " has-exhibit-content" : ""}`}>
           {screen === "scan" && (
             <section className="scan-experience" aria-label="Quét hiện vật">
               <div className="mobile-gallery-setting" aria-hidden="true" />
@@ -212,7 +219,7 @@ function MuseumApp() {
             </section>
           )}
 
-          {screen === "object" && selectedExhibit && (
+          {screen !== "scan" && selectedExhibit && (
             <section
               className="object-experience"
               aria-label={`Khám phá ${selectedExhibit.name}`}
@@ -276,9 +283,10 @@ function MuseumApp() {
                 <div className="object-action-list">
                   {objectSections.map((section) => (
                     <button
-                      className="object-action-button"
+                      className={`object-action-button${screen === section.id ? " is-active" : ""}`}
                       key={section.id}
                       type="button"
+                      aria-current={screen === section.id ? "page" : undefined}
                       onClick={() => openObjectSection(section.id)}
                     >
                       <span
@@ -301,21 +309,21 @@ function MuseumApp() {
               className={`content-experience content-experience-${screen}`}
               aria-label={screenTitles[screen]}
             >
-              <div className="content-glass-panel glass-surface">
+              <div className="content-glass-panel glass-surface" ref={contentPanelRef}>
                 <header className="content-experience-header">
                   <button
                     className="spatial-back-button"
                     type="button"
                     onClick={handleBackToObject}
                   >
-                    ← Quay lại hiện vật
+                    Mở rộng 3D
                   </button>
 
                   <div>
                     <span className="section-label">
                       {selectedExhibit.name}
                     </span>
-                    <h1>{screenTitles[screen]}</h1>
+                    <h1 aria-live="polite">{screenTitles[screen]}</h1>
                   </div>
 
                   <button
@@ -323,7 +331,7 @@ function MuseumApp() {
                     type="button"
                     onClick={handleNextContent}
                   >
-                    Tiếp theo
+                    {nextSectionLabel} →
                   </button>
                 </header>
 
