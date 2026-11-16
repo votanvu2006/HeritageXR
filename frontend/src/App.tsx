@@ -207,11 +207,10 @@ function MuseumApp() {
               </div>
 
               <InteractiveScene
-                key={captureMode === "photo" ? "photo" : "gallery"}
                 selectedId={null}
                 onSelect={handleSelectExhibit}
-                showDisplayCase={captureMode !== "photo"}
-                alignToGallery={captureMode !== "photo"}
+                showDisplayCase
+                alignToGallery
               />
 
               {captureMode === "photo" ? (
