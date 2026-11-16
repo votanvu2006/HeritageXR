@@ -963,6 +963,8 @@ export function InteractiveScene({
     renderer.domElement.addEventListener("pointerdown", onPointerDown);
     renderer.domElement.addEventListener("pointerup", onPointerUp);
 
+    const hotspotBounds = new THREE.Box3();
+    const hotspotCorner = new THREE.Vector3();
     const projectHotspots = () => {
       const width = container.clientWidth;
       const height = container.clientHeight;
@@ -997,6 +999,26 @@ export function InteractiveScene({
               model.position.z + localZ * scale,
             );
 
+        // Project the artifact itself, excluding its glass case and pedestal.
+        // Only the visible marker scales down; the touch target remains 44px.
+        if (artifact) {
+          hotspotBounds.setFromObject(artifact);
+          let minX = Infinity, maxX = -Infinity;
+          let minY = Infinity, maxY = -Infinity;
+          for (const x of [hotspotBounds.min.x, hotspotBounds.max.x]) {
+            for (const y of [hotspotBounds.min.y, hotspotBounds.max.y]) {
+              for (const z of [hotspotBounds.min.z, hotspotBounds.max.z]) {
+                hotspotCorner.set(x, y, z).project(camera);
+                minX = Math.min(minX, hotspotCorner.x);
+                maxX = Math.max(maxX, hotspotCorner.x);
+                minY = Math.min(minY, hotspotCorner.y);
+                maxY = Math.max(maxY, hotspotCorner.y);
+              }
+            }
+          }
+          const projectedSize = Math.min((maxX - minX) * width / 2, (maxY - minY) * height / 2);
+          hotspot.style.setProperty("--hotspot-diameter", `${THREE.MathUtils.clamp(projectedSize * .24, 14, 28)}px`);
+        }
         position.project(camera);
 
         const isVisible =

@@ -89,6 +89,7 @@ function ExhibitSectionNav({ active, onSelect }: { active: ExperienceScreen; onS
 
 function MuseumApp() {
   const [selectedId, setSelectedId] = useState<ExhibitId | null>(null);
+  const [captureMode, setCaptureMode] = useState<"scan" | "photo" | "collection">("scan");
   const [screen, setScreen] = useState<ExperienceScreen>("scan");
   const quizProgress = useSyncExternalStore(subscribeQuizProgress, readQuizProgress);
   const points = quizProgress.points;
@@ -178,7 +179,17 @@ function MuseumApp() {
   const nextSectionLabel = objectSections.find((section) => section.id === nextSection)?.label;
 
   return (
-    <CameraPassthrough>
+    <CameraPassthrough controls={screen === "scan" ? (
+      <div className="capture-toolbar" role="group" aria-label="Chế độ khám phá mô phỏng">
+        <button type="button" className={captureMode === "scan" ? "is-active" : ""} aria-pressed={captureMode === "scan"} onClick={() => setCaptureMode("scan")}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M3 12h18" /></svg>Quét
+        </button>
+        <button type="button" className={captureMode !== "scan" ? "is-active" : ""} aria-pressed={captureMode !== "scan"} onClick={() => setCaptureMode("photo")}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M4 6h4l2-3h4l2 3h4v14H4z" /><circle cx="12" cy="12" r="4" /></svg>Chụp
+        </button>
+      </div>
+    ) : <span />}>
+
       <main className="app heritage-experience spatial-app">
         <header className="visitor-identity">
           <div className="heritage-brand visitor-brand"><strong>HeritageXR</strong><span>BẢO TÀNG TƯƠNG TÁC</span></div>
@@ -187,35 +198,34 @@ function MuseumApp() {
 
         <div className={`spatial-stage spatial-stage-${screen}${isContentOpen ? " is-reading" : ""}`}>
           {screen === "scan" && (
-            <section className="scan-experience" aria-label="Quét hiện vật">
+            <section className={`scan-experience capture-${captureMode}`} aria-label="Khám phá hiện vật mô phỏng">
               <div className="mobile-gallery-setting" aria-hidden="true" />
               <div className="scan-guidance glass-surface">
-                <div className="mobile-demo-intro">
-                  <span className="section-label">THAM QUAN MÔ PHỎNG</span>
-                  <strong>Khám phá bộ sưu tập Đông Sơn</strong>
-                  <p>Chạm điểm sáng trên hiện vật để bắt đầu.</p>
-                </div>
-                <div className="desktop-scan-intro">
-                <span className="section-label">GÓC NHÌN CAMERA</span>
-                <strong>Hướng camera về hiện vật muốn khám phá</strong>
-                <p>
-                  Chạm hotspot trên hiện vật để mở không gian xem riêng.
-                </p>
-                </div>
+                <span className="section-label">{captureMode === "collection" ? "BỘ SƯU TẬP MÔ PHỎNG" : "TRẢI NGHIỆM MÔ PHỎNG"}</span>
+                <strong>{captureMode === "photo" ? "Đưa hiện vật vào khung hình" : captureMode === "collection" ? "Phòng trưng bày của bạn" : "Khám phá bộ sưu tập Đông Sơn"}</strong>
+                <p>{captureMode === "photo" ? "Chụp thử ba hiện vật demo để tạo phòng trưng bày." : "Chạm điểm sáng trên hiện vật để khám phá."}</p>
               </div>
 
               <InteractiveScene
+                key={captureMode === "photo" ? "photo" : "gallery"}
                 selectedId={null}
                 onSelect={handleSelectExhibit}
-                showDisplayCase
-                alignToGallery
+                showDisplayCase={captureMode !== "photo"}
+                alignToGallery={captureMode !== "photo"}
               />
 
-              <div className="scan-bottom-hint glass-surface">
-                <span className="scan-status-dot" />
-                <span className="desktop-scan-intro">Cảnh xung quanh vẫn hiển thị khi fen lia điện thoại</span>
-                <span className="mobile-demo-intro">3 hiện vật · Chạm để khám phá</span>
-              </div>
+              {captureMode === "photo" ? (
+                <div className="demo-photo-actions">
+                  <span>Ảnh demo · tối đa 3 hiện vật</span>
+                  <button type="button" className="demo-shutter" aria-label="Chụp mô phỏng và tạo phòng trưng bày" onClick={() => setCaptureMode("collection")}><span /></button>
+                  <span>Chụp để trưng bày</span>
+                </div>
+              ) : (
+                <div className="scan-bottom-hint glass-surface" role="status">
+                  <span className="scan-status-dot" />
+                  <span>{captureMode === "collection" ? "Đã trưng bày 3 hiện vật demo" : "3 hiện vật demo · Chạm để khám phá"}</span>
+                </div>
+              )}
             </section>
           )}
 

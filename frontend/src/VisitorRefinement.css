@@ -105,3 +105,90 @@
 @media (max-height: 500px) {
   .heritage-experience .object-experience { min-height: 480px; }
 }
+
+/* Keep identity legible without putting it inside another panel. */
+.heritage-experience .visitor-brand {
+  padding: 4px 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  text-shadow: 0 1px 4px #000, 0 2px 12px #000b;
+}
+.heritage-experience .scan-experience .exhibit-hotspot,
+.heritage-experience .scan-experience .exhibit-hotspot:hover {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.heritage-experience .scan-experience .exhibit-hotspot .hotspot-marker {
+  display: grid;
+  place-items: center;
+  width: var(--hotspot-diameter, 22px);
+  height: var(--hotspot-diameter, 22px);
+  border: 1px solid #ffedc7dc;
+  border-radius: 50%;
+  background: #30271fc4;
+  box-shadow: 0 0 0 3px #e9cd9224, 0 2px 8px #0008;
+}
+.heritage-experience .scan-experience .hotspot-marker::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff8eb;
+}
+.heritage-experience .scan-experience .exhibit-hotspot::after {
+  top: calc(50% + var(--hotspot-diameter, 22px) / 2 + 7px);
+  padding: 6px 8px;
+  min-height: 0;
+  font-size: 10px;
+}
+.heritage-experience .scan-experience .exhibit-hotspot:focus-visible {
+  outline: 2px solid #fff0c9;
+  outline-offset: 2px;
+}
+
+/* Two clearly labelled demo modes replace the camera on/off control. */
+.camera-passthrough-shell:has(.heritage-experience) .camera-passthrough-control:has(.capture-toolbar) {
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 24px);
+}
+.capture-toolbar { display: flex; gap: 4px; padding: 5px; border: 1px solid #cbb08466; border-radius: 24px; background: #251e18ed; box-shadow: 0 4px 20px #0004; }
+.capture-toolbar button { display: flex; gap: 8px; align-items: center; justify-content: center; min-width: 112px; min-height: 44px; padding: 10px 20px; color: #eee5d7; background: transparent; border: 0; border-radius: 19px; font: inherit; font-size: 13px; cursor: pointer; }
+.capture-toolbar button.is-active { background: #f6ead3; color: #30271f; }
+.capture-toolbar svg { width: 20px; height: 20px; }
+.heritage-experience .capture-photo { background: radial-gradient(ellipse at center, #4d3a24, #171c19 75%); border: 1px solid #d7bc8544; border-radius: 24px; overflow: hidden; }
+.heritage-experience .capture-photo .mobile-gallery-setting { display: none; }
+.heritage-experience .capture-photo .exhibit-hotspot { visibility: hidden !important; pointer-events: none; }
+.heritage-experience .capture-photo .scan-guidance { width: min(540px, calc(100% - 24px)); top: 12px; z-index: 3; }
+.heritage-experience .capture-photo .scene-container { position: absolute; inset: 115px 0 135px; height: auto; }
+.heritage-experience .demo-photo-actions { position: absolute; z-index: 3; inset: auto 12px 12px; display: grid; justify-items: center; gap: 7px; color: #f8edda; font-size: 11px; text-align: center; }
+.demo-shutter { display: grid; place-items: center; width: 58px; height: 58px; padding: 4px; border: 2px solid #fff2dc; border-radius: 50%; background: transparent; cursor: pointer; }
+.demo-shutter span { width: 100%; height: 100%; border-radius: 50%; background: #fff2dc; }
+.heritage-experience .scan-bottom-hint { bottom: 8px; }
+@media(max-width: 900px) { .heritage-experience .capture-photo .scene-container { inset: 120px 0 135px; } }
+.heritage-experience .visitor-identity { position: relative; z-index: 5; }
+.capture-toolbar { pointer-events: auto; }
+@media (max-height: 600px) {
+  .heritage-experience.spatial-app:has(.capture-photo) { height: auto; min-height: 100dvh; }
+  .heritage-experience .spatial-stage:has(.capture-photo),
+  .heritage-experience .capture-photo { min-height: 480px; }
+}
+@media (max-height: 600px) {
+  .camera-passthrough-shell:has(.capture-photo) .camera-passthrough-control:has(.capture-toolbar) {
+    position: relative;
+    inset: auto;
+    width: fit-content;
+    margin: 0 auto 12px;
+    transform: none;
+  }
+}

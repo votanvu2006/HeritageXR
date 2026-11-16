@@ -10,9 +10,10 @@ import { mediaFailure } from "./device/deviceSupport";
 
 type CameraPassthroughProps = {
   children: ReactNode;
+  controls?: ReactNode;
 };
 
-export function CameraPassthrough({ children }: CameraPassthroughProps) {
+export function CameraPassthrough({ children, controls }: CameraPassthroughProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const mountedRef = useRef(true);
@@ -33,7 +34,7 @@ export function CameraPassthrough({ children }: CameraPassthroughProps) {
   const toggleCamera = useCallback(async () => {
     if (isCameraOn) {
       stopCamera();
-      setCameraMessage("Camera đã tắt.");
+      setCameraMessage("");
       return;
     }
 
@@ -105,6 +106,7 @@ export function CameraPassthrough({ children }: CameraPassthroughProps) {
       <div className="camera-passthrough-content">{children}</div>
 
       <div className="camera-passthrough-control">
+        {controls ?? <>
         <button
           className={`camera-toggle-button ${
             isCameraOn ? "is-active" : ""
@@ -118,6 +120,7 @@ export function CameraPassthrough({ children }: CameraPassthroughProps) {
         </button>
 
         {cameraMessage && <span className="camera-passthrough-caption" role="status">{cameraMessage}</span>}
+        </>}
       </div>
     </div>
   );
