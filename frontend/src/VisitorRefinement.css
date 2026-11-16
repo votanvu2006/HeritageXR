@@ -73,7 +73,7 @@
   .heritage-experience .visitor-brand { padding: 6px 10px; }
   .heritage-experience .visitor-brand strong { font-size: 16px; }
   .heritage-experience .spatial-stage { margin-top: 10px; }
-  .heritage-experience .object-experience { gap: 10px; overflow-y: auto; }
+  .heritage-experience .object-experience { gap: 10px; overflow: hidden; }
   .heritage-experience .object-experience-heading { width: 100%; min-height: 66px; grid-template-columns: 44px minmax(0, 1fr) 78px; padding: 10px; gap: 8px; }
   .heritage-experience .object-title-copy h1 { font-size: 16px; }
   .heritage-experience .object-title-copy :is(.section-label, p) { display: none; }
@@ -98,12 +98,6 @@
   .heritage-experience .content-glass-panel > .object-action-dock .object-action-button { min-height: 50px; padding: 5px 2px; gap: 4px; font-size: 10px; }
   .heritage-experience .object-action-icon { width: 20px; height: 20px; }
   .camera-passthrough-shell:has(.heritage-experience) .camera-passthrough-control { left: 12px; max-width: calc(100vw - 24px); }
-}
-@media (max-height: 700px) {
-  .heritage-experience .object-experience:has(.structure-part-card) { min-height: 580px; }
-}
-@media (max-height: 500px) {
-  .heritage-experience .object-experience { min-height: 480px; }
 }
 
 /* Keep identity legible without putting it inside another panel. */
@@ -178,17 +172,77 @@
 @media(max-width: 900px) { .heritage-experience .capture-photo .scene-container { inset: 120px 0 135px; } }
 .heritage-experience .visitor-identity { position: relative; z-index: 5; }
 .capture-toolbar { pointer-events: auto; }
-@media (max-height: 600px) {
-  .heritage-experience.spatial-app:has(.capture-photo) { height: auto; min-height: 100dvh; }
-  .heritage-experience .spatial-stage:has(.capture-photo),
-  .heritage-experience .capture-photo { min-height: 480px; }
+/* The visitor app owns one dynamic viewport, including browser chrome changes.
+   Only reading, chat and cutaway explanation panes can scroll internally. */
+html:has(.heritage-experience),
+body:has(.heritage-experience),
+#root:has(.heritage-experience) {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
-@media (max-height: 600px) {
-  .camera-passthrough-shell:has(.capture-photo) .camera-passthrough-control:has(.capture-toolbar) {
-    position: relative;
-    inset: auto;
-    width: fit-content;
-    margin: 0 auto 12px;
-    transform: none;
-  }
+.camera-passthrough-shell:has(.heritage-experience) {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+.camera-passthrough-shell:has(.heritage-experience) .camera-passthrough-content {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+.heritage-experience.spatial-app {
+  height: 100%;
+  min-height: 0;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  overflow: hidden;
+}
+.heritage-experience.spatial-app:has(.scan-experience) {
+  padding-bottom: max(82px, calc(env(safe-area-inset-bottom) + 70px));
+}
+.heritage-experience .spatial-stage,
+.heritage-experience .scan-experience,
+.heritage-experience .object-experience,
+.heritage-experience .object-experience:has(.structure-part-card) {
+  min-height: 0;
+  overflow: hidden;
+}
+.heritage-experience .object-experience,
+.heritage-experience .object-experience:has(.structure-part-card) {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+.heritage-experience .object-experience .structure-scene-viewport {
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+.heritage-experience .object-experience .is-cutaway .structure-scene-viewport {
+  grid-template-rows: minmax(0, 1fr) minmax(0, auto) auto;
+}
+.heritage-experience .object-experience .structure-scene-viewport .structure-part-card {
+  max-height: min(150px, 24dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+@media (max-height: 620px) {
+  .heritage-experience.spatial-app { padding-top: max(6px, env(safe-area-inset-top)); }
+  .heritage-experience .visitor-identity { min-height: 30px; }
+  .heritage-experience .visitor-brand { padding-block: 0; }
+  .heritage-experience .spatial-stage { margin-top: 6px; }
+  .heritage-experience .object-experience { gap: 6px; }
+  .heritage-experience .object-experience-heading { min-height: 48px; padding: 4px 8px; border-radius: 18px; }
+  .heritage-experience .object-title-copy :is(.section-label, p) { display: none; }
+  .heritage-experience .object-action-button { min-height: 44px; gap: 3px; padding: 4px 2px; }
+  .heritage-experience .object-action-dock { padding: 4px 6px; }
+  .heritage-experience .object-action-icon { width: 18px; height: 18px; }
+  .heritage-experience .object-experience .structure-scene-viewport { gap: 6px; }
+  .heritage-experience .object-experience .structure-scene-viewport .structure-part-card { max-height: 80px; padding: 8px 12px; }
+  .heritage-experience .structure-part-card h3 { font-size: 14px; margin-block: 2px; }
+  .heritage-experience .scan-experience .scan-guidance { padding: 8px 10px; }
+  .heritage-experience .scan-guidance p { margin-top: 4px; }
+  .heritage-experience .capture-photo .scene-container { inset: 94px 0 100px; }
+  .heritage-experience .demo-photo-actions { gap: 3px; bottom: 6px; }
+  .demo-shutter { width: 44px; height: 44px; }
+}
+@media (max-width: 900px) {
+  .heritage-experience .object-experience-heading .object-back-text { display: none; }
 }
