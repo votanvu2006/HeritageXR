@@ -90,6 +90,9 @@ function ExhibitSectionNav({ active, onSelect }: { active: ExperienceScreen; onS
 function MuseumApp() {
   const [selectedId, setSelectedId] = useState<ExhibitId | null>(null);
   const [captureMode, setCaptureMode] = useState<"scan" | "photo" | "collection">("scan");
+  const cameraVideoRef = useRef<HTMLVideoElement>(null);
+  const [cameraReady, setCameraReady] = useState(false);
+  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const [screen, setScreen] = useState<ExperienceScreen>("scan");
   const quizProgress = useSyncExternalStore(subscribeQuizProgress, readQuizProgress);
   const points = quizProgress.points;
@@ -179,8 +182,8 @@ function MuseumApp() {
   const nextSectionLabel = objectSections.find((section) => section.id === nextSection)?.label;
 
   return (
-    <CameraPassthrough controls={screen === "scan" ? (
-      <div className="capture-toolbar" role="group" aria-label="Chế độ khám phá mô phỏng">
+    <CameraPassthrough enabled={screen === "scan" && captureMode !== "collection"} videoRef={cameraVideoRef} onReady={setCameraReady} controls={screen === "scan" ? (
+      <div className="capture-toolbar" role="group" aria-label="Chế độ camera">
         <button type="button" className={captureMode === "scan" ? "is-active" : ""} aria-pressed={captureMode === "scan"} onClick={() => setCaptureMode("scan")}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M3 12h18" /></svg>Quét
         </button>
@@ -199,32 +202,45 @@ function MuseumApp() {
         <div className={`spatial-stage spatial-stage-${screen}${isContentOpen ? " is-reading" : ""}`}>
           {screen === "scan" && (
             <section className={`scan-experience capture-${captureMode}`} aria-label="Khám phá hiện vật mô phỏng">
-              <div className="mobile-gallery-setting" aria-hidden="true" />
+              {captureMode === "collection" && <div className="mobile-gallery-setting" aria-hidden="true" />}
               <div className="scan-guidance glass-surface">
-                <span className="section-label">{captureMode === "collection" ? "BỘ SƯU TẬP MÔ PHỎNG" : "TRẢI NGHIỆM MÔ PHỎNG"}</span>
-                <strong>{captureMode === "photo" ? "Đưa hiện vật vào khung hình" : captureMode === "collection" ? "Phòng trưng bày của bạn" : "Khám phá bộ sưu tập Đông Sơn"}</strong>
-                <p>{captureMode === "photo" ? "Chụp thử ba hiện vật demo để tạo phòng trưng bày." : "Chạm điểm sáng trên hiện vật để khám phá."}</p>
+                <span className="section-label">{captureMode === "collection" ? "BỘ SƯU TẬP DEMO" : "CAMERA"}</span>
+                <strong>{captureMode === "photo" ? "Đưa hiện vật vào khung hình" : captureMode === "collection" ? "Phòng trưng bày của bạn" : "Hướng camera về hiện vật"}</strong>
+                <p>{captureMode === "collection" ? "Chạm điểm sáng để khám phá." : captureMode === "photo" ? "Chụp ảnh để mở phòng trưng bày với 3 hiện vật demo." : "Nhận diện và hotspot theo camera sẽ được bổ sung sau."}</p>
               </div>
 
-              <InteractiveScene
+              {captureMode === "collection" && <InteractiveScene
                 selectedId={null}
                 onSelect={handleSelectExhibit}
                 showDisplayCase
                 alignToGallery
-              />
+              />}
+              {captureMode !== "collection" && <div className="live-camera-reticle" aria-hidden="true" />}
+              {captureMode === "collection" && capturedPhoto && <img className="capture-photo-thumbnail" src={capturedPhoto} alt="Ảnh vừa chụp từ camera" />}
 
               {captureMode === "photo" ? (
                 <div className="demo-photo-actions">
-                  <span>Ảnh demo · tối đa 3 hiện vật</span>
-                  <button type="button" className="demo-shutter" aria-label="Chụp mô phỏng và tạo phòng trưng bày" onClick={() => setCaptureMode("collection")}><span /></button>
+                  <span>Kết quả trưng bày sử dụng 3 hiện vật demo</span>
+                  <button type="button" className="demo-shutter" aria-label="Chụp ảnh và mở phòng trưng bày demo" disabled={!cameraReady} onClick={() => {
+                    const video = cameraVideoRef.current;
+                    if (!video || !video.videoWidth || !video.videoHeight) return;
+                    const canvas = document.createElement("canvas");
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    const context = canvas.getContext("2d");
+                    if (!context) return;
+                    context.drawImage(video, 0, 0);
+                    setCapturedPhoto(canvas.toDataURL("image/jpeg", 0.8));
+                    setCaptureMode("collection");
+                  }}><span /></button>
                   <span>Chụp để trưng bày</span>
                 </div>
-              ) : (
+              ) : captureMode === "collection" ? (
                 <div className="scan-bottom-hint glass-surface" role="status">
                   <span className="scan-status-dot" />
                   <span>{captureMode === "collection" ? "Đã trưng bày 3 hiện vật demo" : "3 hiện vật demo · Chạm để khám phá"}</span>
                 </div>
-              )}
+              ) : null}
             </section>
           )}
 
