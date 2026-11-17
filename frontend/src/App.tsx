@@ -216,7 +216,7 @@ function MuseumApp() {
                 alignToGallery
               />}
               {captureMode !== "collection" && <div className="live-camera-reticle" aria-hidden="true" />}
-              {captureMode === "collection" && capturedPhoto && <img className="capture-photo-thumbnail" src={capturedPhoto} alt="Ảnh vừa chụp từ camera" />} 
+              {captureMode === "collection" && capturedPhoto && <img className="capture-photo-thumbnail" src={capturedPhoto} alt="Ảnh vừa chụp từ camera" />}
 
               {captureMode === "photo" ? (
                 <div className="demo-photo-actions">
