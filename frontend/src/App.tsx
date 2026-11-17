@@ -92,6 +92,7 @@ function MuseumApp() {
   const [captureMode, setCaptureMode] = useState<"scan" | "photo" | "collection">("scan");
   const cameraVideoRef = useRef<HTMLVideoElement>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  const [cameraRequested, setCameraRequested] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const [screen, setScreen] = useState<ExperienceScreen>("scan");
   const quizProgress = useSyncExternalStore(subscribeQuizProgress, readQuizProgress);
@@ -182,12 +183,12 @@ function MuseumApp() {
   const nextSectionLabel = objectSections.find((section) => section.id === nextSection)?.label;
 
   return (
-    <CameraPassthrough enabled={screen === "scan" && captureMode !== "collection"} videoRef={cameraVideoRef} onReady={setCameraReady} controls={screen === "scan" ? (
+    <CameraPassthrough enabled={cameraRequested && screen === "scan" && captureMode !== "collection"} videoRef={cameraVideoRef} onReady={setCameraReady} controls={screen === "scan" ? (
       <div className="capture-toolbar" role="group" aria-label="Chế độ camera">
-        <button type="button" className={captureMode === "scan" ? "is-active" : ""} aria-pressed={captureMode === "scan"} onClick={() => setCaptureMode("scan")}>
+        <button type="button" className={captureMode === "scan" ? "is-active" : ""} aria-pressed={captureMode === "scan"} onClick={() => { setCaptureMode("scan"); setCameraRequested(true); }}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M3 12h18" /></svg>Quét
         </button>
-        <button type="button" className={captureMode !== "scan" ? "is-active" : ""} aria-pressed={captureMode !== "scan"} onClick={() => setCaptureMode("photo")}>
+        <button type="button" className={captureMode !== "scan" ? "is-active" : ""} aria-pressed={captureMode !== "scan"} onClick={() => { setCaptureMode("photo"); setCameraRequested(true); }}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M4 6h4l2-3h4l2 3h4v14H4z" /><circle cx="12" cy="12" r="4" /></svg>Chụp
         </button>
       </div>
@@ -215,7 +216,14 @@ function MuseumApp() {
                 showDisplayCase
                 alignToGallery
               />}
-              {captureMode !== "collection" && <div className="live-camera-reticle" aria-hidden="true" />}
+              {captureMode !== "collection" && cameraRequested && <div className="live-camera-reticle" aria-hidden="true" />}
+              {captureMode !== "collection" && !cameraRequested && <div className="camera-start-card glass-surface">
+                <span className="camera-start-icon" aria-hidden="true">⌁</span>
+                <strong>Sẵn sàng mở camera</strong>
+                <p>Chạm bên dưới để cho phép camera và bắt đầu {captureMode === "photo" ? "chụp" : "quét"}.</p>
+                <button type="button" onClick={() => setCameraRequested(true)}>Bắt đầu camera</button>
+                <small>Nếu trang mở bên trong ứng dụng quét QR, hãy chọn ⋯ rồi mở bằng Safari hoặc Chrome.</small>
+              </div>}
               {captureMode === "collection" && capturedPhoto && <img className="capture-photo-thumbnail" src={capturedPhoto} alt="Ảnh vừa chụp từ camera" />}
 
               {captureMode === "photo" ? (

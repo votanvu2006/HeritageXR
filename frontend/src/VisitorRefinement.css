@@ -285,3 +285,9 @@ body:has(.heritage-experience),
   .is-live-camera .scan-guidance strong { font-size: 16px; }
   .is-live-camera .scan-guidance p { font-size: 12px; line-height: 1.4; }
 }
+.camera-start-card { position: absolute; z-index: 4; top: 48%; left: 50%; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 10px; width: min(390px, calc(100% - 40px)); padding: 22px; color: #f8edda; text-align: center; }
+.camera-start-icon { display: grid; place-items: center; width: 56px; height: 56px; border: 1px solid #d7bc8577; border-radius: 50%; font-size: 30px; }
+.camera-start-card strong { font-size: 20px; }
+.camera-start-card p { margin: 0; font-size: 14px; line-height: 1.5; }
+.camera-start-card button { min-height: 48px; padding: 10px 22px; border: 0; border-radius: 999px; background: #f6ead3; color: #30271f; font: inherit; cursor: pointer; }
+.camera-start-card small { color: #e1d5c1; font-size: 11px; line-height: 1.45; }
