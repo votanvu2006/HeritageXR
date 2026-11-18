@@ -609,10 +609,25 @@ function styleGalleryCase(model: THREE.Group, id: ExhibitId) {
   gradient.addColorStop(1, "rgba(15, 8, 4, 0)");
   context.fillStyle = gradient;
   context.fillRect(0, 0, 128, 128);
-  const contactShadow = new THREE.Mesh(
-    new THREE.PlaneGeometry(3.5, 3.1),
+  const contactTexture = new THREE.CanvasTexture(shadowCanvas);
+  // A small contact shadow on the slab makes the artifact visibly rest on it.
+  const artifactFootprint = id === "drum" ? 1.6 : id === "jar" ? 1.05 : 0.38;
+  const slabShadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(artifactFootprint, artifactFootprint),
     new THREE.MeshBasicMaterial({
-      map: new THREE.CanvasTexture(shadowCanvas),
+      map: contactTexture,
+      transparent: true,
+      opacity: 0.7,
+      depthWrite: false,
+    }),
+  );
+  slabShadow.rotation.x = -Math.PI / 2;
+  slabShadow.position.y = pedestalTop + 0.002;
+  displayCase.add(slabShadow);
+  const contactShadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.8, 2.5),
+    new THREE.MeshBasicMaterial({
+      map: contactTexture,
       transparent: true,
       depthWrite: false,
     }),
@@ -774,12 +789,13 @@ export function InteractiveScene({
       const wallCenters = isPhonePortrait
         ? [0.213, 0.5, 0.786]
         : isPortrait ? [0.22, 0.5, 0.78] : [0.24, 0.5, 0.76];
-      // Seat the cases at the bays' lower edge on narrow or short screens;
-      // otherwise the cases and their labels fall below the wall display.
+      // The portrait room's floor starts at 75.4% of the image height.
+      // Put the cases in front of that line, not on the wall's skirting board.
       const isShortPhoneLandscape =
         window.innerWidth <= 900 && window.innerHeight <= 500;
+      const portraitFloorRatio = window.innerHeight <= 620 ? 0.77 : 0.785;
       const floorY =
-        window.innerHeight * (isPhonePortrait ? 0.745 : isPortrait || isShortPhoneLandscape ? 0.67 : 0.75);
+        window.innerHeight * (isPhonePortrait ? portraitFloorRatio : isPortrait || isShortPhoneLandscape ? 0.67 : 0.75);
       const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
       const layoutRay = new THREE.Raycaster();
       const point = new THREE.Vector3();
